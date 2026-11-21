@@ -190,12 +190,16 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .bt #top { padding-left: max(16px, calc((100% - 1408px) / 2)) !important; padding-right: max(16px, calc((100% - 1408px) / 2)) !important; }
 .bt #cert, .bt #route { padding-left: max(0px, calc((100% - 1440px) / 2)) !important; }
 /* обложка на больших экранах чуть крупнее, чтобы не казалась мелкой */
-@media (min-width: 1800px) { .bt #top { zoom: 1.2; } }
-@media (min-width: 2300px) { .bt #top { zoom: 1.4; } }
+@media (min-width: 1800px) { .bt #top { zoom: 1.4; } }
+@media (min-width: 2300px) { .bt #top { zoom: 1.6; } }
 /* обложка на весь экран (21.11): 30px — бегущая строка; при zoom делим высоту на коэффициент */
 @media (min-width: 901px) { .bt #top { min-height: calc(100svh - 30px); align-content: center; } }
-@media (min-width: 1800px) { .bt #top { min-height: calc((100svh - 30px) / 1.2); } }
-@media (min-width: 2300px) { .bt #top { min-height: calc((100svh - 30px) / 1.4); } }
+/* большие мониторы (21.11): обложка крупнее (zoom 1.4 / 1.6), уже по ширине — отзыв не наезжает на фото; отступ сверху под шапку */
+@media (min-width: 1800px) {
+  .bt #top { min-height: calc((100svh - 30px) / 1.4); padding-top: calc(60px / 1.4) !important; padding-left: max(16px, calc((100% - 1240px) / 2)) !important; padding-right: max(16px, calc((100% - 1240px) / 2)) !important; }
+  .bt #top > .hide-m:first-child { justify-content: flex-start !important; }
+}
+@media (min-width: 2300px) { .bt #top { min-height: calc((100svh - 30px) / 1.6); padding-top: calc(60px / 1.6) !important; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } .splash { display: none !important; } }
 </style>
 </helmet>
@@ -824,7 +828,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"cursor":{"editor":"boolean","default":true,"section":"Приколы"},"$preview":{"width":1440,"height":12800}}'>
 class Component extends DCLogic {
-  state = { tab: 'mani', open: 'mani-0', step: 0, prog: 0, faq: 0, work: 1, splashes: [], menuOpen: false, mstep: 0, infoManual: false, cx: 0, cy: 0, cdrag: false, lb: null, lbOpen: false };
+  state = { tab: 'mani', open: 'mani-0', step: 0, prog: 0, faq: 0, work: 1, splashes: [], menuOpen: false, mstep: 0, infoManual: null, atTop: true, cx: 0, cy: 0, cdrag: false, lb: null, lbOpen: false };
   pinH = 740;
   pinHeight() { const pin = this.ritualEl && this.ritualEl.firstElementChild; return pin && pin.offsetHeight ? pin.offsetHeight : this.pinH; }
 
@@ -976,6 +980,8 @@ class Component extends DCLogic {
   componentDidMount() {
     this.onScroll = () => {
       this.parallax();
+      const atTop = window.scrollY < 80;
+      if (atTop !== this.state.atTop) this.setState({ atTop: atTop, infoManual: null });
       const el = this.ritualEl;
       if (!el) return;
       const r = el.getBoundingClientRect();
@@ -1087,6 +1093,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state;
+    const infoShow = st.infoManual !== null ? st.infoManual : st.atTop;
     const IMG = {
       p1: 'assets/karta-p1.webp',
       p3: 'assets/karta-p3.webp',
@@ -1243,12 +1250,13 @@ class Component extends DCLogic {
       menuItems: [['#promo', 'Акция для новых гостей'], ['#studio', 'Студия'], ['#ritual', 'Ритуал визита'], ['#drinks', 'Меню напитков'], ['#price', 'Услуги и цены'],
         ['#works', 'Работы'], ['#clean', 'Стерильность'], ['#team', 'Команда'], ['#reviews', 'Отзывы'], ['#cert', 'Сертификат'], ['#faq', 'Вопросы'], ['#route', 'Как дойти']]
         .map((x, i) => ({ href: x[0], label: x[1], n: (i < 9 ? '0' : '') + (i + 1) })),
-      infoOpen: st.infoManual,
-      infoSign: st.infoManual ? '▴' : '▾',
-      infoTf: st.infoManual ? 'none' : 'translateY(-104%)',
-      infoOp: st.infoManual ? 1 : 0,
-      infoPe: st.infoManual ? 'auto' : 'none',
-      infoToggle: () => this.setState({ infoManual: !st.infoManual }),
+      // «о_студии»: открыта наверху страницы, прячется при прокрутке; стрелка — вручную (21.11)
+      infoOpen: infoShow,
+      infoSign: infoShow ? '▴' : '▾',
+      infoTf: infoShow ? 'none' : 'translateY(-104%)',
+      infoOp: infoShow ? 1 : 0,
+      infoPe: infoShow ? 'auto' : 'none',
+      infoToggle: () => this.setState({ infoManual: !infoShow }),
       zA: this.zoomer('assets/hero-left.webp', 'Гостья в меховом пальто показывает свежий маникюр', '(a) гостья бэсти', -8), zB: this.zoomer('assets/hero-center.webp', 'Тёмное покрытие с леопардовым принтом', '(b) тёмный леопард', 3), zC: this.zoomer('assets/hero-c.webp', 'Бордовое покрытие на фоне белого кирпича', '(c) бордо', 9),
       setLb: this.setLb,
       zEntrance: this.zoomer('assets/route-entrance-lg.webp', 'Печатников переулок, вывеска «бэсти» над входом', '(a) вход с Печатникова переулка — ищите бордовую вывеску', -2),
