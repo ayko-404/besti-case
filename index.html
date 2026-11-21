@@ -198,7 +198,7 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
     ['pixel', 'Пиксели'], ['slot', 'Из щели'], ['ink', 'Чернила'], ['blur', 'Фокус'], ['type', 'Печать'], ['rise', 'По буквам']
   ];
   var hv = 'pixel';
-  try { var sv = localStorage.getItem('besti:hv'); if (sv) hv = sv; } catch (e) {}
+  try { var sv = localStorage.getItem('besti:hv2'); if (sv) hv = sv; } catch (e) {}
   // разбить текст заголовка на буквы; потом вернуть те же текстовые узлы (React их не теряет)
   function splitChars(h) {
     var walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT), nodes = [], n;
@@ -218,9 +218,51 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
     });
     return { chars: chars, restore: function () { back.forEach(function (b) { if (b[0].parentNode) b[0].parentNode.replaceChild(b[1], b[0]); }); } };
   }
+  // пиксели по буквам (21.11): каждая буква собирается из мелких пикселей своей формы и цвета, буквы по очереди
+  function pixelLetters(h, delay) {
+    var sp = splitChars(h), N = sp.chars.length; if (!N) return sp.restore();
+    var hr = h.getBoundingClientRect(), padT = 40, padS = 24;
+    var ox = hr.left + scrollX - padS, oy = hr.top + scrollY - padT, W = Math.min(hr.width + padS * 2, document.documentElement.clientWidth - Math.max(0, ox)), H = hr.height + padT + 40;
+    ox = Math.max(0, ox);
+    var cv = document.createElement('canvas'); cv.className = 'px-veil';
+    cv.style.cssText = 'left:' + ox + 'px;top:' + oy + 'px;width:' + W + 'px;height:' + H + 'px;';
+    var dpr = Math.min(devicePixelRatio || 1, 2); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    document.body.appendChild(cv);
+    var ctx = cv.getContext('2d'), off = document.createElement('canvas'), oc = off.getContext('2d', { willReadFrequently: true });
+    var stg = Math.min(45, 950 / N), DUR = 520, letters = [];
+    sp.chars.forEach(function (c, i) {
+      var r = c.getBoundingClientRect(); if (r.width < 1) return;
+      var cs = getComputedStyle(c), k = c.offsetWidth ? r.width / c.offsetWidth : 1, fs = parseFloat(cs.fontSize) * k;
+      var cell = Math.max(2, Math.round(fs / 16));
+      var font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + fs + 'px ' + cs.fontFamily;
+      var w = Math.ceil(r.width + fs * .4), hh = Math.ceil(r.height), lx = Math.round(fs * .2);
+      off.width = w; off.height = hh; oc.clearRect(0, 0, w, hh); oc.font = font; oc.fillStyle = '#000';
+      var m = oc.measureText(c.textContent), fa = m.fontBoundingBoxAscent || fs * .8, fd = m.fontBoundingBoxDescent || fs * .2;
+      oc.fillText(c.textContent, lx, (hh - (fa + fd)) / 2 + fa);
+      var data = oc.getImageData(0, 0, w, hh).data, px = [];
+      for (var y = 0; y < hh; y += cell) for (var x = 0; x < w; x += cell) {
+        var cx = Math.min(w - 1, x + (cell >> 1)), cy = Math.min(hh - 1, y + (cell >> 1));
+        if (data[(cy * w + cx) * 4 + 3] > 110) px.push([x - lx, y, Math.random() * .5, .62 + Math.random() * .38]);
+      }
+      var t0 = delay + i * stg;
+      c.animate([{ opacity: 0, offset: 0 }, { opacity: 0, offset: .5 }, { opacity: 1, offset: .78 }, { opacity: 1 }], { duration: DUR, delay: t0, fill: 'backwards' });
+      letters.push({ x: r.left + scrollX, y: r.top + scrollY, px: px, cell: cell, col: cs.color, t0: t0 });
+    });
+    var base = performance.now(), hy0 = hr.top + scrollY, hx0 = hr.left + scrollX, end = delay + N * stg + DUR;
+    (function frame() {
+      var t = performance.now() - base, b = h.getBoundingClientRect(), dy = b.top + scrollY - hy0, dx = b.left + scrollX - hx0;
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      letters.forEach(function (L) {
+        var p = (t - L.t0) / DUR; if (p <= 0 || p >= 1) return;
+        ctx.fillStyle = L.col;
+        for (var j = 0; j < L.px.length; j++) { var q = L.px[j]; if (p > q[2] && p < q[3]) ctx.fillRect(L.x - ox + dx + q[0], L.y - oy + dy + q[1], L.cell, L.cell); }
+      });
+      if (t < end) requestAnimationFrame(frame); else { cv.remove(); sp.restore(); }
+    })();
+  }
   function animH(h, delay) {
     var E = 'cubic-bezier(.23, 1, .32, 1)';
-    if (hv === 'pixel') return pixel(h, delay);
+    if (hv === 'pixel') return pixelLetters(h, delay);
     if (hv === 'slot') return h.animate([{ clipPath: 'inset(100% -10% -20% -10%)', translate: '0 .45em' }, { clipPath: 'inset(-20% -10% -20% -10%)', translate: '0 0' }], { duration: 900, delay: delay, easing: E, fill: 'backwards' });
     if (hv === 'ink') return h.animate([{ WebkitMaskImage: 'linear-gradient(90deg, #000 0%, #000 40%, transparent 60%)', maskImage: 'linear-gradient(90deg, #000 0%, #000 40%, transparent 60%)', WebkitMaskSize: '260% 100%', maskSize: '260% 100%', WebkitMaskPosition: '100% 0', maskPosition: '100% 0', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' },
       { WebkitMaskImage: 'linear-gradient(90deg, #000 0%, #000 40%, transparent 60%)', maskImage: 'linear-gradient(90deg, #000 0%, #000 40%, transparent 60%)', WebkitMaskSize: '260% 100%', maskSize: '260% 100%', WebkitMaskPosition: '0% 0', maskPosition: '0% 0', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' }], { duration: 1300, delay: delay, easing: 'cubic-bezier(.45, 0, .2, 1)', fill: 'backwards' });
@@ -262,7 +304,7 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
     }
     box.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
-      if (b.hasAttribute('data-v')) { hv = b.getAttribute('data-v'); try { localStorage.setItem('besti:hv', hv); } catch (x) {} mark(); }
+      if (b.hasAttribute('data-v')) { hv = b.getAttribute('data-v'); try { localStorage.setItem('besti:hv2', hv); } catch (x) {} mark(); }
       replay();
     });
     mark();
