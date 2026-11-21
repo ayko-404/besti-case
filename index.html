@@ -346,8 +346,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div style="position: sticky; top: 8px; z-index: 50; height: 0; overflow: visible;">
 <header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 8px 16px 0;">
 <nav aria-label="Основное меню" style="display: flex; align-items: stretch; background: #FFFAF6; border: 1px solid rgba(43, 26, 23, .4); box-shadow: 3px 3px 0 rgba(43, 26, 23, .16);">
-<a href="#top" aria-label="Бэсти — студия маникюра, наверх" style="display: flex; align-items: center; padding: 3px 16px; min-height: 44px; text-decoration: none; color: #85231A;">
-<img fetchpriority="high" decoding="async" src="assets/besti-logo-bordo.svg" alt="бэсти — студия маникюра" style="height: 50px; width: auto; display: block;">
+<a href="#top" aria-label="Бэсти — студия маникюра, наверх" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 5px 16px 6px; min-height: 44px; text-decoration: none; color: #85231A;">
+<img fetchpriority="high" decoding="async" src="assets/besti-wordmark-bordo.svg" alt="бэсти" style="height: 36px; width: auto; display: block;"><span style="font-family: 'PT Mono', monospace; font-size: 11px; line-height: 1; letter-spacing: .02em; white-space: nowrap; color: #85231A;">студия маникюра</span>
 </a>
 <a class="navlink" href="#price" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 14px;">Услуги и цены</a>
 <a class="navlink" href="#studio" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 14px;">Студия</a>
@@ -380,7 +380,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 
 <main>
 <!-- ОБЛОЖКА · вариант 1 (выбран 29.10): фото, заголовок, описание, кнопки по центру; окно «о_студии» справа -->
-<section id="top" class="sec stack" style="position: relative; background: #FFFAF6; color: #2B1A17; border-bottom: 1px solid rgba(133, 35, 26, .2); padding: 30px 16px 26px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center;">
+<section id="top" class="sec stack" style="position: relative; background: #FFFAF6; color: #2B1A17; box-shadow: inset 0 -1px 0 #FFFFFF, inset 0 -2px 0 rgba(43, 26, 23, .18); padding: 30px 16px 26px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center;">
 <div class="hide-m" style="grid-column: 1 / span 3; align-self: center; display: flex; justify-content: center;">
 <figure class="levitate" style="margin: 0; width: 262px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 2px 8px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 9px; letter-spacing: .06em; text-transform: uppercase;"><span>отзыв · Яндекс Карты</span><span aria-hidden="true">_ □ ×</span></div>
@@ -394,10 +394,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </figure>
 </div>
 <div style="grid-column: 4 / span 6; display: flex; flex-direction: column; align-items: center; text-align: center;">
-<div style="display: flex; justify-content: center; align-items: flex-end;"><figure class="tilt zoomable" onClick="{{zA}}" style="position: relative; z-index: 1; width: 180px; margin: 0 -16px 0 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(-8deg) translateY(16px);"><img fetchpriority="high" decoding="async" src="assets/hero-left.webp" alt="Гостья в меховом пальто показывает свежий маникюр, розовая надпись «бэсти»" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(a) гостья бэсти</figcaption></figure><figure class="tilt" style="position: relative; z-index: 2; width: 224px; margin: 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(3deg);"><video id="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-video-poster.webp" aria-label="Видео: день в студии бэсти — зал, процесс и готовый маникюр" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"><source src="assets/hero-video.mp4" type="video/mp4"></video><figcaption style="display: flex; justify-content: space-between; margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;"><span>(b) день в бэсти</span><span class="rec-m" aria-hidden="true" style="color: #C0392B;">● rec</span></figcaption></figure><figure class="tilt zoomable" onClick="{{zC}}" style="position: relative; z-index: 1; width: 180px; margin: 0 0 0 -16px; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(9deg) translateY(20px);"><img fetchpriority="high" decoding="async" src="assets/hero-c.webp" alt="Бордовое покрытие на фоне белого кирпича" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(c) бордо</figcaption></figure></div>
+<div style="display: flex; justify-content: center; align-items: flex-end;"><figure class="tilt zoomable" onClick="{{zA}}" style="position: relative; z-index: 1; width: 180px; margin: 0 -16px 0 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(-8deg) translateY(16px);"><img fetchpriority="high" decoding="async" src="assets/hero-left.webp" alt="Гостья в меховом пальто показывает свежий маникюр, розовая надпись «бэсти»" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(a) гостья бэсти</figcaption></figure><figure class="tilt zoomable" onClick="{{zB}}" style="position: relative; z-index: 2; width: 224px; margin: 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(3deg);"><video id="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-video-poster.webp" aria-label="Видео: день в студии бэсти — зал, процесс и готовый маникюр" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"><source src="assets/hero-video.mp4" type="video/mp4"></video><figcaption style="display: flex; justify-content: space-between; margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;"><span>(b) день в бэсти</span><span class="rec-m" aria-hidden="true" style="color: #C0392B;">● rec</span></figcaption></figure><figure class="tilt zoomable" onClick="{{zC}}" style="position: relative; z-index: 1; width: 180px; margin: 0 0 0 -16px; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(9deg) translateY(20px);"><img fetchpriority="high" decoding="async" src="assets/hero-c.webp" alt="Бордовое покрытие на фоне белого кирпича" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(c) бордо</figcaption></figure></div>
 <h1 class="h1" style="margin: 44px 0 0; font-size: 60px; line-height: .98; font-weight: 500; letter-spacing: -.02em; color: #85231A;">Маникюр и педикюр<br><em style="font-style: italic; font-weight: 400;">в гостях у бэсти</em></h1>
-<p style="margin: 12px 0 0; max-width: 620px; font-size: 18px; line-height: 1.45; color: #2B1A17;">Студия маникюра и педикюра в 3 минутах от метро «Трубная». Выберите услугу и запишитесь онлайн</p>
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 14px;"><a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться онлайн</a></div>
+<p style="margin: 12px 0 0; max-width: 520px; font-size: 18px; line-height: 1.45; color: #2B1A17;">Студия маникюра и педикюра в 3 минутах от метро «Трубная». Выберите услугу и запишитесь онлайн</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px;"><a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться онлайн</a></div>
 </div>
 </section>
 
@@ -453,7 +453,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 02 СТУДИЯ · коллаж (a)(b)(c) (Köppen) -->
-<section id="studio" ref="{{setStudio}}" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start; border-top: 1px solid rgba(133, 35, 26, .25);">
+<section id="studio" ref="{{setStudio}}" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start; box-shadow: inset 0 1px 0 rgba(43, 26, 23, .18), inset 0 2px 0 #FFFFFF;">
 <div style="grid-column: 1 / span 4;">
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">(02) Студия</p>
 <h2 class="hx" style="margin: 16px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Студия<br><span style="position: relative; display: inline-block; padding: 0 6px;">с характером<svg aria-hidden="true" viewBox="0 0 300 90" preserveAspectRatio="none" fill="none" style="position: absolute; left: -16px; top: -14px; width: calc(100% + 32px); height: calc(100% + 26px); overflow: visible; pointer-events: none;"><path d="M24 42 C 24 14, 150 4, 268 16 C 302 22, 298 70, 222 80 C 140 90, 32 86, 12 62 C 2 46, 40 26, 96 21" stroke="#85231A" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path><path d="M44 18 C 122 2, 282 8, 292 42 C 298 74, 198 90, 108 85 C 38 81, 4 66, 12 44 C 20 27, 72 13, 156 12" stroke="#85231A" stroke-width="1.6" stroke-linecap="round" vector-effect="non-scaling-stroke"></path><path d="M62 76 C 18 68, 6 44, 30 30 C 72 6, 232 6, 280 31 C 298 44, 288 62, 248 71" stroke="#85231A" stroke-width="1.3" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg></span></h2>
@@ -572,7 +572,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 05 ПРАЙС · заголовок по центру, иконки категорий, две колонки -->
-<section id="price" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; border-top: 1px solid rgba(133, 35, 26, .25);">
+<section id="price" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; box-shadow: inset 0 1px 0 rgba(43, 26, 23, .18), inset 0 2px 0 #FFFFFF;">
 <div style="grid-column: 7 / span 6; text-align: left;">
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">(05) Услуги и цены</p>
 <h2 class="hx" style="margin: 14px 0 0; font-size: 40px; line-height: 1.05; font-weight: 500; letter-spacing: -.01em;">От „Самой невинности“<br>до „Роскошного максимума“</h2>
@@ -650,7 +650,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 06 РАБОТЫ · карточки «накиданы в кучу» (как у Mon Poney) -->
-<section id="works" class="sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 48px; border-top: 1px solid rgba(133, 35, 26, .25); overflow: hidden;">
+<section id="works" class="sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 48px; box-shadow: inset 0 1px 0 rgba(43, 26, 23, .18), inset 0 2px 0 #FFFFFF; overflow: hidden;">
 <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">(06) Работы</p>
 <h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Руки после бэсти</h2>
@@ -750,7 +750,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 09 ОТЗЫВЫ · «шахматка» (выбрана 29.10): лёгкие карточки через клетку, аватары с Яндекс Карт -->
-<section id="reviews" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 48px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; border-top: 1px solid rgba(133, 35, 26, .25);">
+<section id="reviews" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 48px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; box-shadow: inset 0 1px 0 rgba(43, 26, 23, .18), inset 0 2px 0 #FFFFFF;">
 <div style="grid-column: 1 / span 6;">
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">(09) Отзывы</p>
 <div style="display: flex; align-items: flex-end; gap: 12px; margin-top: 14px;">
@@ -785,7 +785,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 10 СЕРТИФИКАТ · рендер как у MECCA: ролик-брелок (KIE Seedance, цикл туда-обратно 10 с) -->
-<section id="cert" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 0 16px 0 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; border-top: 1px solid rgba(133, 35, 26, .25);">
+<section id="cert" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 0 16px 0 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; box-shadow: inset 0 1px 0 rgba(43, 26, 23, .18), inset 0 2px 0 #FFFFFF;">
 <div class="cert-wrap" style="grid-column: 1 / span 5; position: relative; overflow: hidden;">
 <div class="cert-stage" aria-hidden="true" style="position: relative; width: 120%; max-width: none; aspect-ratio: 1 / 1; background: linear-gradient(to bottom, #B29C99 0%, #C8B5B3 48%, #E5D6D4 100%); overflow: hidden;">
 <video ref="{{setVideo}}" class="cert-video" src="assets/sertifikat-card-loop_960.mp4" poster="assets/sertifikat-card-loop-poster.jpg" muted loop playsinline preload="none"></video>
@@ -803,7 +803,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 11 FAQ · заголовок и список по центру -->
-<section id="faq" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start; border-top: 1px solid rgba(133, 35, 26, .25);">
+<section id="faq" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start; box-shadow: inset 0 1px 0 rgba(43, 26, 23, .18), inset 0 2px 0 #FFFFFF;">
 <div style="grid-column: 1 / span 5; text-align: left;">
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">(11) Вопросы</p>
 <div style="display: flex; justify-content: flex-start; align-items: flex-end; gap: 6px; margin-top: 14px;">
@@ -832,7 +832,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 12 КАК ДОЙТИ · карта слева, заголовок вместе с текстом справа -->
-<section id="route" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 0 16px 0 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: stretch; border-top: 1px solid rgba(133, 35, 26, .25);">
+<section id="route" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 0 16px 0 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: stretch; box-shadow: inset 0 1px 0 rgba(43, 26, 23, .18), inset 0 2px 0 #FFFFFF;">
 <div class="mapfull" style="grid-column: 1 / span 5; position: relative; min-height: 560px; display: flex; flex-direction: column; background: #FFFAF6; border: 1px solid rgba(133, 35, 26, .4);">
 <div style="flex: none; display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 3px 4px 3px 12px; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;"><span>карта.besti</span><a href="https://yandex.ru/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 24px; padding: 0 8px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; text-decoration: none;">открыть ↗</a></div>
 <div class="mapbody" style="position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; container-type: size; background: #EFE6E2;">
@@ -943,7 +943,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div class="lbx" ref="{{setLb}}" tabindex="-1" role="dialog" aria-modal="true" aria-label="{{lbAlt}}" onClick="{{lbClose}}" style="position: fixed; inset: 0; z-index: 300;">
 <div style="position: absolute; inset: 0; background: rgba(43, 26, 23, .8); opacity: {{lbOp}}; transition: opacity .5s ease;"></div>
 <figure style="position: absolute; left: 50%; top: {{lbTop}}px; width: {{lbW}}px; margin: 0; padding: 12px 12px 14px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 12px 14px 0 rgba(0, 0, 0, .28); transform: {{lbTf}}; transform-origin: 50% 50%; transition: {{lbTr}}; will-change: transform;">
-<img loading="lazy" decoding="async" src="{{lbSrc}}" alt="{{lbAlt}}" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;">
+<sc-if value="{{lbIsImg}}" hint-placeholder-val="{{true}}"><img loading="lazy" decoding="async" src="{{lbSrc}}" alt="{{lbAlt}}" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"></sc-if>
+<sc-if value="{{lbIsVid}}" hint-placeholder-val="{{false}}"><video src="{{lbVid}}" poster="{{lbSrc}}" autoplay muted loop playsinline aria-label="{{lbAlt}}" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"></video></sc-if>
 <figcaption style="display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;"><span>{{lbCap}}</span><span style="color: #7E4F48;">esc · закрыть</span></figcaption>
 </figure>
 <button aria-label="Закрыть фото" style="position: absolute; top: 20px; right: 20px; min-height: 40px; padding: 0 16px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: {{lbOp}}; transition: opacity .4s ease;">× закрыть</button>
@@ -985,7 +986,7 @@ class Component extends DCLogic {
   zoomer(src, alt, cap, rot) { return (e) => this.openLb(e, { src: src, alt: alt, cap: cap, rot: rot || 0 }); }
   lbVals() {
     const lb = this.state.lb, open = this.state.lbOpen;
-    if (!lb) return { lbOn: false, lbSrc: '', lbAlt: '', lbCap: '', lbTf: 'none', lbTr: 'none', lbOp: 0, lbTop: 0, lbW: 0, lbClose: this.closeLb };
+    if (!lb) return { lbOn: false, lbIsImg: true, lbIsVid: false, lbVid: '', lbSrc: '', lbAlt: '', lbCap: '', lbTf: 'none', lbTr: 'none', lbOp: 0, lbTop: 0, lbW: 0, lbClose: this.closeLb };
     const vw = window.innerWidth, ih = window.innerHeight, vh = Math.min(ih, 1000);
     const o = this.lbOrigin || { cx: vw / 2, cy: vh / 2, w: 200 };
     const W = Math.round(Math.min(vw * 0.9, (vh * 0.86 - 50) * 0.75 + 26));
@@ -994,7 +995,7 @@ class Component extends DCLogic {
     const top = ih > 1400 ? Math.round(Math.max(o.cy, H / 2 + 24)) : Math.round(ih / 2);
     const sc = Math.max(0.05, o.w / W);
     const from = 'translate(-50%, -50%) translate(' + Math.round(o.cx - vw / 2) + 'px, ' + Math.round(o.cy - top) + 'px) scale(' + sc.toFixed(3) + ') rotate(' + lb.rot + 'deg)';
-    return { lbOn: true, lbSrc: lb.src, lbAlt: lb.alt, lbCap: lb.cap, lbW: W, lbTop: top,
+    return { lbOn: true, lbIsImg: !lb.video, lbIsVid: !!lb.video, lbVid: lb.video || '', lbSrc: lb.src, lbAlt: lb.alt, lbCap: lb.cap, lbW: W, lbTop: top,
       lbTf: open ? 'translate(-50%, -50%) rotate(-1.2deg)' : from,
       lbTr: 'transform .62s cubic-bezier(.2, .9, .25, 1)',
       lbOp: open ? 1 : 0, lbClose: this.closeLb };
@@ -1382,7 +1383,7 @@ class Component extends DCLogic {
       infoOp: infoShow ? 1 : 0,
       infoPe: infoShow ? 'auto' : 'none',
       infoToggle: () => this.setState({ infoManual: !infoShow }),
-      zA: this.zoomer('assets/hero-left.webp', 'Гостья в меховом пальто показывает свежий маникюр', '(a) гостья бэсти', -8), zB: this.zoomer('assets/hero-center.webp', 'Тёмное покрытие с леопардовым принтом', '(b) тёмный леопард', 3), zC: this.zoomer('assets/hero-c.webp', 'Бордовое покрытие на фоне белого кирпича', '(c) бордо', 9),
+      zA: this.zoomer('assets/hero-left.webp', 'Гостья в меховом пальто показывает свежий маникюр', '(a) гостья бэсти', -8), zB: (e) => this.openLb(e, { src: 'assets/hero-video-poster.webp', video: 'assets/hero-video.mp4', alt: 'Видео: день в студии бэсти — зал, процесс и готовый маникюр', cap: '(b) день в бэсти', rot: 3 }), zC: this.zoomer('assets/hero-c.webp', 'Бордовое покрытие на фоне белого кирпича', '(c) бордо', 9),
       setLb: this.setLb,
       zEntrance: this.zoomer('assets/route-entrance-lg.webp', 'Печатников переулок, вывеска «бэсти» над входом', '(a) вход с Печатникова переулка — ищите бордовую вывеску', -2),
       zMenu: this.zoomer('assets/karta-p8.webp', 'Меню «В гостях у бэсти» в руке гостьи', '(a) меню «В гостях у бэсти»', -3),
