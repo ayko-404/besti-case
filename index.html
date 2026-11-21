@@ -193,13 +193,87 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
       if (t < 1) requestAnimationFrame(frame); else cv.remove();
     })();
   }
+  // ── Варианты анимации заголовков (21.11, выбор Никиты) — переключатель: ссылка с ?variants ──
+  var HV = [
+    ['pixel', 'Пиксели'], ['slot', 'Из щели'], ['ink', 'Чернила'], ['blur', 'Фокус'], ['type', 'Печать'], ['rise', 'По буквам']
+  ];
+  var hv = 'pixel';
+  try { var sv = localStorage.getItem('besti:hv'); if (sv) hv = sv; } catch (e) {}
+  // разбить текст заголовка на буквы; потом вернуть те же текстовые узлы (React их не теряет)
+  function splitChars(h) {
+    var walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT), nodes = [], n;
+    while ((n = walker.nextNode())) if (n.nodeValue.trim()) nodes.push(n);
+    var chars = [], back = [];
+    nodes.forEach(function (tn) {
+      var frag = document.createDocumentFragment(), wrap = document.createElement('span');
+      wrap.setAttribute('data-hs', '');
+      tn.nodeValue.split(/(\s+)/).forEach(function (word) {
+        if (!word) return;
+        if (/^\s+$/.test(word)) { wrap.appendChild(document.createTextNode(word)); return; }
+        var w = document.createElement('span'); w.style.cssText = 'display:inline-block;white-space:nowrap';
+        Array.prototype.forEach.call(word, function (ch) { var c = document.createElement('span'); c.textContent = ch; c.style.display = 'inline-block'; w.appendChild(c); chars.push(c); });
+        wrap.appendChild(w);
+      });
+      tn.parentNode.replaceChild(wrap, tn); back.push([wrap, tn]);
+    });
+    return { chars: chars, restore: function () { back.forEach(function (b) { if (b[0].parentNode) b[0].parentNode.replaceChild(b[1], b[0]); }); } };
+  }
+  function animH(h, delay) {
+    var E = 'cubic-bezier(.23, 1, .32, 1)';
+    if (hv === 'pixel') return pixel(h, delay);
+    if (hv === 'slot') return h.animate([{ clipPath: 'inset(100% -10% -20% -10%)', translate: '0 .45em' }, { clipPath: 'inset(-20% -10% -20% -10%)', translate: '0 0' }], { duration: 900, delay: delay, easing: E, fill: 'backwards' });
+    if (hv === 'ink') return h.animate([{ WebkitMaskImage: 'linear-gradient(90deg, #000 0%, #000 40%, transparent 60%)', maskImage: 'linear-gradient(90deg, #000 0%, #000 40%, transparent 60%)', WebkitMaskSize: '260% 100%', maskSize: '260% 100%', WebkitMaskPosition: '100% 0', maskPosition: '100% 0', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' },
+      { WebkitMaskImage: 'linear-gradient(90deg, #000 0%, #000 40%, transparent 60%)', maskImage: 'linear-gradient(90deg, #000 0%, #000 40%, transparent 60%)', WebkitMaskSize: '260% 100%', maskSize: '260% 100%', WebkitMaskPosition: '0% 0', maskPosition: '0% 0', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' }], { duration: 1300, delay: delay, easing: 'cubic-bezier(.45, 0, .2, 1)', fill: 'backwards' });
+    if (hv === 'blur') return h.animate([{ filter: 'blur(14px)', opacity: 0, scale: '1.04' }, { filter: 'blur(0)', opacity: 1, scale: '1' }], { duration: 1100, delay: delay, easing: E, fill: 'backwards' });
+    var sp = splitChars(h), N = sp.chars.length;
+    if (hv === 'type') {
+      var step = Math.min(45, 1100 / Math.max(N, 1)), cur = document.createElement('span');
+      cur.style.cssText = 'display:inline-block;width:.08em;height:.85em;margin-left:.04em;background:#FFACE4;vertical-align:-.05em';
+      sp.chars.forEach(function (c, i) { c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1, delay: delay + i * step, fill: 'backwards' }); });
+      var t0 = performance.now() + delay;
+      (function tick() {
+        var i = Math.floor((performance.now() - t0) / step);
+        if (i >= 0 && i < N) { var c = sp.chars[i]; if (cur.previousSibling !== c) c.after(cur); }
+        if (i < N + 8) requestAnimationFrame(tick); else { cur.remove(); sp.restore(); }
+      })();
+      return;
+    }
+    // rise: буквы поднимаются из размытия по очереди
+    var st = Math.min(28, 700 / Math.max(N, 1));
+    sp.chars.forEach(function (c, i) { c.animate([{ opacity: 0, translate: '0 .5em', filter: 'blur(6px)' }, { opacity: 1, translate: '0 0', filter: 'blur(0)' }], { duration: 750, delay: delay + i * st, easing: E, fill: 'backwards' }); });
+    setTimeout(sp.restore, delay + N * st + 800);
+  }
+  // панель выбора: только по ссылке с ?variants
+  function panel() {
+    if (!/[?&]variants/.test(location.search)) return;
+    var box = document.createElement('div');
+    box.style.cssText = "position:fixed;left:16px;bottom:16px;z-index:9000;width:244px;background:#FFFFFF;border:1px solid #2B1A17;box-shadow:5px 5px 0 #2B1A17;font-family:'PT Mono',monospace;font-size:12px;color:#2B1A17";
+    var head = '<div style="display:flex;justify-content:space-between;padding:5px 8px;background:#85231A;color:#FFFAF6;font-size:11px;letter-spacing:.06em;text-transform:uppercase"><span>заголовки.exe</span><span>_ □ ×</span></div>';
+    var btns = HV.map(function (v, i) { return '<button data-v="' + v[0] + '" style="display:flex;gap:8px;width:100%;padding:7px 10px;border:0;border-top:1px solid rgba(43,26,23,.12);background:transparent;font:inherit;text-align:left;cursor:pointer;color:inherit"><b style="color:#85231A">' + (i + 1) + '</b>' + v[1] + '</button>'; }).join('');
+    box.innerHTML = head + btns + '<button data-replay style="width:100%;padding:9px 10px;border:0;border-top:1px solid #2B1A17;background:#FFACE4;font:inherit;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;color:#85231A">▶ повторить</button>';
+    document.body.appendChild(box);
+    function mark() { Array.prototype.forEach.call(box.querySelectorAll('[data-v]'), function (b) { b.style.background = b.getAttribute('data-v') === hv ? '#FFF1F9' : 'transparent'; b.style.fontWeight = b.getAttribute('data-v') === hv ? '700' : '400'; }); }
+    function replay() {
+      Array.prototype.forEach.call(document.querySelectorAll('main h1, main h2'), function (h, i) {
+        var r = h.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight || h.querySelector('[data-hs]')) return;
+        h.getAnimations().forEach(function (a) { a.cancel(); });
+        animH(h, 80 * i % 400);
+      });
+    }
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.hasAttribute('data-v')) { hv = b.getAttribute('data-v'); try { localStorage.setItem('besti:hv', hv); } catch (x) {} mark(); }
+      replay();
+    });
+    mark();
+  }
   function show(el, delay) {
     el.removeAttribute('data-rv');
     var from = reduce ? { opacity: 0 } : { opacity: 0, translate: '0 22px' }, to = reduce ? { opacity: 1 } : { opacity: 1, translate: '0 0' };
     try { el.animate([from, to], { duration: reduce ? 400 : 700, delay: delay, easing: EASE, fill: 'backwards' }); } catch (e) {}
     if (reduce) return;
     var hs = /^H[12]$/.test(el.tagName) ? [el] : el.querySelectorAll('h1, h2');
-    Array.prototype.forEach.call(hs, function (h) { pixel(h, delay + 120); });
+    Array.prototype.forEach.call(hs, function (h) { animH(h, delay + 120); });
   }
   function targets(sec) {
     var kids = Array.prototype.filter.call(sec.children, function (c) { return c.offsetParent !== null || getComputedStyle(c).position === 'fixed'; });
@@ -232,6 +306,7 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
     })();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup); else setup();
+  if (document.body) panel(); else document.addEventListener('DOMContentLoaded', panel);
 })();
 </script>
 <x-dc>
