@@ -190,6 +190,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 /* обложка на больших экранах чуть крупнее, чтобы не казалась мелкой */
 @media (min-width: 1800px) { .bt #top { zoom: 1.2; } }
 @media (min-width: 2300px) { .bt #top { zoom: 1.4; } }
+/* обложка на весь экран (21.11): 30px — бегущая строка; при zoom делим высоту на коэффициент */
+@media (min-width: 901px) { .bt #top { min-height: calc(100svh - 30px); align-content: center; } }
+@media (min-width: 1800px) { .bt #top { min-height: calc((100svh - 30px) / 1.2); } }
+@media (min-width: 2300px) { .bt #top { min-height: calc((100svh - 30px) / 1.4); } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } .splash { display: none !important; } }
 </style>
 </helmet>
