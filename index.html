@@ -184,8 +184,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .pcoupon .btn { padding: 0 16px !important; }
   .pnotch { right: 83px !important; }
 }
-/* широкие мониторы: содержимое не шире 1440 (1408 + поля), фоны и бегущие строки — на всю ширину */
-.bt .sec, .bt .ritual-pin, .bt header, .bt .crt > .stack { padding-left: max(16px, calc((100% - 1408px) / 2)) !important; padding-right: max(16px, calc((100% - 1408px) / 2)) !important; }
+/* широкие мониторы: содержимое не шире 1632 (1600 + поля; было 1408 до 21.11), фоны и бегущие строки — на всю ширину */
+.bt .sec, .bt .ritual-pin, .bt header, .bt .crt > .stack { padding-left: max(16px, calc((100% - 1600px) / 2)) !important; padding-right: max(16px, calc((100% - 1600px) / 2)) !important; }
+/* обложка под zoom 1.2/1.4 — прежняя ширина 1408, иначе фото и отзыв расползаются к краям (21.11) */
+.bt #top { padding-left: max(16px, calc((100% - 1408px) / 2)) !important; padding-right: max(16px, calc((100% - 1408px) / 2)) !important; }
 .bt #cert, .bt #route { padding-left: max(0px, calc((100% - 1440px) / 2)) !important; }
 /* обложка на больших экранах чуть крупнее, чтобы не казалась мелкой */
 @media (min-width: 1800px) { .bt #top { zoom: 1.2; } }
