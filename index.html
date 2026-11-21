@@ -13,6 +13,7 @@
 <!-- Прелоадер (21.11): механика по agentcard.com — лого рисуется линией и заливается, затем пиксельная «диафрагма» цвета страницы. Свой код. -->
 <script>document.documentElement.setAttribute('data-loading','')</script>
 <style>
+html { scrollbar-gutter: stable; }
 html[data-loading], html[data-loading] body { overflow: hidden; }
 .bl { position: fixed; inset: 0; z-index: 9999; color: #FFFAF6; background: #85231A; user-select: none; touch-action: none; overscroll-behavior: none; overflow: clip; transition: opacity .45s linear; }
 .bl:not([data-live]) { animation: bl-timeout 0s linear 9s forwards; }
@@ -1182,18 +1183,23 @@ class Component extends DCLogic {
     this.setState({ lb: ph, lbOpen: false });
     requestAnimationFrame(() => requestAnimationFrame(() => { if (this.state.lb) this.setState({ lbOpen: true }); }));
   }
+  // закрытие (21.11): анимируем прямо в DOM, без перерисовки всей страницы; снимаем окно после конца перехода (.62с)
   closeLb = () => {
     if (!this.state.lb || this.lbClosing) return;
     this.lbClosing = true;
-    this.setState({ lbOpen: false });
+    const root = this.lbEl && this.lbEl.isConnected ? this.lbEl : null, fig = root && root.querySelector('figure');
+    if (fig && this.lbFromTf) {
+      fig.style.transform = this.lbFromTf;
+      Array.prototype.forEach.call(root.children, (c) => { if (c !== fig) c.style.opacity = 0; });
+    } else this.setState({ lbOpen: false });
     setTimeout(() => {
       this.lbClosing = false;
       try { document.documentElement.style.overflow = ''; } catch (x) {}
-      this.setState({ lb: null });
-    }, 560);
+      this.setState({ lb: null, lbOpen: false });
+    }, 660);
   };
   onKey = (e) => { if (e.key === 'Escape') this.closeLb(); };
-  setLb = (el) => { if (el) { el.addEventListener('keydown', this.onKey); try { el.focus({ preventScroll: true }); } catch (x) {} } };
+  setLb = (el) => { this.lbEl = el; if (el) { el.addEventListener('keydown', this.onKey); try { el.focus({ preventScroll: true }); } catch (x) {} } };
   zoomer(src, alt, cap, rot) { return (e) => this.openLb(e, { src: src, alt: alt, cap: cap, rot: rot || 0 }); }
   lbVals() {
     const lb = this.state.lb, open = this.state.lbOpen;
@@ -1206,6 +1212,7 @@ class Component extends DCLogic {
     const top = ih > 1400 ? Math.round(Math.max(o.cy, H / 2 + 24)) : Math.round(ih / 2);
     const sc = Math.max(0.05, o.w / W);
     const from = 'translate(-50%, -50%) translate(' + Math.round(o.cx - vw / 2) + 'px, ' + Math.round(o.cy - top) + 'px) scale(' + sc.toFixed(3) + ') rotate(' + lb.rot + 'deg)';
+    this.lbFromTf = from;
     return { lbOn: true, lbIsImg: !lb.video, lbIsVid: !!lb.video, lbVid: lb.video || '', lbSrc: lb.src, lbAlt: lb.alt, lbCap: lb.cap, lbW: W, lbTop: top,
       lbTf: open ? 'translate(-50%, -50%) rotate(-1.2deg)' : from,
       lbTr: 'transform .62s cubic-bezier(.2, .9, .25, 1)',
