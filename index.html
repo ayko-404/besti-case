@@ -11,7 +11,7 @@
 <link rel="preload" href="fonts/cormorant-garamond-500-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css">
 <!-- Прелоадер (21.11): механика по agentcard.com — лого рисуется линией и заливается, затем пиксельная «диафрагма» цвета страницы. Свой код. -->
-<script>try{if(sessionStorage.getItem('besti:intro-seen'))document.documentElement.setAttribute('data-intro','seen')}catch(e){}document.documentElement.setAttribute('data-loading','')</script>
+<script>document.documentElement.setAttribute('data-loading','')</script>
 <style>
 html[data-loading], html[data-loading] body { overflow: hidden; }
 .bl { position: fixed; inset: 0; z-index: 9999; color: #FFFAF6; background: #85231A; user-select: none; touch-action: none; overscroll-behavior: none; overflow: clip; transition: opacity .45s linear; }
@@ -46,16 +46,15 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
 <script>
 /* Прелоадер: 1) лого «бэсти» рисуется контуром 1,6 с, заливается; держим ≥2 с и до загрузки страницы;
    2) «диафрагма»: квадраты цвета страницы (13 px) по наклонному эллипсу с шумом, 1 с, ease-out cubic; 3) затухание .45 с.
-   Первый визит за сессию — полный; повторный — только обратная диафрагма. */
+   Показывается полностью при каждом открытии (21.11). */
 (function () {
   var root = document.documentElement, el = document.getElementById('bl');
   if (!el) return;
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var intro = root.getAttribute('data-intro') !== 'seen';
+  var intro = true; // всегда полная версия (Никита, 21.11)
   el.setAttribute('data-mode', intro ? 'intro' : 'page');
   el.setAttribute('data-live', '');
   el.setAttribute('data-phase', 'tracing');
-  try { sessionStorage.setItem('besti:intro-seen', '1'); } catch (e) {}
   var t0 = performance.now(), loaded = document.readyState === 'complete';
   addEventListener('load', function () { loaded = true; });
   setTimeout(function () { loaded = true; }, 3000);
