@@ -36,6 +36,11 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
 @media (max-width: 767px) { .bl-mark { width: min(64vw, 480px); } }
 @media (prefers-reduced-motion: reduce) { .bl-fill path { opacity: 1; animation: none; } .bl-trace { display: none; } }
 </style>
+<style>
+/* появление блоков (21.11): до показа скрыты visibility, показ — WAAPI (не мешает своим анимациям карточек) */
+[data-rv="0"] { visibility: hidden !important; }
+.px-veil { position: absolute; z-index: 40; pointer-events: none; }
+</style>
 <noscript><style>.bl { display: none; } html[data-loading], html[data-loading] body { overflow: auto; }</style></noscript>
 <script src="js/react.production.min.js"></script>
 <script src="js/react-dom.production.min.js"></script>
@@ -138,6 +143,95 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
     });
     go(); wait();
   }).catch(function () { goAt = performance.now() - 5000; wait(); });
+})();
+</script>
+<script>
+/* Появление при прокрутке (21.11): блоки — снизу 22px + прозрачность, 700мс, кривая --ease-out, ступенька 70мс.
+   Заголовки — пиксельное проявление: квадраты цвета фона растворяются слева направо с рваным краем,
+   на фронте — розовые пиксели (как прелоадер). Обложка — после прелоадера. reduce-motion — только фейд. */
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var EASE = 'cubic-bezier(.23, 1, .32, 1)';
+  function bgOf(el) {
+    for (var n = el; n && n !== document.documentElement; n = n.parentElement) {
+      var c = getComputedStyle(n).backgroundColor;
+      if (c && c !== 'transparent' && !/rgba\(.*,\s*0\)$/.test(c)) return c;
+    }
+    return '#FFFAF6';
+  }
+  function isDark(c) { var m = c.match(/\d+/g); return m && (+m[0] * .3 + +m[1] * .59 + +m[2] * .11) < 140; }
+  function pixel(h, delay) {
+    var r = h.getBoundingClientRect(); if (r.width < 4 || r.height < 4) return;
+    var pad = 8, padB = 30, x = Math.max(0, r.left + scrollX - pad), y = r.top + scrollY - pad - 22, w = Math.min(r.width + pad * 2, document.documentElement.clientWidth - x), hh = r.height + pad + padB + 22;
+    var bg = bgOf(h), accent = isDark(bg) ? '#FFACE4' : '#FFACE4', cell = innerWidth < 700 ? 6 : 8;
+    var cv = document.createElement('canvas'); cv.className = 'px-veil';
+    cv.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + hh + 'px;';
+    var dpr = Math.min(devicePixelRatio || 1, 2); cv.width = Math.round(w * dpr); cv.height = Math.round(hh * dpr);
+    document.body.appendChild(cv);
+    var ctx = cv.getContext('2d'), cols = Math.ceil(w / cell), rows = Math.ceil(hh / cell), th = new Float32Array(cols * rows);
+    for (var q = 0; q < cols; q++) for (var k = 0; k < rows; k++) {
+      // порог: слева направо + шум по строкам и случайность — рваный фронт
+      th[k * cols + q] = (q / cols) * .62 + Math.sin(k * 1.7 + q * .3) * .05 + Math.random() * .33;
+    }
+    function draw(p) {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      for (var i = 0; i < th.length; i++) {
+        var d = th[i] - p; if (d < 0) continue;
+        var q = i % cols, k = (i / cols) | 0;
+        ctx.fillStyle = d < .06 ? accent : bg;
+        var x0 = Math.round(q * cell * dpr), y0 = Math.round(k * cell * dpr);
+        ctx.fillRect(x0, y0, Math.round((q + 1) * cell * dpr) - x0, Math.round((k + 1) * cell * dpr) - y0);
+      }
+    }
+    draw(-.1);
+    var start = performance.now() + delay, D = 950;
+    (function frame() {
+      var t = (performance.now() - start) / D;
+      if (t < 0) return requestAnimationFrame(frame);
+      var e = 1 - Math.pow(1 - Math.min(1, t), 3);
+      draw(e * 1.1 - .06);
+      if (t < 1) requestAnimationFrame(frame); else cv.remove();
+    })();
+  }
+  function show(el, delay) {
+    el.removeAttribute('data-rv');
+    var from = reduce ? { opacity: 0 } : { opacity: 0, translate: '0 22px' }, to = reduce ? { opacity: 1 } : { opacity: 1, translate: '0 0' };
+    try { el.animate([from, to], { duration: reduce ? 400 : 700, delay: delay, easing: EASE, fill: 'backwards' }); } catch (e) {}
+    if (reduce) return;
+    var hs = /^H[12]$/.test(el.tagName) ? [el] : el.querySelectorAll('h1, h2');
+    Array.prototype.forEach.call(hs, function (h) { pixel(h, delay + 120); });
+  }
+  function targets(sec) {
+    var kids = Array.prototype.filter.call(sec.children, function (c) { return c.offsetParent !== null || getComputedStyle(c).position === 'fixed'; });
+    if (kids.length <= 2) { var deep = []; kids.forEach(function (c) { var g = Array.prototype.filter.call(c.children, function (x) { return x.offsetParent !== null; }); if (g.length) deep = deep.concat(g); else deep.push(c); }); kids = deep; }
+    return kids;
+  }
+  var io, done = {};
+  function setup() {
+    var secs = document.querySelectorAll('main section[id]');
+    if (!secs.length) return setTimeout(setup, 120);
+    io = new IntersectionObserver(function (es) {
+      var vis = es.filter(function (e) { return e.isIntersecting; }).map(function (e) { return e.target; });
+      vis.sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
+      vis.forEach(function (el, i) { io.unobserve(el); show(el, Math.min(i, 6) * 70); });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    Array.prototype.forEach.call(secs, function (sec) {
+      if (sec.id === 'ritual' || done[sec.id]) return; done[sec.id] = 1;
+      targets(sec).forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (sec.id !== 'top' && r.bottom < innerHeight * .9 && r.top < innerHeight) return; // уже на экране — не прячем
+        el.setAttribute('data-rv', '0');
+        if (sec.id !== 'top') io.observe(el);
+      });
+    });
+    // обложка — когда ушёл прелоадер
+    (function waitLoader() {
+      if (document.getElementById('bl') && document.getElementById('bl').getAttribute('data-phase') !== 'done') return setTimeout(waitLoader, 60);
+      var tops = document.querySelectorAll('#top [data-rv="0"]');
+      Array.prototype.forEach.call(tops, function (el, i) { show(el, 80 + Math.min(i, 6) * 80); });
+    })();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup); else setup();
 })();
 </script>
 <x-dc>
@@ -347,7 +441,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 8px 16px 0;">
 <nav aria-label="Основное меню" style="display: flex; align-items: stretch; background: #FFFAF6; border: 1px solid rgba(43, 26, 23, .4); box-shadow: 3px 3px 0 rgba(43, 26, 23, .16);">
 <a href="#top" aria-label="Бэсти — студия маникюра, наверх" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 5px 16px 6px; min-height: 44px; text-decoration: none; color: #85231A;">
-<img fetchpriority="high" decoding="async" src="assets/besti-wordmark-bordo.svg" alt="бэсти" style="height: 36px; width: auto; display: block;"><span style="font-family: 'PT Mono', monospace; font-size: 11px; line-height: 1; letter-spacing: .02em; white-space: nowrap; color: #85231A;">студия маникюра</span>
+<img fetchpriority="high" decoding="async" src="assets/besti-wordmark-bordo.svg" alt="бэсти" style="height: 36px; width: auto; display: block;"><span style="display: inline-block; transform: rotate(-6deg) skewX(-8deg); margin-top: 1px; font-family: 'PT Mono', monospace; font-size: 11px; line-height: 1; letter-spacing: .02em; white-space: nowrap; color: #85231A;">студия маникюра</span>
 </a>
 <a class="navlink" href="#price" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 14px;">Услуги и цены</a>
 <a class="navlink" href="#studio" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 14px;">Студия</a>
