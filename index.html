@@ -379,13 +379,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .nail { transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
 .prow-hover:hover { background: rgba(255, 172, 228, .16); }
 /* ── Прайс «рабочий стол» (22.11, выбор Никиты): пиксельные папки-ярлыки, услуги — окном; список слева, карточка справа ── */
-.pl-list { grid-column: 1 / span 6; border-top: 1px solid rgba(43, 26, 23, .25); }
+.pl-list { grid-column: 1 / span 6; margin-left: 40px; border-top: 1px solid rgba(43, 26, 23, .25); }
 .pl-row { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; column-gap: 10px; width: 100%; min-height: 52px; padding: 0 10px 0 8px; background: transparent; border: 0; border-bottom: 1px solid rgba(43, 26, 23, .25); text-align: left; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1.3; color: #2B1A17; cursor: pointer; transition: background-color .16s ease; }
 .pl-row:hover { background: rgba(255, 172, 228, .14); }
 .pl-row[aria-pressed="true"] { background: #FFF6F0; color: #85231A; }
 .pl-mark { font-size: 10px; color: #85231A; }
 .pl-price { white-space: nowrap; color: #85231A; }
-.pl-det { grid-column: 8 / span 5; align-self: start; padding-top: 4px; }
+.pl-det { grid-column: 7 / span 6; align-self: start; padding: 4px 40px 0 0; }
 .pl-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; }
 .pl-title { margin: 12px 0 0; font-family: 'PT Mono', monospace !important; font-size: 26px !important; line-height: 1.2; font-weight: 400; letter-spacing: .02em; text-transform: uppercase; color: #2B1A17; }
 .pl-big { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 18px 0 0; font-family: 'PT Mono', monospace; font-size: 44px; line-height: 1; color: #85231A; }
@@ -398,7 +398,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pl-det, .pl-det *, .pl-inline, .pl-inline *, .pl-list * { font-size-adjust: none !important; }
 #price[data-pv="desk"] .pr-panel::before, #price[data-pv="desk"] .pr-panel::after { font-size-adjust: none; }
 @media (max-width: 900px) {
-  .pl-list { grid-column: 1 / -1; }
+  .pl-list { grid-column: 1 / -1; margin-left: 0; }
   .pl-det { display: none; }
   .pl-inline { display: block; padding: 6px 8px 18px; border-bottom: 1px solid rgba(43, 26, 23, .25); background: #FFF6F0; }
   .pl-inline .pl-big { margin-top: 8px; font-size: 30px; }
@@ -412,7 +412,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 #price[data-pv="desk"] .pr-tab > span:last-child { align-items: center; }
 #price[data-pv="desk"] .pr-ic { position: relative; width: 74px; height: 60px; display: grid !important; place-items: center; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 37 30' shape-rendering='crispEdges'%3E%3Cpath d='M1 1h14v4h21v24H1z' fill='%232B1A17'/%3E%3Cpath d='M2 2h12v4h21v22H2z' fill='%23FFCDEB'/%3E%3Cpath d='M2 10h33v18H2z' fill='%23FFACE4'/%3E%3Cpath d='M2 9h33v1H2z' fill='%2385231A'/%3E%3C/svg%3E") center / 100% 100% no-repeat; image-rendering: pixelated; }
 #price[data-pv="desk"] .pr-ic img { width: 34px !important; height: 34px !important; margin-top: 8px; }
-#price[data-pv="desk"] .pr-panel { position: relative; margin-top: 20px !important; padding: 64px 40px 40px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 6px 6px 0 #2B1A17; }
+#price[data-pv="desk"] .pr-panel { position: relative; margin-top: 20px !important; padding: 64px 0 40px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 6px 6px 0 #2B1A17; }
 #price[data-pv="desk"] .pr-panel::before { content: attr(aria-label) ".txt"; position: absolute; left: 0; right: 0; top: 0; height: 30px; padding: 0 12px; display: flex; align-items: center; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: lowercase; }
 #price[data-pv="desk"] .pr-panel::after { content: '_ □ ×'; position: absolute; right: 12px; top: 0; height: 30px; display: flex; align-items: center; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .1em; }
 @media (max-width: 900px) {
