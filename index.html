@@ -907,8 +907,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .bigletter { display: flex; justify-content: center; align-items: flex-start; padding-top: 30px; }
 .bigletter span { font-family: 'PT Mono', monospace; font-size: 300px; line-height: .8; color: transparent; background: repeating-linear-gradient(to bottom, #FFFAF6 0 6px, transparent 6px 10px); -webkit-background-clip: text; background-clip: text; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .bigletter:hover span { transform: translateY(-14px); background: repeating-linear-gradient(to bottom, #FFACE4 0 6px, transparent 6px 10px); -webkit-background-clip: text; background-clip: text; }
-.ctacoupon { animation: ctacoupon 6s ease-in-out infinite; }
-@keyframes ctacoupon { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(-2.5deg) translateY(-8px); } }
 .pxdog-body { animation: pxhop 3.2s ease-out infinite; }
 .pxdog-shadow { animation: pxshadow 3.2s ease-out infinite; }
 @keyframes pxhop { 0%, 64%, 100% { transform: translateY(0); } 72% { transform: translateY(-10px); } 80% { transform: translateY(0); } 86% { transform: translateY(-4px); } 92% { transform: translateY(0); } }
@@ -970,8 +968,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .cert-text { order: -1; padding: 0 0 8px 16px !important; }
   .route-text { padding: 0 0 0 16px !important; }
   .mapfull { min-height: 460px !important; margin-right: -16px; }
-  .cta-derzhi { left: 4px !important; top: -42px !important; }
-  .cta-derzhi > span { font-size: 30px !important; }
   .cert-wrap .cert-stage { width: 100% !important; }
   .bigletter { padding-top: 22px; }
   .chip { font-size: 12px; }
@@ -982,10 +978,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .rec-m { display: none; }
   #top .tilt { width: 116px !important; }
   #top .tilt:nth-child(2) { width: 136px !important; }
-  .ctacoupon > div:first-child { grid-template-columns: minmax(0, 1fr) 100px !important; }
-  .ctacoupon [style*="font-size: 60px"] { font-size: 36px !important; }
-  .ctacoupon > span[style*="right: 123px"] { right: 87px !important; }
-  .ctacoupon ul { grid-template-columns: minmax(0, 1fr) !important; }
   .bigletter span { font-size: 84px; }
   .bigletter { padding-top: 16px; }
   .tap { display: inline-flex !important; align-items: center; min-height: 44px; }
@@ -1475,41 +1467,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <p class="rk__sub">1 этаж · 3 минуты от метро «Трубная»</p>
 <ul class="rk__list"><li><span>часы</span>каждый день 10:00–22:00</li><li><span>телефон</span><a href="tel:+79652300425">+7 (965) 230-04-25</a></li><li><span>рядом</span>«Золотое Яблоко» и рестораны</li></ul>
 <div class="rk__btns"><a class="btn rk__btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener">Записаться онлайн</a><a class="btn rk__btn rk__btn--ghost" href="https://yandex.ru/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener">Маршрут</a></div>
-</div>
-</div>
-</section>
-
-<!-- 13 ФИНАЛЬНЫЙ ПРИЗЫВ · «купон напоследок» (выбран 29.10) -->
-<section id="final" class="sec" style="position: relative; background: #85231A; color: #FFFAF6; padding: 72px 16px 72px; display: flex; flex-direction: column; align-items: center; text-align: center; overflow: hidden;">
-<div class="stack" style="width: 100%; max-width: 1100px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; text-align: left;">
-<div style="grid-column: 1 / span 5; display: flex; justify-content: center;">
-<div class="ctacoupon" style="position: relative; width: 480px; max-width: 100%;">
-<div style="display: grid; grid-template-columns: minmax(0, 1fr) 136px; background: #FFACE4; color: #85231A; border: 1px solid #2B1A17; box-shadow: 8px 8px 0 #2B1A17;">
-<div style="position: relative; padding: 22px 22px 20px;">
-<span aria-hidden="true" style="position: absolute; inset: 8px; border: 1px dashed rgba(133, 35, 26, .55); pointer-events: none;"></span>
-<p style="display: flex; align-items: center; gap: 7px; margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;"><svg aria-hidden="true" width="11" height="11" viewBox="0 0 5 5" shape-rendering="crispEdges" style="display: block;"><rect x="2" y="0" width="1" height="1" fill="#85231A"></rect><rect x="1" y="1" width="3" height="1" fill="#85231A"></rect><rect x="0" y="2" width="5" height="1" fill="#85231A"></rect><rect x="2" y="2" width="1" height="1" fill="#FFFFFF"></rect><rect x="1" y="3" width="3" height="1" fill="#85231A"></rect><rect x="2" y="4" width="1" height="1" fill="#85231A"></rect></svg>Купон · сэт-комплекс Luxio</p>
-<p style="display: flex; align-items: baseline; gap: 12px; margin: 8px 0 0;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 60px; line-height: 1; font-weight: 500; letter-spacing: -.02em; white-space: nowrap;">2 890 ₽</span><span class="sr">вместо</span><s style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 500; white-space: nowrap;">3 400 ₽</s></p>
-<ul style="list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 10px; font-size: 12px; color: #2B1A17;"><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>снятие гель-лака</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>маникюр</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>выравнивание</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>покрытие Luxio</li></ul>
-<p style="margin: 12px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #6F1D15;">для первого визита в бэсти</p>
-</div>
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 8px; padding: 18px 12px 14px; background: #FFFFFF; border-left: 2px dashed #2B1A17; text-align: center;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #7E4F48;">купон</p>
-<p style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 60px; line-height: .9; font-weight: 600; color: #85231A;">−15%</p>
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #2B1A17;">экономия 510 ₽</p>
-<span aria-hidden="true" style="display: block; width: 100%; height: 26px; background: repeating-linear-gradient(90deg, #2B1A17 0 2px, transparent 2px 4px, #2B1A17 4px 5px, transparent 5px 8px, #2B1A17 8px 11px, transparent 11px 13px);"></span>
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">первый визит</p>
-</div>
-</div>
-<span aria-hidden="true" style="position: absolute; top: -13px; right: 123px; width: 26px; height: 26px; border-radius: 50%; background: #85231A; border: 1px solid #2B1A17; clip-path: inset(50% 0 0 0);"></span>
-<span aria-hidden="true" style="position: absolute; bottom: -13px; right: 123px; width: 26px; height: 26px; border-radius: 50%; background: #85231A; border: 1px solid #2B1A17; clip-path: inset(0 0 50% 0);"></span>
-<span class="cta-derzhi" aria-hidden="true" style="position: absolute; left: -18px; top: -46px; display: flex; align-items: flex-end; gap: 2px; transform: rotate(-8deg);"><span style="font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 34px; line-height: 1; color: #FFACE4;">держи</span><svg width="44" height="36" viewBox="0 0 44 36" fill="none"><path d="M3 6 C 18 2, 32 8, 36 28" stroke="#FFACE4" stroke-width="2.4" stroke-linecap="round"></path><path d="M28 22 L37 30 L41 19" stroke="#FFACE4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
-</div>
-</div>
-<div style="grid-column: 7 / span 6;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Запись онлайн</p>
-<h2 class="hx" style="margin: 12px 0 0; font-size: 48px; line-height: .95; font-weight: 500; letter-spacing: -.02em;">Купон на первый визит ещё ждёт</h2>
-<p style="margin: 14px 0 0; font-size: 15px; line-height: 1.45;">Запишитесь онлайн — время и мастера видно сразу</p>
-<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;"><a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #FFACE4; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться</a><a class="btn" href="https://t.me/bestie_nail" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Написать в Telegram</a></div>
 </div>
 </div>
 </section>
@@ -2209,8 +2166,11 @@ class Component extends DCLogic {
 .rk__list span { flex: none; width: 76px; padding-top: 2px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
 .rk__list a { color: #2B1A17; }
 .rk__btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-.rk__btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
-.rk__btn--ghost { background: #FFFFFF; color: #85231A; }
+/* кнопки окна — один в один .btn прошлой версии: объём (светлый и тёмный внутренний кант), тень 3px, нажатие */
+.rk__btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; box-shadow: 3px 3px 0 #2B1A17, inset 1px 1px 0 rgba(255, 255, 255, .55), inset -2px -2px 0 rgba(43, 26, 23, .25); transition: transform .12s ease, box-shadow .12s ease; }
+.rk__btn:hover { color: #FFFAF6; transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #2B1A17, inset 1px 1px 0 rgba(255, 255, 255, .55), inset -2px -2px 0 rgba(43, 26, 23, .25); }
+.rk__btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #2B1A17, inset 2px 2px 0 rgba(43, 26, 23, .3); }
+.rk__btn--ghost, .rk__btn--ghost:hover { background: #FFFFFF; color: #85231A; }
 @media (max-width: 900px) {
   .route2 { height: auto; }
   .route2__map { position: relative; height: 380px; }
