@@ -753,8 +753,30 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .egg-done a { color: #85231A; }
 .egg-v3.is-done .egg-done { visibility: visible; animation: egg-pop .35s steps(4) both; }
 @media (prefers-reduced-motion: reduce) { .egg-v3.is-done .egg-done { animation: none; } }
+/* «Основательница» — блок с прошлой версии сайта (ayko-404/Besti, #founder), после «Работ» (22.11) */
+.fnd * { font-size-adjust: none; }
+.fnd__q { margin: 0 calc((100% - 88px) / 12 + 8px); font-family: 'PT Mono', monospace; font-size: 44px; line-height: 1.1; text-transform: uppercase; color: #2B1A17; }
+.fnd__hand { display: block; margin-top: 22px; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 56px; line-height: 1.05; color: #85231A; text-transform: none; transform: rotate(-2deg); transform-origin: left; }
+.fnd__row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; margin-top: 64px; align-items: start; }
+.fnd__ph { grid-column: 2 / span 3; margin: 0; }
+.fnd__ph img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1) contrast(1.05); border: 1px solid #2B1A17; }
+.fnd__ph figcaption { margin-top: 14px; font-family: 'PT Mono', monospace; }
+.fnd__ph figcaption b { display: block; font-weight: 400; font-size: 16px; color: #2B1A17; }
+.fnd__ph figcaption span { display: block; margin-top: 4px; font-size: 12px; color: #7E4F48; }
+.fnd__txt { grid-column: 8 / span 4; }
+.fnd__txt p { margin: 18px 0 0; font-family: 'PT Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #2B1A17; }
+.fnd__txt p:first-child { margin-top: 0; }
+.fnd__txt .fnd__end { margin-top: 56px; }
+.fnd__txt .fnd__sign { margin: 6px 0 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 44px; line-height: 1; color: #85231A; transform: rotate(-4deg); transform-origin: left; }
+@media (max-width: 900px) {
+  .fnd__q { margin: 0; font-size: 28px; }
+  .fnd__hand { font-size: 34px; }
+  .fnd__row { grid-template-columns: 1fr; row-gap: 32px; margin-top: 36px; }
+  .fnd__ph, .fnd__txt { grid-column: 1; }
+  .fnd__ph { width: 64%; }
+}
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
-@media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
+@media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #founder, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
 .tilt { transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .tilt:hover { transform: rotate(0deg) scale(1.04) !important; }
@@ -1248,6 +1270,19 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <button class="btn" aria-label="Следующая работа" onClick="{{worksNext}}" style="width: 52px; height: 44px; padding: 0; display: grid; place-items: center; background: #FFACE4; border: 1px solid #2B1A17;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="#85231A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
 </div>
 <p style="margin: 14px 0 0; text-align: center;"><!-- INSTAGRAM: заменить href="#works" на ссылку аккаунта, когда клиентка пришлёт --><a class="tap" href="#works" data-instagram-pending="1" style="font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-underline-offset: 4px;">Больше работ — в Instagram* →</a></p>
+</section>
+<section id="founder" class="sec fnd" style="position: relative; background: #FFFAF6; color: #2B1A17; padding: 64px 16px 72px;">
+<p class="fnd__q">«Бэсти — это лучшая подруга. <span class="fnd__hand">Такое место мне и&nbsp;хотелось создать»</span></p>
+<div class="fnd__row">
+<figure class="fnd__ph"><img width="800" height="800" src="assets/osnovatelnica-zuhra.webp" alt="Зухра, основательница студии бэсти" loading="lazy" decoding="async"><figcaption><b>Зухра</b><span>основательница бэсти</span></figcaption></figure>
+<div class="fnd__txt">
+<p>Я хотела студию, куда приходят не только за&nbsp;маникюром. Где тебя помнят по&nbsp;имени, знают, какую форму ногтей ты любишь, и&nbsp;сразу предлагают кофе.</p>
+<p>Иногда гостей встречаю я сама: показываю студию, приношу меню напитков. Сама я делаю брови, а&nbsp;маникюр и&nbsp;педикюр — работа наших мастеров.</p>
+<p>Пока мастер работает, можно включить фильм на&nbsp;планшете, а&nbsp;в&nbsp;конце сделать массаж рук. Из&nbsp;таких мелочей и&nbsp;складывается ощущение, что ты пришла к&nbsp;подруге.</p>
+<p class="fnd__end">Заходите в гости</p>
+<p class="fnd__sign">Зухра</p>
+</div>
+</div>
 </section>
 
 <!-- 07 СТЕРИЛЬНОСТЬ · вариант «крафт-пакет» (выбран 29.10): иллюстрация слева, чек-лист справа -->
