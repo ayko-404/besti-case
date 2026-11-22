@@ -563,7 +563,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 /* единая шкала шрифтов (22.11): размеры в коде = отрисованные, подгонка font-size-adjust убрана.
    с 22.11 (вечер) сокращена: Наборный: 12 (метки, капс, подписи) · 15 (текст) · 24 (капс) · 44.
    Заголовочный: 22 (h3, цитата) · 48 (h2) · 60 (h1, цифры). Рукописный: 34 · 56.
-   Исключение — имитация карточки Яндекс Карт (#ymap): её собственные размеры. */
+*/
 /* отзывы (22.11) — с прошлой версии, под общую шкалу: моно 44 капс, текст 15, подписи 12 */
 .rvw__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; }
 .rvw__side { grid-column: 1 / span 5; }
@@ -929,7 +929,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 @keyframes levitate { 0%, 100% { transform: translateY(0) rotate(-2.6deg); box-shadow: 5px 5px 0 #2B1A17; } 50% { transform: translateY(-9px) rotate(-1.6deg); box-shadow: 8px 15px 0 rgba(43, 26, 23, .8); } }
 .pcard { position: absolute; z-index: 2; display: flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 rgba(43, 26, 23, .25); font-size: 15px; line-height: 1.25; color: #2B1A17; text-align: left; }
 .pcard b { flex: none; width: 22px; height: 22px; display: grid; place-items: center; background: #FFACE4; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; font-weight: 400; color: #85231A; }
-.cert-video { position: absolute; left: 13%; top: 13%; width: 74%; height: 74%; object-fit: cover; display: block;
+.cert-video { position: absolute; left: 50%; top: 50%; width: min(80cqw, 80cqh); height: min(80cqw, 80cqh); transform: translate(-50%, -50%); object-fit: cover; display: block;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent), linear-gradient(to bottom, transparent, #000 10%, #000 88%, transparent);
   -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent), linear-gradient(to bottom, transparent, #000 10%, #000 88%, transparent); mask-composite: intersect; }
 .splash { position: fixed; z-index: 100; width: 0; height: 0; pointer-events: none; }
@@ -1000,7 +1000,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 }
 /* широкие мониторы: содержимое не шире 1632 (1600 + поля; было 1408 до 21.11), фоны и бегущие строки — на всю ширину */
 .bt .sec, .bt .ritual-pin, .bt header, .bt .crt > .stack { padding-left: max(16px, calc((100% - 1600px) / 2)) !important; padding-right: max(16px, calc((100% - 1600px) / 2)) !important; }
-.bt #cert, .bt #route { padding-left: max(0px, calc((100% - 1440px) / 2)) !important; }
+/* сертификат (22.11): фото от левого края страницы до центральной линии, текст — от центральной линии */
+.bt #cert { padding-left: 0 !important; padding-right: 0 !important; }
 /* обложка на весь экран (21.11): 30px — бегущая строка */
 @media (min-width: 901px) { .bt #top { min-height: calc(100svh - 30px); align-content: center; } }
 /* большие мониторы (22.11): zoom всей обложки убран — текст и кнопки как на всём сайте; крупнее только фото */
@@ -1413,12 +1414,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 
 <!-- 10 СЕРТИФИКАТ · рендер как у MECCA: ролик-брелок (KIE Seedance, цикл туда-обратно 10 с) -->
 <section id="cert" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 0 16px 0 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center;">
-<div class="cert-wrap" style="grid-column: 1 / span 5; position: relative; overflow: hidden;">
-<div class="cert-stage" aria-hidden="true" style="position: relative; width: 120%; max-width: none; aspect-ratio: 1 / 1; background: linear-gradient(to bottom, #B29C99 0%, #C8B5B3 48%, #E5D6D4 100%); overflow: hidden;">
+<div class="cert-wrap" style="grid-column: 1 / span 6; position: relative; overflow: hidden;">
+<div class="cert-stage" aria-hidden="true" style="position: relative; width: 100%; max-width: none; aspect-ratio: 4 / 5; max-height: 88vh; container-type: size; background: linear-gradient(to bottom, #B29C99 0%, #C8B5B3 48%, #E5D6D4 100%); overflow: hidden;">
 <video ref="{{setVideo}}" class="cert-video" src="assets/sertifikat-card-loop_960.mp4" poster="assets/sertifikat-card-loop-poster.jpg" muted loop playsinline preload="none"></video>
 </div>
 </div>
-<div class="cert-text" style="grid-column: 7 / span 5; padding: 56px 0;">
+<div class="cert-text" style="grid-column: 7 / span 5; max-width: 600px; padding: 56px 16px 56px 0;">
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Сертификат</p>
 <div style="display: flex; align-items: flex-end; gap: 10px; margin-top: 14px;">
 <h2 class="hx" style="margin: 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Подарите подруге бэсти</h2>
@@ -1459,34 +1460,20 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 12 КАК ДОЙТИ · карта слева, заголовок вместе с текстом справа -->
-<section id="route" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 0 16px 0 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: stretch;">
-<div class="mapfull" style="grid-column: 1 / span 5; position: relative; min-height: 560px; display: flex; flex-direction: column; background: #FFFAF6; border: 1px solid rgba(133, 35, 26, .4);">
-<div style="flex: none; display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 3px 4px 3px 12px; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;"><span>карта.besti</span><a href="https://yandex.ru/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 24px; padding: 0 8px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; text-decoration: none;">открыть ↗</a></div>
-<div class="mapbody" style="position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; container-type: size; background: #EFE6E2;">
-<div id="ymap" role="region" aria-label="Карта: Бэсти Нейлс, Печатников пер., 6, рядом с метро «Трубная»" style="position: absolute; inset: 0; width: 100%; height: 100%;"></div>
-
-
+<section id="route" class="route2">
+<!-- как дойти (22.11) — с прошлой версии: ч/б Яндекс Карта на всю ширину, окно «как_дойти.txt» от края контейнера; без JS и до загрузки API — статичная картинка -->
+<div class="route2__map">
+<div id="ymap" role="region" aria-label="Карта: Бэсти Нейлс, Печатников пер., 6, рядом с метро «Трубная»"></div>
+<a class="route2__static" href="https://yandex.ru/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener"><span class="map__img"><img width="650" height="450" src="assets/ui/karta-trubnaya-bez-metki.webp" alt="Карта: Печатников пер., 6 — рядом с метро «Трубная»" loading="lazy"><span class="dog" aria-hidden="true"><span class="dog__shadow"></span><span class="dog__body"><span class="dog__tag">мы тут</span><img loading="lazy" width="46" height="42" src="assets/ui/pxdog-maltipu.svg" alt=""></span></span></span></a>
 </div>
+<div class="rk">
+<div class="rk__bar"><span>// как_дойти.txt</span><span aria-hidden="true">_ □ ×</span></div>
+<div class="rk__in">
+<p class="rk__big">Печатников пер., 6</p>
+<p class="rk__sub">1 этаж · 3 минуты от метро «Трубная»</p>
+<ul class="rk__list"><li><span>часы</span>каждый день 10:00–22:00</li><li><span>телефон</span><a href="tel:+79652300425">+7 (965) 230-04-25</a></li><li><span>рядом</span>«Золотое Яблоко» и рестораны</li></ul>
+<div class="rk__btns"><a class="btn rk__btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener">Записаться онлайн</a><a class="btn rk__btn rk__btn--ghost" href="https://yandex.ru/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener">Маршрут</a></div>
 </div>
-<div class="route-text" style="grid-column: 7 / span 5; padding: 64px 0 56px;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Как дойти</p>
-<h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1.05; font-weight: 500; letter-spacing: -.01em;">340 метров от „Трубной“</h2>
-<p style="margin: 10px 0 0; font-size: 15px; color: #2B1A17;">Москва, Печатников переулок, 6</p>
-<ul style="list-style: none; margin: 14px 0 0; padding: 0; border-top: 1px solid rgba(133, 35, 26, .4); font-size: 12px; color: #2B1A17;">
-<li style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(133, 35, 26, .4);"><span>Трубная</span><span style="color: #85231A;">340 м</span></li>
-<li style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(133, 35, 26, .4);"><span>Цветной бульвар</span><span style="color: #85231A;">750 м</span></li>
-<li style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(133, 35, 26, .4);"><span>Сретенский бульвар</span><span style="color: #85231A;">770 м</span></li>
-</ul>
-<p style="margin: 12px 0 0; font-size: 12px; color: #2B1A17;">1 этаж · остановка «Метро Трубная» — 245 м</p>
-<div style="display: flex; gap: 14px; align-items: flex-start; margin-top: 14px;">
-<figure class="tilt zoomable" onClick="{{zEntrance}}" style="flex: none; width: 240px; margin: 0; padding: 7px 7px 9px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 4px 5px 0 rgba(43, 26, 23, .28); transform: rotate(-2deg); cursor: zoom-in;"><img loading="lazy" decoding="async" src="assets/route-entrance-lg.webp" alt="Печатников переулок, вывеска «бэсти» над входом" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 35%; display: block;"><figcaption style="display: flex; justify-content: space-between; margin-top: 6px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A;"><span>вход · вывеска</span><span aria-hidden="true">⤢</span></figcaption></figure>
-<div style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #2B1A17;">
-<span>Ежедневно, 10:00–22:00</span>
-<a class="tap" href="tel:+79652300425" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 600; color: #85231A; text-decoration: none;">+7 (965) 230-04-25</a>
-<span style="font-size: 12px;">Вход без пандуса — на коляске к нам, к сожалению, не попасть</span>
-</div>
-</div>
-<a class="btn" href="https://yandex.by/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 18px; padding: 0 22px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Построить маршрут</a>
 </div>
 </section>
 
@@ -2195,22 +2182,40 @@ class Component extends DCLogic {
 }
 </script>
 <style>
-#ymap .ypin, #ymap .ypin *, #ymap .yc, #ymap .yc * { font-size-adjust: none !important; }
-.ypin { position: absolute; left: -29px; top: -78px; display: flex; align-items: flex-start; cursor: pointer; font-family: 'YS Text', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; }
-.ypin-c { position: relative; flex: none; width: 58px; height: 58px; border-radius: 50%; background: #EE5843; display: grid; place-items: center; }
-.ypin-c::after { content: ''; position: absolute; left: 50%; bottom: -9px; margin-left: -8px; border: 8px solid transparent; border-top: 10px solid #EE5843; border-bottom: 0; }
-.ypin::after { content: ''; position: absolute; left: 25px; top: 74px; width: 8px; height: 8px; border-radius: 50%; background: #EE5843; box-shadow: 0 0 0 2px #fff; }
-.ypin-l { margin: 6px 0 0 10px; padding: 6px 14px 7px 12px; background: #fff; border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,.16); white-space: nowrap; line-height: 1.2; color: #000; }
-.ypin-l b { font-size: 17px; font-weight: 500; } .ypin-l i { font-style: normal; font-size: 16px; font-weight: 400; color: #333; margin-left: 4px; } .ypin-l i span { color: #888; }
-.ypin-l small { display: block; margin-top: 2px; font-size: 14px; font-weight: 400; color: #8A8A8A; }
-.yc { width: min(300px, calc(100vw - 110px)); font-family: 'YS Text', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 14px; color: #000; line-height: 1.35; }
-.yc-t { font-size: 18px; color: #196DFF; font-weight: 400; } .yc-s { font-size: 12px; color: #888; margin-top: 2px; }
-.yc-r { display: flex; align-items: center; gap: 6px; margin: 10px 0 12px; } .yc-r b { font-weight: 500; } .yc-o { margin-left: auto; font-size: 14px; }
-.yc-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; } .yc-row a { color: #000; text-decoration: none; }
-.yc-m { margin: 8px 0; } .yc-mi { display: inline-grid; place-items: center; width: 18px; height: 18px; margin-right: 6px; border-radius: 3px; color: #fff; font-size: 11px; font-weight: 600; } .yc-d { color: #196DFF; }
-.yc-b { display: flex; gap: 8px; margin-top: 14px; } .yc-b a { flex: 1; padding: 9px 6px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 400; }
-.yc-b1 { background: #EEF3FF; color: #196DFF; } .yc-b2 { background: #196DFF; color: #fff; }
-@media (max-width: 600px) { .yc-m + .yc-m { display: none; } }
+/* как дойти (22.11) — с прошлой версии, размеры по общей шкале */
+.route2 { position: relative; height: 640px; border-top: 1px solid rgba(133, 35, 26, .2); overflow: hidden; background: #E6E6E6; }
+.route2__map { position: absolute; inset: 0; z-index: 1; container-type: size; overflow: hidden; }
+#ymap { position: absolute; inset: 0; z-index: 2; }
+.route2__static { position: absolute; inset: 0; z-index: 1; display: block; }
+.route2__map.is-live .route2__static { display: none; }
+.route2 .map__img { position: absolute; width: max(100cqw, 144.45cqh); height: max(100cqh, 69.23cqw); left: calc((100cqw - max(100cqw, 144.45cqh)) * .5); top: calc((100cqh - max(100cqh, 69.23cqw)) * .62); }
+.route2 .map__img > img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05) brightness(1.04); }
+.route2 .dog { position: absolute; left: 89.1%; top: 56.7%; transform: translate(-50%, -100%); pointer-events: none; }
+.route2 .dog__shadow { position: absolute; left: 50%; bottom: -3px; width: 34px; height: 6px; margin-left: -17px; background: rgba(43, 26, 23, .28); animation: pxshadow 3.2s ease-out infinite; }
+.route2 .dog__body { position: relative; display: block; animation: pxhop 3.2s ease-out infinite; }
+.route2 .dog__body img { width: 46px; height: 42px; image-rendering: pixelated; }
+.route2 .dog__tag { position: absolute; right: calc(100% - 4px); top: -16px; padding: 3px 7px 4px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; line-height: 1; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+#ymap [class*="ground-pane"] { filter: grayscale(1) contrast(1.03) brightness(1.03); }
+#ymap [class*="copyrights-promo"] { filter: grayscale(1); }
+.rk { position: absolute; z-index: 3; top: 50%; left: max(16px, calc((100% - 1600px) / 2)); width: 400px; transform: translateY(-50%) rotate(-1.5deg); background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; font-family: 'PT Mono', monospace; color: #2B1A17; }
+.rk__bar { display: flex; justify-content: space-between; align-items: center; padding: 3px 8px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.rk__in { padding: 22px 24px 24px; background: #FFFAF6; }
+.rk__big { margin: 0; font-size: 24px; line-height: 1.1; text-transform: uppercase; color: #85231A; }
+.rk__sub { margin: 8px 0 0; font-size: 12px; }
+.rk__list { list-style: none; margin: 18px 0 0; padding: 0; border-top: 1px dotted rgba(133, 35, 26, .55); }
+.rk__list li { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px dotted rgba(133, 35, 26, .55); font-size: 15px; }
+.rk__list span { flex: none; width: 76px; padding-top: 2px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
+.rk__list a { color: #2B1A17; }
+.rk__btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.rk__btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.rk__btn--ghost { background: #FFFFFF; color: #85231A; }
+@media (max-width: 900px) {
+  .route2 { height: auto; }
+  .route2__map { position: relative; height: 380px; }
+  .route2 .map__img { left: calc(100cqw - max(100cqw, 144.45cqh) + 24px); }
+  .rk { position: relative; top: auto; left: auto; width: auto; margin: -40px 12px 32px; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .route2 .dog__body, .route2 .dog__shadow { animation: none; } }
 </style>
 <script>
 /* Карта Яндекса в «Как дойти». YMAPS_KEY — API-ключ из developer.tech.yandex.ru (пока пусто, ждём ключ). */
@@ -2221,28 +2226,16 @@ class Component extends DCLogic {
   function init(el) {
     if (el.getAttribute('data-ready')) return;
     el.setAttribute('data-ready', '1');
-    var map = new ymaps.Map(el, { center: [55.76745, 37.62380], zoom: 17, controls: ['zoomControl'] });
-    map.setBounds([[55.7665, 37.6208], [55.7683, 37.6292]], { checkZoomRange: true, zoomMargin: 24 });
+    var wide = innerWidth > 900;
+    var map = new ymaps.Map(el, { center: wide ? [BESTI[0] + 0.0006, BESTI[1] - 0.0045] : BESTI, zoom: 16, controls: [] },
+      { suppressMapOpenBlock: false, yandexMapDisablePoiInteractivity: true });
+    map.controls.add('zoomControl', { size: 'small', position: { right: 16, top: 16 } }); // справа: слева окно «как_дойти»
     map.behaviors.disable('scrollZoom');
-    var ORG = 'https://yandex.ru/maps/org/besti_neyls/87489915348/';
-    var ROUTE = 'https://yandex.ru/maps/?rtext=~' + BESTI[0] + '%2C' + BESTI[1] + '&rtt=auto';
-    var h = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Moscow' })).getHours();
-    var open = h >= 10 && h < 22;
-    var hours = open ? 'До 22:00' : 'Откроется в 10:00';
-    var ic = '<svg width="32" height="32" viewBox="0 0 34 34" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5h5v6H9z"/><path d="M8 11h7a2 2 0 0 1 2 2v13a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V13a2 2 0 0 1 2-2z"/><path d="M8.5 19h6"/><circle cx="21.5" cy="25.5" r="2.8"/><circle cx="28" cy="25.5" r="2.8"/><path d="M22.6 23L27 5.5M26.9 23L23.5 9"/></svg>';
-    var Pin = ymaps.templateLayoutFactory.createClass('<div class="ypin"><span class="ypin-c">' + ic + '</span><span class="ypin-l"><b>Бэсти Нейлс</b><i><span>★</span> 5</i><small>' + hours + '</small></span></div>');
-    var star = '<span style="color:#FC0;font-size:16px;letter-spacing:1px;">★★★★★</span>';
-    var m = function (c, n, d) { return '<div class="yc-m"><span class="yc-mi" style="background:' + c + '">М</span>' + n + ' <span class="yc-d"><svg width="12" height="14" viewBox="0 0 24 24" fill="#196DFF" style="vertical-align:-2px"><circle cx="13" cy="4" r="2"/><path d="M10 22l2-7 2 2v5h2v-6.5l-2-2 .6-3A6 6 0 0 0 19 12v-2a4 4 0 0 1-3.5-2l-1-1.6A2 2 0 0 0 12.8 5c-.3 0-.5 0-.8.1L7 7.3V12h2V8.6l1.8-.7L9.2 16 5 15.2l-.4 2 6 1.1z"/></svg> ' + d + '</span></div>'; };
-    var card = '<div class="yc"><div class="yc-t">Бэсти Нейлс</div><div class="yc-s">Ногтевая студия, салон красоты</div>' +
-      '<div class="yc-r">' + star + ' <b>5,0</b><span class="yc-o">' + (open ? 'Открыто до 22:00' : 'Откроется в 10:00') + '</span></div>' +
-      '<div class="yc-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="#999"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg> Москва, Печатников переулок, 6</div><div class="yc-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="#999"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg> <a href="tel:+79652300425">+7 (965) 230-04-25</a></div>' +
-      m('#A0C142', 'Трубная', '340 м') + m('#A0A0A0', 'Цветной бульвар', '750 м') + m('#A0C142', 'Сретенский бульвар', '770 м') +
-      '<div class="yc-b"><a class="yc-b1" href="' + ROUTE + '" target="_blank" rel="noopener">Как добраться</a><a class="yc-b2" href="' + ORG + '" target="_blank" rel="noopener">Об организации</a></div></div>';
-    var pm = new ymaps.Placemark(BESTI, { hintContent: '', balloonContent: card }, {
-      iconLayout: Pin, iconShape: { type: 'Rectangle', coordinates: [[-29, -78], [210, 0]] },
-      hideIconOnBalloonOpen: false, balloonOffset: [0, -78], balloonMaxWidth: 340, balloonPanelMaxMapArea: 0
-    });
-    map.geoObjects.add(pm);
+    if (!wide) map.behaviors.disable('drag'); // на телефоне карта не перехватывает прокрутку
+    map.geoObjects.add(new ymaps.Placemark(BESTI, { hintContent: 'Бэсти Нейлс — Печатников пер., 6' }, {
+      iconLayout: 'default#image', iconImageHref: 'assets/ui/metka-karta.svg', iconImageSize: [64, 84], iconImageOffset: [-32, -84]
+    }));
+    if (el.parentNode) el.parentNode.classList.add('is-live');
   }
   function load(el) {
     if (started) { if (window.ymaps) ymaps.ready(function () { init(el); }); return; }
