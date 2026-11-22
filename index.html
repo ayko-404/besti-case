@@ -510,9 +510,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .gintro__r { right: calc(50% - min(27.75vh, 292px) - 10vw); top: 56%; font-family: 'Gogol', cursive !important; font-size: clamp(64px, 8vw, 150px); -webkit-text-stroke-width: 4px; transform: translateX(calc((1 - var(--p)) * var(--dr, 75vw))) rotate(-4deg); }
 .gintro__ring { position: relative; display: inline-block; padding: 0 .1em; }
 .gintro__l, .gintro__r { font-size-adjust: none !important; }
-.gosti__body { padding: 24px 16px 0; }
-.ga { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; }
-.ga__m { grid-column: 1 / span 6; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #2B1A17; border-top: 0; }
+.gosti__body { padding: 24px 0 0; }
+.ga { display: grid; grid-template-columns: calc(50% - 60px) 64px minmax(0, 1fr); }
+.ga__m { grid-column: 1; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #2B1A17; border-left: 0; border-top: 0; }
 .ga__m--1 { border-top: 1px solid #2B1A17; }
 .ga__m figure { margin: 0; position: relative; overflow: hidden; background: #2B1A17; }
 .ga__m figure + figure { border-left: 1px solid #2B1A17; }
@@ -520,18 +520,23 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .ga__m .ga__wide { grid-column: 1 / -1; }
 .ga__m .ga__wide img { aspect-ratio: 4 / 3; }
 .ga__m--1 { grid-row: 1; } .ga__m--2 { grid-row: 2; } .ga__m--3 { grid-row: 3; } .ga__m--4 { grid-row: 4; }
-.ga__t { grid-column: 8 / span 4; }
-.ga__t--1 { grid-row: 1; align-self: start; padding-top: 48px; }
-.ga__t--2 { grid-row: 2; align-self: center; }
-.ga__t--3 { grid-row: 3; align-self: end; padding-bottom: 72px; }
-.ga__t--4 { grid-row: 4; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+.ga__t { grid-column: 3; position: relative; align-self: stretch !important; display: flex; flex-direction: column; max-width: 560px; padding-right: 16px; }
+.ga__t > :not(.dd) { position: relative; z-index: 1; }
+.ga__t--1 { grid-row: 1; justify-content: flex-start; padding-top: 48px; }
+.ga__t--2 { grid-row: 2; justify-content: center; }
+.ga__t--2 > div[style*="will-change"] { max-width: 470px; }
+.ga__t--3 { grid-row: 3; justify-content: flex-end; padding-bottom: 72px; }
+.ga__t--4 { grid-row: 4; justify-content: center; }
 .ga__t--4 .ga__btn { align-self: flex-start; margin-top: 32px; }
 .ga__label { margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
 .ga__h { margin: 10px 0 0; font-family: 'PT Mono', monospace; font-size: 24px; line-height: 1.2; text-transform: uppercase; color: #2B1A17; }
 .ga__p { margin: 12px 0 0; font-family: 'PT Mono', monospace; font-size: 13.5px; line-height: 1.55; color: #2B1A17; }
 .ga__note { margin: 28px 0 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 40px; line-height: 1; color: #85231A; transform: rotate(-4deg); transform-origin: left; }
 .ga__label, .ga__h, .ga__p, .ga__note { font-size-adjust: none !important; }
-@media (prefers-reduced-motion: reduce) { .gintro { --p: 1 !important; height: auto; } .gintro__stick { position: relative; top: 0; height: 86vh; } }
+.dd { position: absolute; z-index: 0; height: auto; pointer-events: none; overflow: visible; transform: rotate(var(--r, 0deg)); animation: dd-wobble 5.5s ease-in-out infinite; }
+.dd--cup { animation-delay: -1.4s; } .dd--pop { animation-delay: -2.6s; } .dd--bub { animation-delay: -3.8s; } .dd--spark { animation-duration: 3.2s; }
+@keyframes dd-wobble { 0%, 100% { transform: rotate(var(--r, 0deg)) translateY(0); } 50% { transform: rotate(calc(var(--r, 0deg) * -.4)) translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .dd { animation: none; } .gintro { --p: 1 !important; height: auto; } .gintro__stick { position: relative; top: 0; height: 86vh; } }
 @media (max-width: 900px) {
   .gintro { height: 190vh; }
   .gintro__stick { top: 70px; height: calc(100vh - 70px); }
@@ -540,6 +545,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .gintro__r { left: 0; right: 0; top: 62%; text-align: center; font-size: 46px; padding: 0 12px; -webkit-text-stroke-width: 3px; }
   .gosti__body { padding: 24px 0 0; }
   .ga { grid-template-columns: 1fr; row-gap: 0; }
+  .dd { display: none; }
+  .ga__m { border-left: 1px solid #2B1A17; }
+  .ga__t { max-width: none; padding-right: 0; }
   .ga__m { grid-template-columns: 1fr; }
   .ga__m figure + figure { border-left: 0; border-top: 1px solid #2B1A17; }
   .ga__m img, .ga__m video { aspect-ratio: 4 / 5; }
@@ -899,6 +907,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div class="ga">
 <div class="ga__m ga__m--1"><figure><video src="assets/gosti/video-den-v-studii.mp4" poster="assets/gosti/video-den-v-studii-poster.webp" muted loop playsinline preload="none" aria-label="Видео: утро в студии"></video></figure><figure><img width="900" height="1200" src="assets/gosti/gosti-stolik-cvety.webp" alt="Столик в студии с цветами" loading="lazy" decoding="async"></figure></div>
 <div class="ga__t ga__t--1">
+<svg class="dd dd--bottle" aria-hidden="true" viewBox="0 0 140 170" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="right: 3%; bottom: 4%; width: 150px; --r: 8deg;"><rect x="52" y="8" width="34" height="44" rx="5" fill="#85231A"/><path d="M58 14 v32" stroke="#FFFAF6" stroke-width="2"/>
+<rect x="46" y="50" width="46" height="12" rx="3" fill="#FFFAF6"/>
+<path d="M30 70 Q30 62 40 62 H98 Q108 62 108 72 V136 Q108 150 94 150 H44 Q30 150 30 136 Z" fill="#FFACE4"/>
+<path d="M54 98 q4 -6 8 0 M78 98 q4 -6 8 0" /><path d="M58 116 q12 12 24 0" /><circle cx="50" cy="112" r="4" fill="#FF7FC8" stroke="none"/><circle cx="92" cy="112" r="4" fill="#FF7FC8" stroke="none"/>
+<path d="M118 30 v16 M110 38 h16" /><path d="M16 46 v10 M11 51 h10" /><path d="M124 100 l6 -4 M126 112 h8" /></svg>
 <p class="ga__label">(a) атмосфера</p>
 <p class="ga__h">Кирпичные стены, красный ковёр и&nbsp;зелёные бархатные кресла</p>
 <p class="ga__p">Студия в Печатниковом переулке, в трёх минутах от «Трубной». Рядом «Золотое Яблоко» и рестораны — можно устроить себе бьюти-день.</p>
@@ -906,6 +919,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 <div class="ga__m ga__m--2"><figure class="ga__wide"><img width="1200" height="900" src="assets/gosti/gosti-zelyonye-kresla-4x3.webp" alt="Зелёные бархатные кресла и ковёр в студии" loading="lazy" decoding="async"></figure></div>
 <div class="ga__t ga__t--2">
+<svg class="dd dd--spark" aria-hidden="true" viewBox="0 0 80 80" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="left: 6%; bottom: 4%; width: 70px; --r: 12deg;"><path d="M40 6 C42 30 50 38 74 40 C50 42 42 50 40 74 C38 50 30 42 6 40 C30 38 38 30 40 6 Z" fill="#FFACE4"/></svg>
+<svg class="dd dd--cup" aria-hidden="true" viewBox="0 0 150 150" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="right: 6%; top: -2%; width: 118px; --r: -7deg;"><path d="M28 70 H108 V102 Q108 130 80 130 H56 Q28 130 28 102 Z" fill="#FFFAF6"/><path d="M108 80 Q132 80 130 98 Q128 114 106 112" />
+<path d="M20 136 H118" /><path d="M48 92 q4 -5 8 0 M76 92 q4 -5 8 0" /><path d="M58 106 q8 8 16 0" />
+<path d="M54 56 c-10 -12 8 -18 4 -30" /><path d="M82 56 c-10 -12 8 -18 4 -30" />
+<path d="M70 22 c-6 -8 -16 -2 -10 6 l10 10 l10 -10 c6 -8 -4 -14 -10 -6 z" fill="#FFACE4"/></svg>
 <div ref="{{setReview}}" style="margin: 0; will-change: transform;">
 <figure class="levitate" style="margin: 0; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 3px 10px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;"><span>отзыв · Яндекс Карты</span><span aria-hidden="true">_ □ ×</span></div>
@@ -924,12 +942,20 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 <div class="ga__m ga__m--3"><figure><img width="900" height="1200" src="assets/gosti/gosti-polka.webp" alt="Полка с уходом в студии" loading="lazy" decoding="async"></figure><figure><video src="assets/gosti/video-process.mp4" poster="assets/gosti/video-process-poster.webp" muted loop playsinline preload="none" aria-label="Видео: мастер делает маникюр"></video></figure></div>
 <div class="ga__t ga__t--3">
+<svg class="dd dd--pop" aria-hidden="true" viewBox="0 0 190 160" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="left: 18%; top: 12%; width: 210px; --r: -5deg;"><path d="M30 60 L44 148 H92 L106 60 Z" fill="#FFFAF6"/><path d="M48 60 L56 148 M68 60 V148 M88 60 L80 148" stroke="#FFACE4" stroke-width="6"/><path d="M30 60 L44 148 H92 L106 60 Z" />
+<circle cx="40" cy="52" r="12" fill="#FFFAF6"/><circle cx="60" cy="42" r="13" fill="#FFFAF6"/><circle cx="82" cy="46" r="12" fill="#FFFAF6"/><circle cx="98" cy="56" r="10" fill="#FFFAF6"/><circle cx="70" cy="58" r="10" fill="#FFFAF6"/>
+<rect x="118" y="44" width="62" height="86" rx="7" fill="#FFACE4" transform="rotate(10 149 87)"/><path d="M142 74 L162 88 L140 100 Z" fill="#85231A" transform="rotate(10 149 87)"/>
+<path d="M126 24 l4 8 M150 18 v10 M172 26 l-4 8" /></svg>
 <p class="ga__label">(b) кресло с кино</p>
 <p class="ga__h">Персональный планшет с&nbsp;наушниками</p>
 <p class="ga__p">Пока мастер работает, время в студии проходит незаметно.</p>
 </div>
 <div class="ga__m ga__m--4"><figure><video src="assets/gosti/video-polki-luxio.mp4" poster="assets/gosti/video-polki-luxio-poster.webp" muted loop playsinline preload="none" aria-label="Видео: полки с лаками Luxio"></video></figure><figure><img width="900" height="1200" src="assets/gosti/gosti-flakon-kirpich.webp" alt="Маникюр на фоне кирпичной стены" loading="lazy" decoding="async"></figure></div>
 <div class="ga__t ga__t--4">
+<svg class="dd dd--bub" aria-hidden="true" viewBox="0 0 180 150" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="right: 2%; top: -2%; width: 150px; --r: 6deg;"><circle cx="52" cy="80" r="34" fill="#FFFAF6"/><path d="M36 66 q6 -10 18 -12" stroke="#FFACE4" stroke-width="4"/>
+<circle cx="116" cy="46" r="20" fill="#FFFAF6"/><path d="M106 38 q4 -6 10 -7" stroke="#FFACE4" stroke-width="3"/><circle cx="130" cy="100" r="12" fill="#FFFAF6"/><circle cx="96" cy="124" r="7" fill="#FFFAF6"/>
+<text x="24" y="146" font-family="Gogol, cursive" font-size="30" fill="#85231A" stroke="none" transform="rotate(-6 24 146)">чисто!</text>
+<path d="M160 20 v12 M154 26 h12" /></svg>
 <p class="ga__label">(c) стерильно</p>
 <p class="ga__h">Инструменты распаковывают при&nbsp;вас</p>
 <p class="ga__p">Из стерильного пакета, на ваших глазах. Покрытие — палитра Luxio.</p>
