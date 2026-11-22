@@ -599,6 +599,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 }
 /* обложка (22.11): текст и кнопки — общей шкалой; H1 на десктопе 72; отзыв 300 */
 @media (min-width: 901px) { #top .h1 { font-size: 72px !important; } #top .hero-rev { width: 300px !important; } }
+/* 22.11: от 1400 — отзыв в 3 строки (360) от края контейнера, не наезжает на фото */
+@media (min-width: 1400px) { #top .hero-rev-col { justify-content: flex-start !important; } #top .hero-rev { flex: none; width: 360px !important; } }
 .bt { font-size: 15px; font-size-adjust: none; font-synthesis: none; line-height: 1.5; }
 .bt h1, .bt h2, .bt h3 { font-family: 'Cormorant Garamond', Georgia, serif; }
 .bt h1, .bt h2, .bt h3, .bt [style*="Cormorant"], .bt [style*="Gogol"], .bt [style*="PT Mono"], .bt .wait, .bt .chip { font-size-adjust: none; }
@@ -717,7 +719,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw { --n: 4; height: calc(var(--n) * 70vh + 100vh); padding: 0 !important; }
 .pw-stick { container-type: inline-size; --rw: max(64px, calc((100cqw - 1600px) / 2)); /* 22.11: боковые клетки до края контейнера сайта */ --ln: rgba(43, 26, 23, .22); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px 0 28px; box-sizing: border-box; overflow: hidden; }
 /* вкладки и линейка — от края до края экрана, контент — в сетке сайта */
-.pw-main { padding: 0 max(88px, calc((100% - 1600px) / 2)); }
+.pw-main { padding: 0 max(88px, calc((100% - 1600px) / 2 + 24px)); }
 .pw-tabs__edge { border-left: 1px solid var(--ln); } .pw-tabs__edge:first-child { border-left: 0; }
 .pw-tabs { position: relative; display: grid; grid-template-columns: var(--rw) repeat(4, minmax(0, 1fr)) var(--rw); height: 80px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ln); border-bottom: 1px solid var(--ln); }
 .pw-tab { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 13px 14px 14px; border-left: 1px solid var(--ln); font-family: 'PT Mono', monospace; color: #2B1A17; cursor: pointer; transition: color .35s ease; }
@@ -727,9 +729,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-tab.is-on { color: #FFFAF6; }
 .pw-tabs__bg { position: absolute; z-index: 0; top: 0; bottom: 0; left: calc(var(--rw) + 1px); width: calc((100% - 2 * var(--rw)) / 4 - 1px); background: #85231A; transform: translateX(calc(var(--k, 0) * 100%)); transition: transform .55s cubic-bezier(.77, 0, .175, 1); }
 .pw-main { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; }
-.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin-left: calc(max(120px, (100cqw - 1600px) / 2) - max(88px, (100cqw - 1600px) / 2)); }
-.pw-ruler { position: absolute; left: 0; top: 185px; bottom: 28px; width: max(68px, calc((100cqw - 1600px) / 2 - 20px)); /* 22.11: пунктир на 24px левее текста, а не по его краю */ background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .38) 0 1px, transparent 1px 14px) right 1px top var(--ty, 0px) / 6px 14px repeat-y; }
-.pw-ruler__n { position: absolute; left: 0; width: 100%; top: 50%; transform: translateY(-50%); text-align: right; padding-right: 20px; box-sizing: border-box; font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; font-size-adjust: none; }
+.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin-left: 32px; }
+.pw-ruler { position: absolute; left: 0; top: 185px; bottom: 28px; width: calc(var(--rw) + 4px); /* 22.11: пунктир по краю контейнера, текст — на 56px правее */ background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .38) 0 1px, transparent 1px 14px) right 1px top var(--ty, 0px) / 6px 14px repeat-y; }
+.pw-ruler__n { position: absolute; left: 0; width: var(--rw); top: 50%; transform: translateY(-50%); text-align: right; padding-right: 20px; box-sizing: border-box; font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; font-size-adjust: none; }
 .pw-label { position: absolute; top: 28px; left: 0; margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
 .pw-txts { position: absolute; left: 0; right: 0; top: 64px; bottom: 0; overflow: hidden; }
 .pw-list { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
@@ -1005,8 +1007,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 /* обложка на весь экран (21.11): 30px — бегущая строка */
 @media (min-width: 901px) { .bt #top { min-height: calc(100svh - 30px); align-content: center; } }
 /* большие мониторы (22.11): zoom всей обложки убран — текст и кнопки как на всём сайте; крупнее только фото */
-@media (min-width: 1800px) { .bt #top .hero-pics { zoom: 1.3; } .bt #top { padding-top: 60px !important; } }
-@media (min-width: 2300px) { .bt #top .hero-pics { zoom: 1.5; } }
+@media (min-width: 1600px) { .bt #top .hero-pics { zoom: 1.3; } .bt #top { padding-bottom: 90px !important; } }
+@media (min-width: 1800px) { .bt #top .hero-pics { zoom: 1.4; } .bt #top { padding-top: 60px !important; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } .splash { display: none !important; } }
 </style>
 </helmet>
