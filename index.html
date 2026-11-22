@@ -538,6 +538,16 @@ html.lenis body {
   }, { passive: true });
 })();
 </script>
+<script>
+/* отзывы: «ещё» раскрывает длинный текст (22.11, с прошлой версии); React может пересоздать узлы — вешаем делегированием */
+(function () {
+  function chk() { document.querySelectorAll('#reviews .rvm').forEach(function (r) { var t = r.querySelector('.rvm__t'), m = r.querySelector('.rvm__more'); if (t && m && !r.classList.contains('is-open')) m.hidden = !(t.scrollHeight > t.clientHeight + 4); }); }
+  document.addEventListener('click', function (e) { var m = e.target.closest && e.target.closest('#reviews .rvm__more'); if (!m) return; var r = m.closest('.rvm'), o = r.classList.toggle('is-open'); m.textContent = o ? 'свернуть' : 'ещё'; });
+  var tm; function later() { clearTimeout(tm); tm = setTimeout(chk, 200); }
+  addEventListener('load', chk); addEventListener('resize', later); setTimeout(chk, 1500); setTimeout(chk, 4000);
+  if (document.fonts) document.fonts.ready.then(chk);
+})();
+</script>
 <x-dc>
 <helmet>
 <style>
@@ -554,6 +564,39 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
    с 22.11 (вечер) сокращена: Наборный: 12 (метки, капс, подписи) · 15 (текст) · 24 (капс) · 44.
    Заголовочный: 22 (h3, цитата) · 48 (h2) · 60 (h1, цифры). Рукописный: 34 · 56.
    Исключение — имитация карточки Яндекс Карт (#ymap): её собственные размеры. */
+/* отзывы (22.11) — с прошлой версии, под общую шкалу: моно 44 капс, текст 15, подписи 12 */
+.rvw__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; }
+.rvw__side { grid-column: 1 / span 5; }
+.rvw__stick { position: sticky; top: 110px; }
+.rvw__h { margin: 0; font-family: 'PT Mono', monospace !important; font-size: 44px; line-height: 1.05; font-weight: 400; text-transform: uppercase; color: #2B1A17; }
+.rvw .nowrap { white-space: nowrap; }
+.rvw .hd-ico { position: relative; top: -22px; display: inline-block; vertical-align: top; width: 64px; height: auto; margin: 0 0 0 6px; transform: rotate(-6deg); }
+.rvw__all { display: flex; align-items: center; gap: 12px; width: max-content; margin: 32px 0 0; color: #85231A; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; text-underline-offset: 4px; }
+.rvw__all img { width: 36px; height: auto; image-rendering: pixelated; transform: rotate(-20deg); }
+.rva__list { grid-column: 7 / span 5; max-width: 700px; }
+.rva__item { display: flex; flex-direction: column; margin: 0 0 40px; padding: 0 0 40px; border-bottom: 1px solid rgba(43, 26, 23, .25); }
+.rva__item:last-child { border-bottom: 0; margin-bottom: 0; }
+.rvm__ph { display: flex; flex-wrap: wrap; gap: 10px; }
+.rvm__ph img { width: 92px; height: 92px; object-fit: cover; border: 1px solid #2B1A17; }
+.rvm__t { margin: 22px 0 0; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1.65; color: #2B1A17; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 7; overflow: hidden; }
+.rvm.is-open .rvm__t { -webkit-line-clamp: unset; }
+.rvm__more { align-self: flex-start; margin-top: 4px; padding: 0; background: none; border: 0; color: #85231A; font-family: 'PT Mono', monospace; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.rvm__more:focus:not(:focus-visible) { outline: none; }
+.rvm figcaption { display: flex; align-items: center; gap: 12px; padding-top: 22px; font-family: 'PT Mono', monospace; }
+.rvm__ava { flex: none; width: 42px; height: 42px; border-radius: 50%; overflow: hidden; border: 1px solid #2B1A17; background: #F3E1DC; }
+.rvm__ava img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rvm figcaption b { display: block; font-weight: 400; font-size: 15px; color: #2B1A17; }
+.rvm figcaption small { display: block; margin-top: 4px; font-size: 12px; color: #7E4F48; }
+@media (max-width: 900px) {
+  .rvw__grid { grid-template-columns: 1fr; }
+  .rvw__side, .rva__list { grid-column: 1; }
+  .rvw__stick { position: static; }
+  .rvw__h { font-size: 28px; }
+  .rvw .hd-ico { top: -14px; width: 48px; }
+  .rvw__all { width: auto; }
+  .rva__list { margin-top: 36px; }
+  .rvm__ph img { width: 76px; height: 76px; }
+}
 /* обложка (22.11): текст и кнопки — общей шкалой; H1 на десктопе 72; отзыв 300 */
 @media (min-width: 901px) { #top .h1 { font-size: 72px !important; } #top .hero-rev { width: 300px !important; } }
 .bt { font-size: 15px; font-size-adjust: none; font-synthesis: none; line-height: 1.5; }
@@ -1359,37 +1402,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 09 ОТЗЫВЫ · «шахматка» (выбрана 29.10): лёгкие карточки через клетку, аватары с Яндекс Карт -->
-<section id="reviews" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 48px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px;">
-<div style="grid-column: 1 / span 6;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Отзывы</p>
-<div style="display: flex; align-items: flex-end; gap: 12px; margin-top: 14px;">
-<h2 class="hx" style="margin: 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Что пишут гостьи</h2>
-<svg class="hide-m" aria-hidden="true" width="78" height="56" viewBox="0 0 78 56" fill="none" style="transform: rotate(-6deg) translateY(-14px);"><path d="M12 8 C 30 2, 62 2, 72 12 C 80 22, 70 34, 50 36 C 40 37, 30 37, 24 36 L 12 50 L 16 34 C 4 30, 0 14, 12 8 Z" stroke="#85231A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"></path><path d="M22 20 h8 M36 20 h6 M48 20 h10" stroke="#85231A" stroke-width="2.6" stroke-linecap="round"></path></svg>
-</div>
-</div>
-<div style="grid-column: 7 / span 6; justify-self: start; align-self: end; text-align: left;">
-<p style="display: flex; justify-content: flex-start; align-items: center; gap: 10px; margin: 0;"><span aria-hidden="true" style="display: flex; gap: 2px;">
-<svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>
-<svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>
-<svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>
-<svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>
-<svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>
-</span><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 60px; line-height: 1; font-weight: 600;">5,0</span></p>
-<p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #2B1A17;">152 оценки · 146 отзывов на Яндекс Картах</p>
-</div>
-<div class="stack" style="grid-column: 1 / -1; margin-top: 36px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; row-gap: 14px; align-items: start;">
-<sc-for list="{{reviews}}" as="v" hint-placeholder-count="6">
-<div style="grid-column: {{v.chCol}}; grid-row: {{v.chRow}}; transform: {{v.chTf}};"><figure class="rcard" style="margin: 0; padding: 16px 18px 18px; background: #FFFFFF; border: 1px solid rgba(43, 26, 23, .22); box-shadow: 3px 4px 0 rgba(43, 26, 23, .1); display: flex; flex-direction: column; justify-content: space-between; gap: 14px; text-align: left;">
-<blockquote style="margin: 0; font-family: {{v.ff}}; font-size: {{v.fs}}px; line-height: {{v.lh}}; font-style: {{v.fst}}; color: {{v.qc}};">{{v.qq}}</blockquote>
-<figcaption style="display: flex; align-items: center; gap: 10px;">
-<span style="flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: {{v.bg}}; overflow: hidden; border: 1px solid #2B1A17; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 600; color: #85231A;"><sc-if value="{{v.hasImg}}" hint-placeholder-val="{{false}}"><img src="{{v.img}}" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;"></sc-if>{{v.avT}}</span>
-<span style="display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 12px; color: #2B1A17;">{{v.who}}</span><span style="font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">{{v.date}} · Яндекс Карты</span></span>
-</figcaption>
-</figure></div>
-</sc-for>
-</div>
-<div style="grid-column: 7 / span 6; display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center; gap: 16px; margin-top: 30px;">
-<a class="tap" href="https://yandex.by/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 12px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-underline-offset: 4px;"><img loading="lazy" decoding="async" src="assets/cursor-nail-sm.png" alt="" style="width: 36px; height: auto; image-rendering: pixelated; transform: rotate(-20deg);"><span style="text-decoration: underline;">Нажмите, чтобы увидеть все отзывы на Яндекс Картах</span></a>
+<!-- 09 ОТЗЫВЫ · с прошлой версии (ayko-404/Besti, 22.11): заголовок закреплён слева, лента отзывов с фото с центральной линии -->
+<section id="reviews" class="sec rvw" style="position: relative; background: #FFFAF6; color: #2B1A17; padding: 64px 16px 48px;">
+<div class="rvw__grid">
+<div class="rvw__side"><div class="rvw__stick"><h2 class="rvw__h">Что пишут <span class="nowrap">гостьи<svg class="hd-ico" aria-hidden="true" width="92" height="74" viewBox="0 0 92 74" fill="none"><path d="M8 22c1-5 4-7 9-7 18-1 40-2 60-1 5 0 8 3 8 8 1 11 1 23 0 34-1 5-4 7-9 7-19 1-40 1-59 0-5 0-8-3-8-8-1-11-2-22-1-33z" fill="#FFFFFF" stroke="#85231A" stroke-width="2.6" stroke-linejoin="round"/><path d="M10 19c11 9 22 17 34 24 4 2 7 2 10-1 10-8 20-15 29-24" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 40c-3-3-8-6-8-10 0-3 2-5 5-5 2 0 3 1 4 3 1-2 3-3 5-3 3 0 4 3 4 5 0 4-6 7-10 10z" fill="#FFACE4" stroke="#85231A" stroke-width="1.8" stroke-linejoin="round"/><path d="M70 10l4-7M79 13l7-4M62 9l-1-7" stroke="#85231A" stroke-width="2.2" stroke-linecap="round"/></svg></span></h2><a class="rvw__all" href="https://yandex.ru/maps/org/besti_neyls/87489915348/reviews/" target="_blank" rel="noopener"><img loading="lazy" width="24" height="21" src="assets/cursor-nail-sm.png" alt=""><span>Нажмите, чтобы увидеть больше отзывов</span></a></div></div>
+<div class="rva__list"><figure class="rvm rva__item"><div class="rvm__ph"><img width="480" height="480" src="assets/otzyvy/dasha-1.webp" alt="Фото из отзыва dasha shutemova" loading="lazy"><img width="480" height="480" src="assets/otzyvy/dasha-2.webp" alt="Фото из отзыва dasha shutemova" loading="lazy"><img width="480" height="480" src="assets/otzyvy/dasha-3.webp" alt="Фото из отзыва dasha shutemova" loading="lazy"><img width="480" height="480" src="assets/otzyvy/dasha-4.webp" alt="Фото из отзыва dasha shutemova" loading="lazy"></div><blockquote class="rvm__t">девочки, я в экстазе!🤤<br>сегодня у меня был вечер принцессы)<br>я записалась на маникюр со сложным дизайном и вдобавок сверху френч, мастер Ксения справилась за 1.40 минут, это ваааау!<br>на входе меня встретила лично владелица студии, показала мне студию, предложила меню с напитками, ещё и мороженым угостила! и все это комплиментом🥹 а какая милая!<br><br>отдельно отмечу интерьер и дизайн студии: уже надоели бежевые минималистичные пространства, а здесь яркие детали, зеленые кресла, ковер на полу и кирпичные стены😍<br>по телевизору идут всеми нами любимые фильмы! <br><br>перед уходом мне предложили массаж рук специальной перчаткой, я такого ещё нигде не видела, это удивительно, но очень приятно и как же расслабляет)<br>еще подарили бальзамчик для губ и стикеры, мой внутренний ребенок ликует<br>я вернусь еще много раз, ради наслаждения❤️</blockquote><button class="rvm__more" type="button" hidden>ещё</button><figcaption><span class="rvm__ava"><img loading="lazy" width="200" height="200" src="assets/dasha.jpg" alt=""></span><span><b>dasha shutemova</b><small>Знаток города 5 уровня · 01.09.2026</small></span></figcaption></figure><figure class="rvm rva__item"><div class="rvm__ph"><img width="480" height="480" src="assets/otzyvy/milana-1.webp" alt="Фото из отзыва Milana M." loading="lazy"><img width="480" height="480" src="assets/otzyvy/milana-2.webp" alt="Фото из отзыва Milana M." loading="lazy"></div><blockquote class="rvm__t">Впервые была в этом салоне и осталась в диком восторге! Локация очень удобная,самый центр Москвы,сервис 10/10,качество услуги так же. Комплекс маникюра с покрытием и снятием сделали за 1,5ч. В конце процедуры предложили спа для рук. Так же удивило комплиментарное меню,большой выбор напитков,также есть десерты. Сама студия с очень уютным дизайном в стиле лофт. Обязательно буду советовать подругам !</blockquote><button class="rvm__more" type="button" hidden>ещё</button><figcaption><span class="rvm__ava"><img loading="lazy" width="200" height="200" src="assets/otzyvy/ava-milana.jpg" alt=""></span><span><b>Milana M.</b><small>Знаток города 5 уровня · 29.08.2026</small></span></figcaption></figure><figure class="rvm rva__item"><div class="rvm__ph"><img width="480" height="480" src="assets/otzyvy/yuliya-1.webp" alt="Фото из отзыва Юлия Драницына" loading="lazy"><img width="480" height="480" src="assets/otzyvy/yuliya-2.webp" alt="Фото из отзыва Юлия Драницына" loading="lazy"></div><blockquote class="rvm__t">Чудесный салон с прекрасным отношением к своим гостям! ✨✨✨ очень вкусный кофе и зефир. Маникюр идеальный, самый аккуратный и нежный мастер в моей жизни, не заметила как делали даже! Очень красиво вышло, как я и хотела. Подход максимально клиентоориентированный, девочки под меня заказали лак, запомнили какой маникюр я хочу и как меня зовут. Очень приятно ❣️❣️❣️</blockquote><button class="rvm__more" type="button" hidden>ещё</button><figcaption><span class="rvm__ava"><img loading="lazy" width="200" height="200" src="assets/otzyvy/ava-yuliya.webp" alt=""></span><span><b>Юлия Драницына</b><small>Знаток города 6 уровня · 21.09.2026</small></span></figcaption></figure><figure class="rvm rva__item"><div class="rvm__ph"><img width="480" height="480" src="assets/otzyvy/kseniya-l-1.webp" alt="Фото из отзыва Ксения Л" loading="lazy"><img width="480" height="480" src="assets/otzyvy/kseniya-l-2.webp" alt="Фото из отзыва Ксения Л" loading="lazy"></div><blockquote class="rvm__t">Мне очень понравилось здесь 🤍<br><br>Долго искала студию без светлого интерьера, который уже везде и немного приелся. А здесь все совсем по другому, очень красиво и уютно, хочется возвращаться)<br><br>Отдельно хочу отметить администратора! Безумно классная девушка, видно, что правда любит свое дело и заботится о гостях. Чай нальют, перчатку для массажа рук бесплатно дадут, в общем, сделают все для вашего комфорта 😅<br><br>В этот раз решила сделать лечебный маникюр, потому что ногти уже очень просили снять покрытие<br><br>Желаю студии процветания и побольше классных клиентов))</blockquote><button class="rvm__more" type="button" hidden>ещё</button><figcaption><span class="rvm__ava"><img loading="lazy" width="200" height="200" src="assets/otzyvy/ava-kseniya-l.webp" alt=""></span><span><b>Ксения Л</b><small>Знаток города 5 уровня · 13.09.2026</small></span></figcaption></figure><figure class="rvm rva__item"><div class="rvm__ph"><img width="480" height="480" src="assets/otzyvy/sofya-1.webp" alt="Фото из отзыва Софья К." loading="lazy"><img width="480" height="480" src="assets/otzyvy/sofya-2.webp" alt="Фото из отзыва Софья К." loading="lazy"></div><blockquote class="rvm__t">Потрясающая студия! <br>Была на маникюре и получила наслаждение от обстановки, невероятно милых и приятных девушек-мастеров и администратора, а самое главное от качества работы - покрытие ровное, кутикула обработана аккуратно, инструменты в стерильных пакетах, мастер заботится о клиенте во время процедуры. В завершении предложили сделать массаж рук специальным массажером - очень приятно от такого сервиса. <br>Также могу отметить что администратор несколько раз предлагала напитки чай, кофе (молоко есть как обычное, так и растительное). <br>Студия превзошла все ожидания🤍</blockquote><button class="rvm__more" type="button" hidden>ещё</button><figcaption><span class="rvm__ava"><img loading="lazy" width="200" height="200" src="assets/otzyvy/ava-sofya.webp" alt=""></span><span><b>Софья К.</b><small>Знаток города 5 уровня · 14.09.2026</small></span></figcaption></figure><figure class="rvm rva__item"><div class="rvm__ph"><img width="480" height="480" src="assets/otzyvy/violetta-1.webp" alt="Фото из отзыва violettavitman" loading="lazy"><img width="480" height="480" src="assets/otzyvy/violetta-2.webp" alt="Фото из отзыва violettavitman" loading="lazy"></div><blockquote class="rvm__t">Очень понравилась студия: камерная и уютная, с приятной атмосферой, отличным сервисом (даже мороженым угощают 🍨) и очень удобным расположением (5 минут пешком от метро Трубная). Делала педикюр, все прошло прекрасно, хотя я очень требовательный клиент из-за чувствительности кожи. Ушла в отличном настроении и со свежим педикюром 🌸</blockquote><button class="rvm__more" type="button" hidden>ещё</button><figcaption><span class="rvm__ava"><img loading="lazy" width="200" height="200" src="assets/otzyvy/ava-violetta.webp" alt=""></span><span><b>violettavitman</b><small>Знаток города 7 уровня · 04.09.2026</small></span></figcaption></figure></div>
+  
 </div>
 </section>
 
