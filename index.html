@@ -428,6 +428,73 @@ html.lenis body {
   requestAnimationFrame(raf);
 })();
 </script>
+<script>
+/* «Почему бэсти» (22.11): по прокрутке закреплённого экрана — активная вкладка и текст, фото меняется «сканированием»
+   снизу вверх (как ref-278: уходящее фото срезается снизу и слегка тускнеет, новое открывается снизу; привязано к прокрутке).
+   Варианты оформления: data-pv2 = heron / bordo / window; окно «почему.exe» по ссылке с ?variants. */
+(function () {
+  var V = [['heron', 'Как у Heron'], ['bordo', 'Бордо'], ['window', 'Окно']], pv = 'heron';
+  try { pv = localStorage.getItem('besti:pv2') || 'heron'; } catch (e) {}
+  var ticking = false, lastK = -1;
+  function upd() {
+    ticking = false;
+    var sec = document.getElementById('ritual'); if (!sec || !sec.classList.contains('pw')) return;
+    if (sec.getAttribute('data-pv2') !== pv) sec.setAttribute('data-pv2', pv);
+    var st = sec.querySelector('.pw-stick'); if (!st || getComputedStyle(st).display === 'none') return;
+    var imgs = sec.querySelectorAll('.pw-img'), N = imgs.length;
+    var r = sec.getBoundingClientRect(), run = sec.offsetHeight - innerHeight;
+    var p = Math.max(0, Math.min(1, -r.top / Math.max(1, run))), f = Math.max(0, Math.min(1, (p - .07) / .86)) * (N - 1); // паузы в начале и в конце
+    for (var i = 0; i < N; i++) {
+      var t = Math.max(0, Math.min(1, f - (i - 1))); // насколько открыто фото i (0..1), открывается на отрезке [i-1, i]
+      var out = Math.max(0, Math.min(1, f - i));     // насколько ушло фото i
+      var top = i === 0 ? 0 : (1 - t) * 100, bot = out * 100;
+      imgs[i].style.clipPath = 'inset(' + top.toFixed(2) + '% 0 ' + Math.min(100 - top, bot).toFixed(2) + '% 0)';
+      imgs[i].style.opacity = (1 - out * .15).toFixed(3);
+    }
+    var seg = Math.min(N - 2, Math.floor(f)), loc = f - seg, scan = sec.querySelector('.pw-scan');
+    if (scan) { scan.style.top = ((1 - loc) * 100).toFixed(2) + '%'; scan.style.visibility = (loc > .01 && loc < .99) ? 'visible' : 'hidden'; }
+    var k = Math.min(N - 1, Math.round(f));
+    sec.style.setProperty('--pp', p.toFixed(4));
+    if (k !== lastK || !sec.querySelector('.pw-tab.is-on')) {
+      lastK = k;
+      sec.querySelector('.pw-tabs').style.setProperty('--k', k);
+      sec.querySelectorAll('.pw-tab').forEach(function (el, i) { el.classList.toggle('is-on', i === k); });
+      sec.querySelectorAll('.pw-txt').forEach(function (el, i) { el.classList.toggle('is-on', i === k); el.classList.toggle('is-past', i < k); });
+      var n = ('0' + (k + 1)).slice(-2), ru = sec.querySelector('.pw-ruler__n'), tg = sec.querySelector('.pw-tag b'), bf = sec.querySelector('.pw-bar__f');
+      if (ru) ru.textContent = '[' + n + ']'; if (tg) tg.textContent = n; if (bf) bf.textContent = imgs[k].getAttribute('data-file');
+    }
+  }
+  function req() { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }
+  addEventListener('scroll', req, { passive: true }); addEventListener('resize', req);
+  setInterval(function () { var s = document.getElementById('ritual'); if (s && !s.getAttribute('data-bound')) { s.setAttribute('data-bound', '1'); lastK = -1; req(); } }, 400);
+  // клик по вкладке — прокрутка к её шагу
+  document.addEventListener('click', function (e) {
+    var tab = e.target.closest && e.target.closest('#ritual .pw-tab'); if (!tab) return;
+    var sec = document.getElementById('ritual'), i = +tab.getAttribute('data-i'), N = sec.querySelectorAll('.pw-img').length;
+    var y = sec.getBoundingClientRect().top + scrollY + (sec.offsetHeight - innerHeight) * (i / (N - 1)) + 2;
+    if (window.__lenis) window.__lenis.scrollTo(y); else scrollTo({ top: y, behavior: 'smooth' });
+  });
+  if (/[?&]variants/.test(location.search)) {
+    var mk = function () {
+      var box = document.createElement('div');
+      box.style.cssText = "position:fixed;right:16px;bottom:16px;z-index:9000;width:244px;background:#FFFFFF;border:1px solid #2B1A17;box-shadow:5px 5px 0 #2B1A17;font-family:'PT Mono',monospace;font-size:12px;color:#2B1A17";
+      box.innerHTML = '<div style="display:flex;justify-content:space-between;padding:5px 8px;background:#85231A;color:#FFFAF6;font-size:11px;letter-spacing:.06em;text-transform:uppercase"><span>почему.exe</span><span>_ □ ×</span></div>' +
+        V.map(function (v, i) { return '<button data-v2="' + v[0] + '" style="display:flex;gap:8px;width:100%;padding:7px 10px;border:0;border-top:1px solid rgba(43,26,23,.12);background:transparent;font:inherit;text-align:left;cursor:pointer;color:inherit"><b style="color:#85231A">' + (i + 1) + '</b>' + v[1] + '</button>'; }).join('') +
+        '<button data-go style="width:100%;padding:9px 10px;border:0;border-top:1px solid #2B1A17;background:#FFACE4;font:inherit;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;color:#85231A">↓ к блоку</button>';
+      document.body.appendChild(box);
+      var mark = function () { box.querySelectorAll('[data-v2]').forEach(function (b) { var on = b.getAttribute('data-v2') === pv; b.style.background = on ? '#FFF1F9' : 'transparent'; b.style.fontWeight = on ? '700' : '400'; }); };
+      box.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        if (b.hasAttribute('data-v2')) { pv = b.getAttribute('data-v2'); try { localStorage.setItem('besti:pv2', pv); } catch (x) {} mark(); req(); }
+        var s = document.getElementById('ritual'); if (s) { var y = s.getBoundingClientRect().top + scrollY + 2; if (window.__lenis) window.__lenis.scrollTo(y); else scrollTo({ top: y, behavior: 'smooth' }); }
+      });
+      mark();
+    };
+    if (document.body) mk(); else document.addEventListener('DOMContentLoaded', mk);
+  }
+  req();
+})();
+</script>
 <x-dc>
 <helmet>
 <style>
@@ -554,6 +621,75 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .ga > * { grid-column: 1 !important; grid-row: auto !important; margin: 0 !important; transform: none !important; }
   .ga__t { padding: 28px 0 40px !important; }
 }
+/* ── «Почему бэсти» (22.11): механика ref-278 — закреплённый экран, вкладки, смена фото «сканированием» по прокрутке. Варианты: heron / bordo / window (?variants) ── */
+.pw { --n: 4; height: calc(var(--n) * 90vh + 100vh); padding: 0 !important; }
+.pw-stick { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px max(16px, calc((100% - 1600px) / 2)) 28px; box-sizing: border-box; overflow: hidden; }
+.pw-tabs { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(43, 26, 23, .28); border-bottom: 1px solid rgba(43, 26, 23, .28); }
+.pw-tab { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; padding: 12px 14px 14px; border-left: 1px solid rgba(43, 26, 23, .28); font-family: 'PT Mono', monospace; color: #2B1A17; cursor: pointer; transition: color .35s ease; }
+.pw-tab:last-of-type { border-right: 1px solid rgba(43, 26, 23, .28); }
+.pw-tab__n { font-size: 12px; letter-spacing: .04em; }
+.pw-tab__t { font-size: 14px; letter-spacing: .04em; text-transform: uppercase; }
+.pw-tab.is-on { color: #FFFAF6; }
+.pw-tabs__bg { position: absolute; z-index: 0; top: 0; bottom: 0; left: 0; width: 25%; background: #85231A; transform: translateX(calc(var(--k, 0) * 100%)); transition: transform .55s cubic-bezier(.77, 0, .175, 1); }
+.pw-main { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; }
+.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding-left: 64px; }
+.pw-ruler { position: absolute; left: 0; top: 0; bottom: 0; width: 40px; background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .35) 0 1px, transparent 1px 16px) right / 8px 100% no-repeat; }
+.pw-ruler__n { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; }
+.pw-label { position: absolute; top: 28px; left: 64px; margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
+.pw-txts { position: relative; min-height: 260px; }
+.pw-txt { position: absolute; left: 0; right: 0; top: 50%; opacity: 0; transform: translateY(calc(-50% + 24px)); transition: opacity .45s cubic-bezier(.23, 1, .32, 1), transform .6s cubic-bezier(.23, 1, .32, 1); pointer-events: none; }
+.pw-txt.is-on { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
+.pw-txt.is-past { transform: translateY(calc(-50% - 24px)); }
+.pw-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; font-size-adjust: none; }
+.pw-h { margin: 14px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(40px, 4vw, 64px); line-height: 1; font-weight: 500; letter-spacing: -.015em; color: #2B1A17; }
+.pw-h em { font-style: italic; font-weight: 400; color: #85231A; }
+.pw-p { margin: 18px 0 0; max-width: 30em; font-family: 'PT Mono', monospace; font-size: 16px; line-height: 1.55; color: #2B1A17; font-size-adjust: none; }
+.pw-right { grid-column: 7 / span 6; align-self: center; }
+.pw-frame { position: relative; padding: 22px; }
+.pw-imgs { position: relative; aspect-ratio: 4 / 3; max-height: calc(100vh - 300px); margin: 0 auto; overflow: hidden; background: #2B1A17; }
+.pw-img { position: absolute; inset: 0; margin: 0; clip-path: inset(100% 0 0 0); will-change: clip-path; }
+.pw-img[data-i="0"] { clip-path: inset(0 0 0 0); }
+.pw-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pw-scan { position: absolute; left: 0; right: 0; top: 100%; height: 2px; background: #FFACE4; box-shadow: 0 0 12px #FFACE4; opacity: 0; pointer-events: none; }
+.pw-tag { position: absolute; left: 14px; top: 14px; padding: 4px 8px; background: #FFACE4; color: #85231A; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; border: 1px solid #2B1A17; }
+.pw-plus { position: absolute; width: 14px; height: 14px; }
+.pw-plus::before, .pw-plus::after { content: ''; position: absolute; background: #2B1A17; }
+.pw-plus::before { left: 6px; top: 0; width: 1px; height: 14px; } .pw-plus::after { top: 6px; left: 0; height: 1px; width: 14px; }
+.pw-plus--tl { left: 0; top: 0; } .pw-plus--tr { right: 0; top: 0; } .pw-plus--bl { left: 0; bottom: 0; } .pw-plus--br { right: 0; bottom: 0; }
+.pw-bar { display: none; }
+.pw-line { display: block; height: 1px; margin-top: 18px; background: rgba(133, 35, 26, .25); }
+.pw-line i { display: block; height: 100%; width: calc(var(--pp, 0) * 100%); background: #85231A; }
+.pw-mob { display: none; }
+/* вариант «Бордо» */
+#ritual[data-pv2="bordo"] { background: #85231A !important; color: #FFFAF6; }
+#ritual[data-pv2="bordo"] .pw-tab, #ritual[data-pv2="bordo"] .pw-h, #ritual[data-pv2="bordo"] .pw-p, #ritual[data-pv2="bordo"] .pw-ruler__n { color: #FFFAF6; }
+#ritual[data-pv2="bordo"] .pw-tab.is-on { color: #85231A; }
+#ritual[data-pv2="bordo"] .pw-tabs__bg { background: #FFACE4; }
+#ritual[data-pv2="bordo"] .pw-tabs, #ritual[data-pv2="bordo"] .pw-tab, #ritual[data-pv2="bordo"] .pw-tab:last-of-type { border-color: rgba(255, 250, 246, .3); }
+#ritual[data-pv2="bordo"] .pw-ruler { background-image: repeating-linear-gradient(to bottom, rgba(255, 250, 246, .4) 0 1px, transparent 1px 16px); }
+#ritual[data-pv2="bordo"] .pw-kick, #ritual[data-pv2="bordo"] .pw-h em { color: #FFACE4; }
+#ritual[data-pv2="bordo"] .pw-label { color: #E3B6B0; }
+#ritual[data-pv2="bordo"] .pw-plus::before, #ritual[data-pv2="bordo"] .pw-plus::after { background: #FFFAF6; }
+#ritual[data-pv2="bordo"] .pw-line { background: rgba(255, 250, 246, .25); } #ritual[data-pv2="bordo"] .pw-line i { background: #FFACE4; }
+/* вариант «Окно» */
+#ritual[data-pv2="window"] .pw-frame { padding: 0; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 8px 8px 0 #2B1A17; transform: rotate(-1deg); }
+#ritual[data-pv2="window"] .pw-bar { display: flex; justify-content: space-between; align-items: center; height: 30px; padding: 0 12px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; }
+#ritual[data-pv2="window"] .pw-imgs { margin: 10px; }
+#ritual[data-pv2="window"] .pw-plus { display: none; }
+#ritual[data-pv2="window"] .pw-scan { opacity: 1; }
+#ritual[data-pv2="window"] .pw-tabs__bg { background: #FFACE4; } #ritual[data-pv2="window"] .pw-tab.is-on { color: #85231A; }
+@media (max-width: 900px) {
+  .pw { height: auto; padding: 64px 16px 48px !important; }
+  .pw-stick { display: none; }
+  .pw-mob { display: block; }
+  .pw-mob__h { margin: 0 0 8px; font-size: 40px; line-height: 1; font-weight: 500; color: #85231A; }
+  .pw-m { margin-top: 32px; }
+  .pw-m img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; }
+  .pw-m .pw-kick { margin-top: 18px; }
+  .pw-m .pw-h { font-size: 34px; }
+  #ritual[data-pv2="bordo"] .pw-mob__h { color: #FFFAF6; }
+}
+@media (prefers-reduced-motion: reduce) { .pw-tabs__bg, .pw-txt { transition: none; } }
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
 @media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
@@ -965,56 +1101,29 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 </section>
 
-<!-- 03 РИТУАЛ ВИЗИТА · экран закрепляется, шаги листаются прокруткой -->
-<section id="ritual" ref="{{setRitual}}" class="ritual-outer" style="position: relative; height: 2400px; background: #85231A; color: #FFFAF6;">
-<div class="ritual-pin stack" style="position: sticky; top: 0; height: 100vh; height: 100svh; padding: 72px 16px 36px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: stretch;">
-<div style="grid-column: 1 / span 3; display: flex; flex-direction: column; justify-content: space-between; gap: 24px;">
-<div>
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Ритуал визита</p>
-<h2 class="hx" style="margin: 14px 0 0; font-size: 36px; line-height: 1.02; font-weight: 500; letter-spacing: -.01em;">Сначала напиток, потом ногти</h2>
+<!-- 03 ПОЧЕМУ БЭСТИ · контент с bestie-nails.ru (22.11); механика по ref-278 (heronaiapp.com): закреплённый экран, вкладки сверху, смена фото «сканированием» снизу вверх по прокрутке -->
+<section id="ritual" class="pw" data-pv2="heron" style="position: relative; background: #FFFAF6; color: #85231A;">
+<div class="pw-stick">
+<ol class="pw-tabs" aria-label="Почему бэсти — шаги"><li class="pw-tab" data-i="0"><span class="pw-tab__n">[01]</span><span class="pw-tab__t">Кино в кресле</span></li><li class="pw-tab" data-i="1"><span class="pw-tab__n">[02]</span><span class="pw-tab__t">Массаж для рук</span></li><li class="pw-tab" data-i="2"><span class="pw-tab__n">[03]</span><span class="pw-tab__t">Меню напитков</span></li><li class="pw-tab" data-i="3"><span class="pw-tab__n">[04]</span><span class="pw-tab__t">Уход Zielinski & Rozen</span></li><li class="pw-tabs__bg" aria-hidden="true"></li></ol>
+<div class="pw-main">
+<div class="pw-left">
+<div class="pw-ruler" aria-hidden="true"><span class="pw-ruler__n">[01]</span></div>
+<p class="pw-label">Почему бэсти</p>
+<div class="pw-txts"><div class="pw-txt" data-i="0"><p class="pw-kick">[01] почему бэсти</p><h3 class="pw-h">Кино <em>в&nbsp;кресле</em></h3><p class="pw-p">У&nbsp;педикюрного кресла свой планшет с&nbsp;наушниками: включите фильм или сериал, пока мастер работает.</p></div><div class="pw-txt" data-i="1"><p class="pw-kick">[02] почему бэсти</p><h3 class="pw-h">Массаж <em>для&nbsp;рук</em></h3><p class="pw-p">В&nbsp;конце процедуры предложим расслабить руки в&nbsp;массажёре. Бесплатно&nbsp;— гости пишут, что видят такое впервые.</p></div><div class="pw-txt" data-i="2"><p class="pw-kick">[03] почему бэсти</p><h3 class="pw-h">Меню <em>напитков</em></h3><p class="pw-p">Кофе на&nbsp;обычном или растительном молоке, гречишный чай, матча и&nbsp;какао на&nbsp;банановом молоке.</p></div><div class="pw-txt" data-i="3"><p class="pw-kick">[04] почему бэсти</p><h3 class="pw-h">Уход <em>Zielinski &amp;&nbsp;Rozen</em></h3><p class="pw-p">Питательный уход входит почти во&nbsp;все виды маникюра и&nbsp;педикюра&nbsp;— доплачивать за&nbsp;него не&nbsp;нужно.</p></div></div>
 </div>
-<ol style="list-style: none; margin: 0; padding: 0;">
-<sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
-<li>
-<button onClick="{{s.pick}}" aria-current="{{s.current}}" style="display: block; width: 100%; padding: 10px 0 12px; background: transparent; border: 0; text-align: left; color: {{s.color}}; font-family: 'PT Mono', monospace;">
-<span style="display: flex; align-items: baseline; gap: 12px;"><span style="font-size: 10px; letter-spacing: .06em;">{{s.n}}</span><span style="font-size: 13px; letter-spacing: .02em; text-transform: uppercase;">{{s.t}}</span><span class="rit-sign" aria-hidden="true" style="display: none; margin-left: auto; width: 24px; height: 24px; place-items: center; border: 1px solid rgba(255, 250, 246, .6); font-size: 14px; line-height: 1;">{{s.sign}}</span></span>
-<span style="display: block; height: 2px; margin-top: 10px; background: rgba(255, 250, 246, .22);"><span style="display: block; height: 100%; width: {{s.bar}}; background: #FFACE4; transition: width .3s linear;"></span></span>
-</button>
-<sc-if value="{{s.mOpen}}" hint-placeholder-val="{{false}}">
-<div class="rit-m" style="margin: 4px 0 16px;">
-<div style="position: relative; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid rgba(255, 250, 246, .35); background: #6F1D15;">
-<sc-if value="{{s.hasImg}}" hint-placeholder-val="{{true}}"><span style="position: relative; display: block; width: 100%; height: 100%; overflow: hidden; background: #2B1A17;"><img aria-hidden="true" alt="" loading="lazy" decoding="async" src="{{s.img}}" style="position: absolute; inset: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; filter: blur(28px) brightness(.55); display: block;"><img loading="lazy" decoding="async" src="{{s.img}}" alt="{{s.alt}}" style="position: relative; width: 100%; height: 100%; object-fit: contain; display: block;"></span></sc-if>
-<sc-if value="{{s.noImg}}" hint-placeholder-val="{{false}}"><div class="ph-d" style="width: 100%; height: 100%; display: grid; place-items: center; padding: 12px; text-align: center;"><span class="wait wait-d">{{s.wait}}</span></div></sc-if>
-</div>
-<p style="margin: 10px 0 0; font-size: 15px; line-height: 1.45; color: #FFFAF6;">{{s.d}}</p>
-</div>
-</sc-if>
-</li>
-</sc-for>
-</ol>
-<div>
-<p class="hide-m" style="margin: 0 0 12px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #FFACE4;">Листайте вниз</p>
-<a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #FFACE4; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться</a>
+<div class="pw-right">
+<div class="pw-frame">
+<div class="pw-bar" aria-hidden="true"><span class="pw-bar__f">kino_v_kresle.jpg</span><span>_ □ ×</span></div>
+<div class="pw-imgs"><figure class="pw-img" data-i="0" data-file="kino_v_kresle.jpg"><img src="assets/pros/kino-v-kresle.webp" alt="Педикюрное кресло с планшетом" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="1" data-file="massazh_dlya_ruk.jpg"><img src="assets/pros/massazher-dlya-ruk.webp" alt="Руки в массажёре для рук" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="2" data-file="menyu_napitkov.jpg"><img src="assets/pros/menyu-napitkov.webp" alt="Меню напитков бэсти на столике студии: кофе, чай, матча и какао" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="3" data-file="uhod_zielinski.jpg"><img src="assets/pros/uhod-zielinski.webp" alt="Средства Zielinski & Rozen на полке студии" loading="lazy" decoding="async"></figure><span class="pw-scan" aria-hidden="true"></span><span class="pw-tag" aria-hidden="true">бэсти · <b>01</b>/04</span></div>
+<i class="pw-plus pw-plus--tl" aria-hidden="true"></i><i class="pw-plus pw-plus--tr" aria-hidden="true"></i><i class="pw-plus pw-plus--bl" aria-hidden="true"></i><i class="pw-plus pw-plus--br" aria-hidden="true"></i>
 </div>
 </div>
-<div class="ritual-photo" style="grid-column: 4 / span 9; position: relative; overflow: hidden; border: 1px solid rgba(255, 250, 246, .35); background: #6F1D15;">
-<sc-for list="{{layers}}" as="l" hint-placeholder-count="4">
-<div style="position: absolute; inset: 0; opacity: {{l.op}}; transform: {{l.tf}}; transition: opacity .8s ease, transform 1.4s cubic-bezier(.2, .8, .2, 1);">
-<sc-if value="{{l.hasImg}}" hint-placeholder-val="{{true}}"><span style="position: relative; display: block; width: 100%; height: 100%; overflow: hidden; background: #2B1A17;"><img aria-hidden="true" alt="" loading="lazy" decoding="async" src="{{l.img}}" style="position: absolute; inset: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; filter: blur(28px) brightness(.55); display: block;"><img loading="lazy" decoding="async" src="{{l.img}}" alt="{{l.alt}}" style="position: relative; width: 100%; height: 100%; object-fit: contain; display: block;"></span></sc-if>
-<sc-if value="{{l.noImg}}" hint-placeholder-val="{{false}}"><div class="ph-d" style="width: 100%; height: 100%; display: grid; place-items: center;"><span class="wait wait-d">{{l.wait}}</span></div></sc-if>
 </div>
-</sc-for>
-<sc-for list="{{layers}}" as="l" hint-placeholder-count="4">
-<div style="position: absolute; left: 20px; bottom: 48px; width: min(380px, calc(100% - 40px)); opacity: {{l.op}}; transform: {{l.cardTf}}; transition: opacity .5s ease, transform .7s cubic-bezier(.2, .8, .2, 1); background: #FFFAF6; color: #2B1A17; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;">
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 3px 10px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;"><span>шаг_{{l.n}}.txt</span><span aria-hidden="true">_ □ ×</span></div>
-<div style="padding: 14px 16px 16px;">
-<p style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; line-height: 1; font-weight: 500; color: #85231A;">{{l.t}}</p>
-<p style="margin: 8px 0 0; font-size: 17px; line-height: 1.45;">{{l.d}}</p>
+<span class="pw-line" aria-hidden="true"><i></i></span>
 </div>
-</div>
-</sc-for>
-<span style="position: absolute; top: 14px; right: 14px; padding: 2px 8px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .04em;">{{curN}} / 04</span>
-</div>
+<div class="pw-mob">
+<h2 class="hx pw-mob__h">Почему <em>бэсти</em></h2>
+<div class="pw-m"><img src="assets/pros/kino-v-kresle.webp" alt="Педикюрное кресло с планшетом" loading="lazy" decoding="async"><p class="pw-kick">[01]</p><h3 class="pw-h">Кино <em>в&nbsp;кресле</em></h3><p class="pw-p">У&nbsp;педикюрного кресла свой планшет с&nbsp;наушниками: включите фильм или сериал, пока мастер работает.</p></div><div class="pw-m"><img src="assets/pros/massazher-dlya-ruk.webp" alt="Руки в массажёре для рук" loading="lazy" decoding="async"><p class="pw-kick">[02]</p><h3 class="pw-h">Массаж <em>для&nbsp;рук</em></h3><p class="pw-p">В&nbsp;конце процедуры предложим расслабить руки в&nbsp;массажёре. Бесплатно&nbsp;— гости пишут, что видят такое впервые.</p></div><div class="pw-m"><img src="assets/pros/menyu-napitkov.webp" alt="Меню напитков бэсти на столике студии: кофе, чай, матча и какао" loading="lazy" decoding="async"><p class="pw-kick">[03]</p><h3 class="pw-h">Меню <em>напитков</em></h3><p class="pw-p">Кофе на&nbsp;обычном или растительном молоке, гречишный чай, матча и&nbsp;какао на&nbsp;банановом молоке.</p></div><div class="pw-m"><img src="assets/pros/uhod-zielinski.webp" alt="Средства Zielinski & Rozen на полке студии" loading="lazy" decoding="async"><p class="pw-kick">[04]</p><h3 class="pw-h">Уход <em>Zielinski &amp;&nbsp;Rozen</em></h3><p class="pw-p">Питательный уход входит почти во&nbsp;все виды маникюра и&nbsp;педикюра&nbsp;— доплачивать за&nbsp;него не&nbsp;нужно.</p></div>
 </div>
 </section>
 
@@ -1919,7 +2028,7 @@ class Component extends DCLogic {
     return Object.assign(this.lbVals(), {
       menuOpen: st.menuOpen, menuLabel: st.menuOpen ? 'закрыть' : 'меню', menuBg: st.menuOpen ? '#FFACE4' : 'transparent',
       menuToggle: () => this.setState({ menuOpen: !st.menuOpen }), menuClose: () => this.setState({ menuOpen: false }),
-      menuItems: [['#promo', 'Акция для новых гостей'], ['#price', 'Услуги и цены'], ['#studio', 'Студия'], ['#ritual', 'Ритуал визита'], ['#drinks', 'Меню напитков'],
+      menuItems: [['#promo', 'Акция для новых гостей'], ['#price', 'Услуги и цены'], ['#studio', 'Студия'], ['#ritual', 'Почему бэсти'], ['#drinks', 'Меню напитков'],
         ['#works', 'Работы'], ['#clean', 'Стерильность'], ['#team', 'Команда'], ['#reviews', 'Отзывы'], ['#cert', 'Сертификат'], ['#faq', 'Вопросы'], ['#route', 'Как дойти']]
         .map((x, i) => ({ href: x[0], label: x[1], n: (i < 9 ? '0' : '') + (i + 1) })),
       // «о_студии»: открыта наверху страницы, прячется при прокрутке; стрелка — вручную (21.11)
