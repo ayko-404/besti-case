@@ -315,7 +315,7 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
     var from = reduce ? { opacity: 0 } : { opacity: 0, translate: '0 22px' }, to = reduce ? { opacity: 1 } : { opacity: 1, translate: '0 0' };
     try { el.animate([from, to], { duration: reduce ? 400 : 700, delay: delay, easing: EASE, fill: 'backwards' }); } catch (e) {}
     if (reduce) return;
-    var hs = /^H[12]$/.test(el.tagName) ? [el] : el.querySelectorAll('h1, h2');
+    var hs = /^H[12]$/.test(el.tagName) ? (el.hasAttribute('data-nopx') ? [] : [el]) : el.querySelectorAll('h1:not([data-nopx]), h2:not([data-nopx])');
     Array.prototype.forEach.call(hs, function (h) { animH(h, delay + 120); });
   }
   function targets(sec) {
@@ -352,6 +352,30 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
   if (document.body) panel(); else document.addEventListener('DOMContentLoaded', panel);
 })();
 </script>
+<script>
+/* «Студия» (22.11): слова заголовка съезжаются к фото по прокрутке заставки; видео коллажа играют только рядом с экраном, без звука */
+(function () {
+  function init() {
+    var gi = document.querySelector('#studio .gintro');
+    if (!gi) return setTimeout(init, 150);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var st = gi.querySelector('.gintro__stick'), ticking = false, start = 0, run = 1;
+      var measure = function () { run = (gi.offsetHeight - st.offsetHeight) * .65; start = gi.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(st).top); };
+      var upd = function () { ticking = false; gi.style.setProperty('--p', Math.max(0, Math.min(1, (scrollY - start) / run)).toFixed(3)); };
+      addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+      addEventListener('resize', function () { measure(); upd(); }); addEventListener('load', function () { measure(); upd(); });
+      measure(); upd();
+    } else gi.style.setProperty('--p', '1');
+    var vids = document.querySelectorAll('#studio .ga video');
+    var play = function (v) { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) play(en.target); else en.target.pause(); }); }, { rootMargin: '200px 0px' });
+      Array.prototype.forEach.call(vids, function (v) { io.observe(v); });
+    } else Array.prototype.forEach.call(vids, play);
+  }
+  init();
+})();
+</script>
 <x-dc>
 <helmet>
 <style>
@@ -379,7 +403,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .nail { transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
 .prow-hover:hover { background: rgba(255, 172, 228, .16); }
 /* ── Прайс «рабочий стол» (22.11, выбор Никиты): пиксельные папки-ярлыки, услуги — окном; список слева, карточка справа ── */
-.pl-list { grid-column: 1 / span 6; margin-left: 40px; border-top: 1px solid rgba(43, 26, 23, .25); }
+.pl-list { grid-column: 1 / span 5; margin-left: 40px; border-top: 1px solid rgba(43, 26, 23, .25); }
 .pl-row { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; column-gap: 10px; width: 100%; min-height: 52px; padding: 0 10px 0 8px; background: transparent; border: 0; border-bottom: 1px solid rgba(43, 26, 23, .25); text-align: left; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1.3; color: #2B1A17; cursor: pointer; transition: background-color .16s ease; }
 .pl-row:hover { background: rgba(255, 172, 228, .14); }
 .pl-row[aria-pressed="true"] { background: #FFF6F0; color: #85231A; }
@@ -420,8 +444,52 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   #price[data-pv="desk"] .pr-panel { padding-top: 44px; }
   #price[data-pv="desk"] .pr-tab { flex: 0 0 30% !important; }
 }
+/* «Студия» — блок «В гостях» из прошлой версии (22.11): заставка со съезжающимися словами, коллаж видео и фото */
+.gintro { --p: 0; position: relative; height: 230vh; }
+.gintro__stick { position: sticky; top: 84px; height: calc(100vh - 84px); display: grid; place-items: center; overflow: hidden; }
+.gintro__img { height: min(70vh, 760px); width: auto; aspect-ratio: 3 / 4; object-fit: cover; border: 1px solid #2B1A17; box-shadow: 6px 6px 0 #2B1A17; }
+.gintro__ttl { position: absolute; inset: 0; margin: 0; pointer-events: none; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; color: #85231A; letter-spacing: -.015em; }
+.gintro__l, .gintro__r { position: absolute; white-space: nowrap; line-height: 1; will-change: transform; text-shadow: 0 2px 0 #FFFAF6, 0 -2px 0 #FFFAF6, 2px 0 0 #FFFAF6, -2px 0 0 #FFFAF6, 2px 2px 0 #FFFAF6, -2px -2px 0 #FFFAF6, 2px -2px 0 #FFFAF6, -2px 2px 0 #FFFAF6; }
+.gintro__l { left: calc(50% - min(26.25vh, 285px) - 10vw); top: 9%; font-size: clamp(64px, 9vw, 150px); transform: translateX(calc((1 - var(--p)) * -75vw)); }
+.gintro__r { right: calc(50% - min(26.25vh, 285px) - 12vw); top: 58%; font-size: clamp(64px, 9vw, 150px); transform: translateX(calc((1 - var(--p)) * 75vw)); }
+.gintro__ring { position: relative; display: inline-block; padding: 0 .1em; }
+.gosti__body { padding-top: 24px; }
+.ga { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; }
+.ga__m { grid-column: 1 / span 6; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #2B1A17; border-top: 0; }
+.ga__m--1 { border-top: 1px solid #2B1A17; }
+.ga__m figure { margin: 0; position: relative; overflow: hidden; background: #2B1A17; }
+.ga__m figure + figure { border-left: 1px solid #2B1A17; }
+.ga__m img, .ga__m video { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+.ga__m .ga__wide { grid-column: 1 / -1; }
+.ga__m .ga__wide img { aspect-ratio: 4 / 3; }
+.ga__m--1 { grid-row: 1; } .ga__m--2 { grid-row: 2; } .ga__m--3 { grid-row: 3; } .ga__m--4 { grid-row: 4; }
+.ga__t { grid-column: 8 / span 4; }
+.ga__t--1 { grid-row: 1; align-self: start; padding-top: 48px; }
+.ga__t--2 { grid-row: 2; align-self: center; }
+.ga__t--3 { grid-row: 3; align-self: end; padding-bottom: 72px; }
+.ga__t--4 { grid-row: 4; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+.ga__t--4 .ga__btn { align-self: flex-start; margin-top: 32px; }
+.ga__label { margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
+.ga__h { margin: 12px 0 0; font-family: 'PT Mono', monospace; font-size: 22px; line-height: 1.25; text-transform: uppercase; color: #85231A; }
+.ga__p { margin: 14px 0 0; font-family: 'PT Mono', monospace; font-size: 16px; line-height: 1.55; color: #2B1A17; }
+.ga__note { margin: 28px 0 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 40px; line-height: 1; color: #85231A; transform: rotate(-4deg); transform-origin: left; }
+.ga__label, .ga__h, .ga__p { font-size-adjust: none; }
+@media (prefers-reduced-motion: reduce) { .gintro { --p: 1 !important; height: auto; } .gintro__stick { position: relative; top: 0; height: 86vh; } }
+@media (max-width: 900px) {
+  .gintro { height: 190vh; }
+  .gintro__stick { top: 70px; height: calc(100vh - 70px); }
+  .gintro__img { width: 78vw; height: auto; }
+  .gintro__l { left: 0; right: 0; top: 18%; text-align: center; font-size: 56px; transform: translateX(calc((1 - var(--p)) * -110vw)); }
+  .gintro__r { left: 0; right: 0; top: 68%; text-align: center; font-size: 52px; transform: translateX(calc((1 - var(--p)) * 110vw)); }
+  .ga { grid-template-columns: 1fr; row-gap: 0; }
+  .ga__m { grid-template-columns: 1fr; }
+  .ga__m figure + figure { border-left: 0; border-top: 1px solid #2B1A17; }
+  .ga__m img, .ga__m video { aspect-ratio: 4 / 5; }
+  .ga > * { grid-column: 1 !important; grid-row: auto !important; margin: 0 !important; transform: none !important; }
+  .ga__t { padding: 28px 0 40px !important; }
+}
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
-@media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
+@media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
 .tilt { transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .tilt:hover { transform: rotate(0deg) scale(1.04) !important; }
@@ -761,13 +829,26 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 </section>
 
-<!-- 02 СТУДИЯ · коллаж (a)(b)(c) (Köppen) -->
-<section id="studio" ref="{{setStudio}}" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
-<div style="grid-column: 1 / span 4;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Студия</p>
-<h2 class="hx" style="margin: 16px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Студия<br><span style="position: relative; display: inline-block; padding: 0 6px;">с характером<svg aria-hidden="true" viewBox="0 0 300 90" preserveAspectRatio="none" fill="none" style="position: absolute; left: -16px; top: -14px; width: calc(100% + 32px); height: calc(100% + 26px); overflow: visible; pointer-events: none;"><path d="M24 42 C 24 14, 150 4, 268 16 C 302 22, 298 70, 222 80 C 140 90, 32 86, 12 62 C 2 46, 40 26, 96 21" stroke="#85231A" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path><path d="M44 18 C 122 2, 282 8, 292 42 C 298 74, 198 90, 108 85 C 38 81, 4 66, 12 44 C 20 27, 72 13, 156 12" stroke="#85231A" stroke-width="1.6" stroke-linecap="round" vector-effect="non-scaling-stroke"></path><path d="M62 76 C 18 68, 6 44, 30 30 C 72 6, 232 6, 280 31 C 298 44, 288 62, 248 71" stroke="#85231A" stroke-width="1.3" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg></span></h2>
-<p style="margin: 24px 0 0; font-size: 18px; line-height: 1.45; color: #2B1A17;">Столы мастеров у окон, зелёные бархатные кресла для ожидания и фильмы, пока делаем маникюр</p>
-<div ref="{{setReview}}" style="margin: 64px 0 0 6px; will-change: transform;">
+<!-- 03 СТУДИЯ · блок «В гостях» из прошлой версии (ayko-404/Besti, 04.11): заставка со съезжающимися словами + коллаж видео и фото; заголовок и отзыв — наши (22.11) -->
+<section id="studio" ref="{{setStudio}}" class="sec gosti" style="position: relative; background: #FFFAF6; color: #85231A; padding: 0 16px 56px;">
+<div class="gintro">
+<div class="gintro__stick">
+<img loading="lazy" decoding="async" width="900" height="1200" class="gintro__img" src="assets/gosti/gosti-gostya-lift.webp" alt="Гостья бэсти показывает разноцветный маникюр">
+<h2 class="gintro__ttl" data-nopx=""><span class="gintro__l">Студия</span><span class="gintro__r"><span class="gintro__ring">с характером<svg aria-hidden="true" viewBox="0 0 300 90" preserveAspectRatio="none" fill="none" style="position: absolute; left: -16px; top: -14px; width: calc(100% + 32px); height: calc(100% + 26px); overflow: visible; pointer-events: none;"><path d="M24 42 C 24 14, 150 4, 268 16 C 302 22, 298 70, 222 80 C 140 90, 32 86, 12 62 C 2 46, 40 26, 96 21" stroke="#85231A" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path><path d="M44 18 C 122 2, 282 8, 292 42 C 298 74, 198 90, 108 85 C 38 81, 4 66, 12 44 C 20 27, 72 13, 156 12" stroke="#85231A" stroke-width="1.6" stroke-linecap="round" vector-effect="non-scaling-stroke"></path><path d="M62 76 C 18 68, 6 44, 30 30 C 72 6, 232 6, 280 31 C 298 44, 288 62, 248 71" stroke="#85231A" stroke-width="1.3" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg></span></span></h2>
+</div>
+</div>
+<div class="gosti__body">
+<div class="ga">
+<div class="ga__m ga__m--1"><figure><video src="assets/gosti/video-den-v-studii.mp4" poster="assets/gosti/video-den-v-studii-poster.webp" muted loop playsinline preload="none" aria-label="Видео: утро в студии"></video></figure><figure><img width="900" height="1200" src="assets/gosti/gosti-stolik-cvety.webp" alt="Столик в студии с цветами" loading="lazy" decoding="async"></figure></div>
+<div class="ga__t ga__t--1">
+<p class="ga__label">(a) атмосфера</p>
+<p class="ga__h">Кирпичные стены, красный ковёр и&nbsp;зелёные бархатные кресла</p>
+<p class="ga__p">Студия в Печатниковом переулке, в трёх минутах от «Трубной». Рядом «Золотое Яблоко» и рестораны — можно устроить себе бьюти-день.</p>
+<p class="ga__note">как у лучшей подруги</p>
+</div>
+<div class="ga__m ga__m--2"><figure class="ga__wide"><img width="1200" height="900" src="assets/gosti/gosti-zelyonye-kresla-4x3.webp" alt="Зелёные бархатные кресла и ковёр в студии" loading="lazy" decoding="async"></figure></div>
+<div class="ga__t ga__t--2">
+<div ref="{{setReview}}" style="margin: 0; will-change: transform;">
 <figure class="levitate" style="margin: 0; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 3px 10px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;"><span>отзыв · Яндекс Карты</span><span aria-hidden="true">_ □ ×</span></div>
 <div style="padding: 14px 16px 16px;">
@@ -783,19 +864,20 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </figure>
 </div>
 </div>
-<div class="stack" style="grid-column: 6 / span 7; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
-<figure style="grid-column: 1 / span 3; margin: 0; position: relative;">
-<img loading="lazy" decoding="async" src="assets/studio-a.webp" alt="Рабочее место мастера у окна, кирпичная стена" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; box-sizing: border-box;">
-<span class="pcard" style="left: 10px; bottom: -16px; transform: rotate(-2deg);"><b>a</b>Маникюр у окна</span>
-</figure>
-<figure style="grid-column: 4 / span 2; margin: 0; position: relative;">
-<img loading="lazy" decoding="async" src="assets/studio-b.webp" alt="Уходовая косметика PREDUBEZHDAI у кирпичной стены" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; box-sizing: border-box;">
-<span class="pcard" style="left: -8px; right: -10px; bottom: -22px; transform: rotate(2deg);"><b>b</b>Уход PREDUBEZHDAI</span>
-</figure>
-<figure class="off-m" style="grid-column: 6 / span 2; margin: 132px 0 0; position: relative;">
-<img loading="lazy" decoding="async" src="assets/studio-c.webp" alt="Полка с ароматами и уходом" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; box-sizing: border-box;">
-<span class="pcard" style="left: -6px; right: 8px; bottom: -20px; transform: rotate(-1.5deg);"><b>c</b>Ароматы и детали</span>
-</figure>
+<div class="ga__m ga__m--3"><figure><img width="900" height="1200" src="assets/gosti/gosti-polka.webp" alt="Полка с уходом в студии" loading="lazy" decoding="async"></figure><figure><video src="assets/gosti/video-process.mp4" poster="assets/gosti/video-process-poster.webp" muted loop playsinline preload="none" aria-label="Видео: мастер делает маникюр"></video></figure></div>
+<div class="ga__t ga__t--3">
+<p class="ga__label">(b) кресло с кино</p>
+<p class="ga__h">Персональный планшет с&nbsp;наушниками</p>
+<p class="ga__p">Пока мастер работает, время в студии проходит незаметно.</p>
+</div>
+<div class="ga__m ga__m--4"><figure><video src="assets/gosti/video-polki-luxio.mp4" poster="assets/gosti/video-polki-luxio-poster.webp" muted loop playsinline preload="none" aria-label="Видео: полки с лаками Luxio"></video></figure><figure><img width="900" height="1200" src="assets/gosti/gosti-flakon-kirpich.webp" alt="Маникюр на фоне кирпичной стены" loading="lazy" decoding="async"></figure></div>
+<div class="ga__t ga__t--4">
+<p class="ga__label">(c) стерильно</p>
+<p class="ga__h">Инструменты распаковывают при&nbsp;вас</p>
+<p class="ga__p">Из стерильного пакета, на ваших глазах. Покрытие — палитра Luxio.</p>
+<a class="btn ga__btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться онлайн</a>
+</div>
+</div>
 </div>
 </section>
 
@@ -1287,7 +1369,7 @@ class Component extends DCLogic {
     const s = this.studioEl, r = this.reviewEl;
     if (!s || !r) return;
     if (window.innerWidth < 900) { r.style.transform = ''; return; }
-    const b = s.getBoundingClientRect();
+    const b = (r.parentElement || s).getBoundingClientRect();
     const c = b.top + b.height / 2 - window.innerHeight / 2;
     this.pxT = Math.max(-20, Math.min(36, -c * 0.08));
     if (!this.pxRaf) this.pxRaf = requestAnimationFrame(this.pxTick);
