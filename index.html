@@ -764,7 +764,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .fq__a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s cubic-bezier(.2, .8, .2, 1); }
 .fq__it.is-open .fq__a { grid-template-rows: 1fr; }
 .fq__ai { overflow: hidden; padding-right: 44px; font-size: 15px; line-height: 1.55; color: #2B1A17; }
-.fq__ai p { margin: 0 0 6px; } .fq__ai p:last-child { margin-bottom: 16px; }
+.fq__ai p { margin: 0 0 6px; } .fq__ai p:last-child { margin-bottom: 16px; } .fq__ai a { color: #85231A; text-underline-offset: 3px; }
 .fq-o { position: absolute; z-index: 1; display: block; opacity: 0; will-change: transform, opacity; }
 .fq-o__b { display: block; animation: fqbob 5.5s ease-in-out infinite alternate; }
 @keyframes fqbob { from { transform: translateY(-7px) rotate(-2deg); } to { transform: translateY(7px) rotate(2deg); } }
@@ -773,7 +773,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 @media (max-width: 1399px) { .fq__objs { display: none; } }
 @media (max-width: 900px) {
   .fq { height: calc(100svh + 700px); }
-  .fq__stage { height: 100svh; padding: 80px 12px 16px; }
+  .fq__stage { height: 100svh; padding: 84px 12px 16px; place-items: start center; }
+  .fq__in { padding-top: 22px !important; }
+  .fq__q { min-height: 48px; }
   .fq__in { padding: 28px 18px 22px; }
   .fq__h { font-size: 34px; }
   .fq__tabs { margin: 24px 0 14px; }
@@ -928,6 +930,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-img { position: absolute; inset: 0; margin: 0; clip-path: inset(100% 0 0 0); will-change: clip-path; }
 .pw-img[data-i="0"] { clip-path: inset(0 0 0 0); }
 .pw-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pw-img[data-file="kino_v_kresle.jpg"] img { object-position: 12% 50%; } /* кадр с планшетом и наушниками целиком */
 .pw-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: #FFACE4; box-shadow: 0 0 12px #FFACE4; opacity: 0; pointer-events: none; }
 .pw-tag { position: absolute; left: 14px; top: 14px; padding: 4px 8px; background: #FFACE4; color: #85231A; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; border: 1px solid #2B1A17; }
 .pw-plus { position: absolute; width: 14px; height: 14px; }
@@ -1633,8 +1636,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div class="fq__in">
 <h2 id="fq-h" class="fq__h">Частые вопросы</h2>
 <p class="fq__sub">Всё, что важно знать до визита</p>
-<div class="fq__tabs" role="tablist" aria-label="Темы вопросов"><button type="button" class="fq__tab" role="tab" id="fq-tab-0" aria-controls="fq-p-0" aria-selected="true" data-t="0">Запись и визит</button><button type="button" class="fq__tab" role="tab" id="fq-tab-1" aria-controls="fq-p-1" aria-selected="false" data-t="1">Студия</button></div>
-<div class="fq__panel" id="fq-p-0" role="tabpanel" aria-labelledby="fq-tab-0"><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Сколько длится визит?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Маникюр — 1–1,5 часа; педикюр — 1–2 часа. Время зависит от услуги; дополнительные процедуры выбираются отдельно</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Записалась не на ту услугу — что делать?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Скажите администратору: поменяем на месте или подскажем заранее</p><p><span class="wait">[ждём: подтверждение]</span></p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Как оплатить?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Картой, наличными, по QR-коду или через СБП</p></div></div></div></div><div class="fq__panel" id="fq-p-1" role="tabpanel" aria-labelledby="fq-tab-1" hidden><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Можно прийти с собакой?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p><span class="wait">[ждём: правила — в карточке «с собаками до 35 см» и «с кошками и собаками»; спросить отдельно]</span></p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Есть ли парковка?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p><span class="wait">[ждём: где — в карточке «парковка: да»]</span></p></div></div></div></div>
+<!-- вопросы и ответы (22.11): карточка Яндекс Карт (audits/yandex-maps-2026-10-23/card.md — особенности, оплата, акция), прайс и меню сайта, отзывы гостей -->
+<div class="fq__tabs" role="tablist" aria-label="Темы вопросов"><button type="button" class="fq__tab" role="tab" id="fq-tab-0" aria-controls="fq-p-0" aria-selected="true" data-t="0">Запись</button><button type="button" class="fq__tab" role="tab" id="fq-tab-1" aria-controls="fq-p-1" aria-selected="false" data-t="1">Оплата</button><button type="button" class="fq__tab" role="tab" id="fq-tab-2" aria-controls="fq-p-2" aria-selected="false" data-t="2">Студия</button></div>
+<div class="fq__panel" id="fq-p-0" role="tabpanel" aria-labelledby="fq-tab-0"><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Как записаться?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Онлайн в YCLIENTS — свободное время и мастера видны сразу. Или по телефону <a href="tel:+79652300425">+7 (965) 230-04-25</a>.</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Сколько длится визит?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Маникюр — от 1 часа до 1,5 часа, педикюр — от 1 до 2 часов. Точное время каждой услуги указано в прайсе.</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Делаете мужской маникюр и педикюр?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Да: мужской маникюр, пилочный мужской маникюр и мужской педикюр — в разделе «Услуги и цены».</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Работаете каждый день?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Да, ежедневно с 10:00 до 22:00.</p></div></div></div></div><div class="fq__panel" id="fq-p-1" role="tabpanel" aria-labelledby="fq-tab-1" hidden><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Как оплатить?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Картой, наличными, по QR-коду или через СБП.</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Есть скидка на первый визит?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Да: сэт-комплекс Luxio — снятие гель-лака, маникюр, выравнивание и покрытие — за 2 890 ₽ вместо 3 400 ₽.</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Есть подарочный сертификат?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Да, на маникюр и педикюр. Купить можно через Telegram <a href="https://t.me/bestie_nail" target="_blank" rel="noopener">@bestie_nail</a>.</p></div></div></div></div><div class="fq__panel" id="fq-p-2" role="tabpanel" aria-labelledby="fq-tab-2" hidden><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Можно прийти с собакой?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Да, мы dog friendly: можно с собаками до 35 см и с кошками.</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Чем угостите?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Пока мастер работает — кофе на обычном или растительном молоке, гречишный чай, матча, какао на банановом молоке. Это комплимент от студии.</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Инструменты стерильные?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Да, инструменты достают из стерильного пакета при вас.</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Есть парковка и Wi-Fi?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Да, и парковка, и Wi-Fi есть.</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Можно на инвалидной коляске?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>К сожалению, вход и помещение пока не приспособлены для коляски.</p></div></div></div></div>
 </div>
 </div>
 </div>
@@ -1668,22 +1672,23 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <img loading="lazy" decoding="async" src="assets/besti-mark-pink.svg" alt="бэсти" style="height: 52px; width: auto; display: block;">
 <p style="margin: 18px 0 0; max-width: 270px; font-size: 15px; line-height: 1.5; color: rgba(255, 250, 246, .9);">Студия маникюра и педикюра в 340 метрах от „Трубной“. Каждый день 10:00–22:00</p>
 </div>
+<!-- подвал (22.11): данные — как на bestie-nails.ru -->
 <div style="grid-column: 4 / span 3; display: flex; flex-direction: column; gap: 8px; font-size: 15px;">
-<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Контакты</p>
-<span>Бэсти Нейлс — студия маникюра</span>
-<a class="tap" href="tel:+79652300425" style="color: #FFFAF6; text-decoration: none;">+7 (965) 230-04-25</a>
-<a class="tap" href="https://t.me/bestie_nail" target="_blank" rel="noopener" style="color: #FFFAF6;">Telegram @bestie_nail</a>
-<span>Instagram* — <span class="wait wait-d">[ждём: ссылка на аккаунт]</span></span>
+<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Подписывайтесь на бэсти</p>
+<span style="color: rgba(255, 250, 246, .9);">Показываем работы мастеров и жизнь студии.</span>
+<a class="tap" href="https://t.me/bestie_nail" target="_blank" rel="noopener" style="color: #FFFAF6; text-underline-offset: 3px;">Telegram</a>
+<a class="tap" href="https://www.instagram.com/bestie.naails/" target="_blank" rel="noopener" style="color: #FFFAF6; text-underline-offset: 3px;">Instagram*</a>
+<a class="tap" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="color: #FFFAF6; text-underline-offset: 3px;">Онлайн-запись</a>
 </div>
 <div style="grid-column: 7 / span 3; display: flex; flex-direction: column; gap: 8px; font-size: 15px;">
-<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Адрес и часы</p>
-<span>Москва, Печатников пер., 6</span>
-<span>Ежедневно 10:00–22:00</span>
+<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Как дойти</p>
+<a class="tap" href="tel:+79652300425" style="color: #FFFAF6; text-decoration: none;">+7 (965) 230-04-25</a>
+<span>Печатников пер., 6</span>
+<span>Каждый день 10:00–22:00</span>
 </div>
 <div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 10px; font-size: 15px;">
-<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Реквизиты и документы</p>
-<span>ИП Абдулагаева Зухра Загитдиновна</span>
-<span><span class="wait wait-d">[ждём: ИНН и ОГРНИП]</span></span>
+<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Бэсти</p>
+<span>© 2026 бэсти · ИП Абдулагаева Зухра Загитдиновна</span>
 <a class="tap" href="privacy.html" style="color: #FFFAF6; text-underline-offset: 3px;">Политика обработки персональных данных</a>
 <span style="margin-top: 2px; font-size: 12px; line-height: 1.4; color: rgba(255, 250, 246, .78);">*Instagram принадлежит компании Meta, признанной экстремистской и запрещённой на территории РФ</span>
 </div>
