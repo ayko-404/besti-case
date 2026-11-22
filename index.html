@@ -353,27 +353,39 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
 })();
 </script>
 <script>
-/* «Студия» (22.11): слова заголовка съезжаются к фото по прокрутке заставки; видео коллажа играют только рядом с экраном, без звука */
+/* «Студия» (22.11): слова заголовка выплывают из-за краёв одновременно и встают к фото по прокрутке заставки; обводка рисуется в конце.
+   Элементы ищем заново на каждом шаге — страница может перерисовать блок. Видео коллажа играют только рядом с экраном. */
 (function () {
-  function init() {
-    var gi = document.querySelector('#studio .gintro');
-    if (!gi) return setTimeout(init, 150);
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      var st = gi.querySelector('.gintro__stick'), ticking = false, start = 0, run = 1;
-      var measure = function () { run = (gi.offsetHeight - st.offsetHeight) * .65; start = gi.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(st).top); };
-      var upd = function () { ticking = false; var p = Math.max(0, Math.min(1, (scrollY - start) / run)); gi.style.setProperty('--p', p.toFixed(3)); gi.classList.toggle('is-done', p >= .97); };
-      addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
-      addEventListener('resize', function () { measure(); upd(); }); addEventListener('load', function () { measure(); upd(); });
-      measure(); upd();
-    } else { gi.style.setProperty('--p', '1'); gi.classList.add('is-done'); }
-    var vids = document.querySelectorAll('#studio .ga video');
-    var play = function (v) { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) play(en.target); else en.target.pause(); }); }, { rootMargin: '200px 0px' });
-      Array.prototype.forEach.call(vids, function (v) { io.observe(v); });
-    } else Array.prototype.forEach.call(vids, play);
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, ticking = false, m = null;
+  function els() { var gi = document.querySelector('#studio .gintro'); return gi ? { gi: gi, st: gi.querySelector('.gintro__stick'), L: gi.querySelector('.gintro__l'), R: gi.querySelector('.gintro__ring') || gi.querySelector('.gintro__r') } : null; }
+  function measure(e) {
+    var run = (e.gi.offsetHeight - e.st.offsetHeight) * .65, start = e.gi.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(e.st).top);
+    var p0 = e.gi.style.getPropertyValue('--p'); e.gi.style.setProperty('--p', '1');
+    var rg = document.createRange(); rg.selectNodeContents(e.L);
+    var sb = e.st.getBoundingClientRect(), lb = rg.getBoundingClientRect(), rb = e.R.getBoundingClientRect();
+    e.gi.style.setProperty('--dl', -Math.ceil(lb.right - sb.left + 24) + 'px');
+    e.gi.style.setProperty('--dr', Math.ceil(sb.right - rb.left + 24) + 'px');
+    e.gi.style.setProperty('--p', p0 || '0');
+    m = { gi: e.gi, run: Math.max(1, run), start: start, w: innerWidth, h: innerHeight };
   }
-  init();
+  function upd() {
+    ticking = false;
+    var e = els(); if (!e || !e.st || !e.L || !e.R) return;
+    if (reduce) { e.gi.style.setProperty('--p', '1'); e.gi.classList.add('is-done'); return; }
+    if (!m || m.gi !== e.gi || m.w !== innerWidth || m.h !== innerHeight) measure(e);
+    var p = Math.max(0, Math.min(1, (scrollY - m.start) / m.run));
+    e.gi.style.setProperty('--p', p.toFixed(3)); e.gi.classList.toggle('is-done', p >= .97);
+  }
+  function req() { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', function () { m = null; req(); });
+  addEventListener('load', function () { m = null; req(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { m = null; req(); });
+  setInterval(function () { var e = els(); if (e && (!m || m.gi !== e.gi)) req(); }, 500);
+  // видео
+  var seen = new WeakSet(), io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) { es.forEach(function (en) { var v = en.target; if (en.isIntersecting) { v.muted = true; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } else v.pause(); }); }, { rootMargin: '200px 0px' }) : null;
+  setInterval(function () { Array.prototype.forEach.call(document.querySelectorAll('#studio .ga video'), function (v) { if (seen.has(v)) return; seen.add(v); if (io) io.observe(v); else { v.muted = true; v.play(); } }); }, 400);
+  req();
 })();
 </script>
 <x-dc>
@@ -454,8 +466,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .gintro__ring path { opacity: 0; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .9s cubic-bezier(.65, 0, .35, 1), opacity 0s linear; }
 .gintro__ring .rg2 path { transition-delay: .35s; transition-duration: .7s, 0s; }
 .gintro.is-done .gintro__ring path { opacity: 1; stroke-dashoffset: 0; }
-.gintro__l { left: calc(50% - min(27.75vh, 292px) - 12vw); top: 8%; font-family: 'PT Mono', monospace !important; font-size: clamp(64px, 10.5vw, 168px); letter-spacing: .0016em; text-transform: uppercase; transform: translateX(calc((1 - var(--p)) * -75vw)); }
-.gintro__r { right: calc(50% - min(27.75vh, 292px) - 10vw); top: 56%; font-family: 'Gogol', cursive !important; font-size: clamp(64px, 8vw, 150px); -webkit-text-stroke-width: 4px; transform: translateX(calc((1 - var(--p)) * 75vw)) rotate(-4deg); }
+.gintro__l { left: calc(50% - min(27.75vh, 292px) - 12vw); top: 8%; font-family: 'PT Mono', monospace !important; font-size: clamp(64px, 10.5vw, 168px); letter-spacing: .0016em; text-transform: uppercase; transform: translateX(calc((1 - var(--p)) * var(--dl, -75vw))); }
+.gintro__r { right: calc(50% - min(27.75vh, 292px) - 10vw); top: 56%; font-family: 'Gogol', cursive !important; font-size: clamp(64px, 8vw, 150px); -webkit-text-stroke-width: 4px; transform: translateX(calc((1 - var(--p)) * var(--dr, 75vw))) rotate(-4deg); }
 .gintro__ring { position: relative; display: inline-block; padding: 0 .1em; }
 .gintro__l, .gintro__r { font-size-adjust: none !important; }
 .gosti__body { padding: 24px 16px 0; }
@@ -484,8 +496,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .gintro { height: 190vh; }
   .gintro__stick { top: 70px; height: calc(100vh - 70px); }
   .gintro__img { width: 78vw; height: auto; }
-  .gintro__l { left: 0; right: 0; top: 26%; text-align: center; font-size: 52px; -webkit-text-stroke-width: 2.5px; transform: translateX(calc((1 - var(--p)) * -110vw)); }
-  .gintro__r { left: 0; right: 0; top: 62%; text-align: center; font-size: 46px; padding: 0 12px; -webkit-text-stroke-width: 3px; transform: translateX(calc((1 - var(--p)) * 110vw)) rotate(-4deg); }
+  .gintro__l { left: 0; right: 0; top: 26%; text-align: center; font-size: 52px; -webkit-text-stroke-width: 2.5px; }
+  .gintro__r { left: 0; right: 0; top: 62%; text-align: center; font-size: 46px; padding: 0 12px; -webkit-text-stroke-width: 3px; }
   .gosti__body { padding: 24px 0 0; }
   .ga { grid-template-columns: 1fr; row-gap: 0; }
   .ga__m { grid-template-columns: 1fr; }
@@ -840,7 +852,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div class="gintro">
 <div class="gintro__stick">
 <img loading="lazy" decoding="async" width="900" height="1200" class="gintro__img" src="assets/gosti/gosti-gostya-lift.webp" alt="Гостья бэсти показывает разноцветный маникюр">
-<h2 class="gintro__ttl" data-nopx=""><span class="gintro__l">Студия</span><span class="gintro__r"><span class="gintro__ring">с характером<svg aria-hidden="true" viewBox="0 0 300 90" preserveAspectRatio="none" fill="none" style="position: absolute; left: -16px; top: -14px; width: calc(100% + 32px); height: calc(100% + 26px); overflow: visible; pointer-events: none;"><g class="rg1"><path pathLength="1" d="M24 42 C 24 14, 150 4, 268 16 C 302 22, 298 70, 222 80 C 140 90, 32 86, 12 62 C 2 46, 40 26, 96 21" stroke="#85231A" stroke-width="3.4" stroke-linecap="round"></path><path pathLength="1" d="M24 42 C 24 14, 150 4, 268 16 C 302 22, 298 70, 222 80 C 140 90, 32 86, 12 62 C 2 46, 40 26, 96 21" stroke="#FFACE4" stroke-width="1.6" stroke-linecap="round"></path></g><g class="rg2"><path pathLength="1" d="M44 18 C 122 2, 282 8, 292 42 C 298 74, 198 90, 108 85 C 38 81, 4 66, 12 44 C 20 27, 72 13, 156 12" stroke="#85231A" stroke-width="3.4" stroke-linecap="round"></path><path pathLength="1" d="M44 18 C 122 2, 282 8, 292 42 C 298 74, 198 90, 108 85 C 38 81, 4 66, 12 44 C 20 27, 72 13, 156 12" stroke="#FFACE4" stroke-width="1.6" stroke-linecap="round"></path><path pathLength="1" d="M62 76 C 18 68, 6 44, 30 30 C 72 6, 232 6, 280 31 C 298 44, 288 62, 248 71" stroke="#85231A" stroke-width="3.4" stroke-linecap="round"></path><path pathLength="1" d="M62 76 C 18 68, 6 44, 30 30 C 72 6, 232 6, 280 31 C 298 44, 288 62, 248 71" stroke="#FFACE4" stroke-width="1.6" stroke-linecap="round"></path></g></svg></span></span></h2>
+<h2 class="gintro__ttl" data-nopx=""><span class="gintro__l">Студия</span><span class="gintro__r"><span class="gintro__ring">с характером<svg aria-hidden="true" viewBox="0 0 300 90" preserveAspectRatio="none" fill="none" style="position: absolute; left: -16px; top: -14px; width: calc(100% + 32px); height: calc(100% + 26px); overflow: visible; pointer-events: none;"><g class="rg1"><path pathLength="1" d="M24 42 C 24 14, 150 4, 268 16 C 302 22, 298 70, 222 80 C 140 90, 32 86, 12 62 C 2 46, 40 26, 96 21" stroke="#FFACE4" stroke-width="2.2" stroke-linecap="round"></path></g><g class="rg2"><path pathLength="1" d="M44 18 C 122 2, 282 8, 292 42 C 298 74, 198 90, 108 85 C 38 81, 4 66, 12 44 C 20 27, 72 13, 156 12" stroke="#FFACE4" stroke-width="2.2" stroke-linecap="round"></path><path pathLength="1" d="M62 76 C 18 68, 6 44, 30 30 C 72 6, 232 6, 280 31 C 298 44, 288 62, 248 71" stroke="#FFACE4" stroke-width="2.2" stroke-linecap="round"></path></g></svg></span></span></h2>
 </div>
 </div>
 <div class="gosti__body">
