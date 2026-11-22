@@ -473,8 +473,6 @@ html.lenis body {
       var rl = sec.querySelector('.pw-ruler'); if (rl) rl.style.setProperty('--ty', (-(f * slot) % 14).toFixed(1) + 'px');
     }
     if (k !== lastK || !sec.querySelector('.pw-tab.is-on')) {
-      var g = sec.querySelector('.pw-imgs');
-      if (g && lastK !== -1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) { g.getAnimations().forEach(function (a) { a.cancel(); }); g.classList.remove('is-glitch'); requestAnimationFrame(function () { g.classList.add('is-glitch'); }); }
       lastK = k;
       sec.querySelector('.pw-tabs').style.setProperty('--k', k);
       sec.querySelectorAll('.pw-tab').forEach(function (el, i) { el.classList.toggle('is-on', i === k); });
@@ -489,8 +487,10 @@ html.lenis body {
   document.addEventListener('click', function (e) {
     var tab = e.target.closest && e.target.closest('#ritual .pw-tab'); if (!tab) return;
     var sec = document.getElementById('ritual'), i = +tab.getAttribute('data-i'), N = sec.querySelectorAll('.pw-img').length;
-    var y = sec.getBoundingClientRect().top + scrollY + (sec.offsetHeight - innerHeight) * (i / (N - 1)) + 2;
-    if (window.__lenis) window.__lenis.scrollTo(y); else scrollTo({ top: y, behavior: 'smooth' });
+    var y = sec.getBoundingClientRect().top + scrollY + (sec.offsetHeight - innerHeight) * (.07 + .86 * i / (N - 1)); // ровно туда, где фото шага открыто целиком
+    // плавно и с заданной длительностью: без рывка на старте и пролёта шагов
+    var dist = Math.abs(y - scrollY), dur = Math.min(1.6, .7 + dist / 2400);
+    if (window.__lenis) window.__lenis.scrollTo(y, { duration: dur, easing: function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; } }); else scrollTo({ top: y, behavior: 'smooth' });
   });
   // счётчик записи: часы:минуты:секунды с момента, как блок на экране
   var t0 = 0, tcOn = false;
@@ -520,7 +520,7 @@ html.lenis body {
 <helmet>
 <style>
 @font-face { font-family: 'Gogol'; src: url('assets/gogol-subset.woff2') format('woff2'), url('assets/gogol-regular.otf') format('opentype'); font-display: swap; }
-html { scroll-behavior: smooth; }
+html:not(.lenis) { scroll-behavior: smooth; } /* с Lenis — без нативной плавности: иначе две анимации прокрутки спорят и экран дёргается (22.11) */
 body { margin: 0; background: #FFFAF6; }
 * { box-sizing: border-box; }
 a { color: #85231A; }
@@ -713,22 +713,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   #ritual[data-pv2="bordo"] .pw-mob__h { color: #FFFAF6; }
 }
 @media (prefers-reduced-motion: reduce) { .pw-tabs__bg { transition: none; } }
-/* помехи на фоне «Почему бэсти» (22.11): зерно, строки развёртки, полоса трекинга VHS, сбой картинки при смене пункта */
+/* помехи на фоне «Почему бэсти» (22.11): зерно; сбой картинки убран 22.11 — давал белые полосы при смене фото */
 .pw-stick::before { content: ''; position: absolute; inset: -220px; z-index: 0; pointer-events: none; background-size: 220px 220px; will-change: transform; animation: pw-grain .7s steps(1) infinite; }
 .pw-tabs, .pw-line, .pw-left, .pw-right { position: relative; z-index: 1; }
 .pw-ruler { z-index: 1; }
 @keyframes pw-grain { 0% { transform: translate(0, 0); } 14% { transform: translate(-37px, 61px); } 28% { transform: translate(83px, -22px); } 42% { transform: translate(-91px, -74px); } 57% { transform: translate(49px, 103px); } 71% { transform: translate(-12px, -118px); } 85% { transform: translate(126px, 37px); } 100% { transform: translate(0, 0); } }
 .pw-play { position: absolute; right: 12px; bottom: 12px; padding: 3px 7px; background: rgba(43, 26, 23, .72); color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; animation: pw-blink 1.6s steps(2) infinite; font-size-adjust: none; }
 @keyframes pw-blink { 50% { opacity: .35; } }
-.pw-imgs.is-glitch { animation: pw-glitch .34s steps(6) 1; }
-@keyframes pw-glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-4px, 1px); }
-  40% { transform: translate(3px, -2px); clip-path: inset(18% 0 52% 0); }
-  60% { transform: translate(-2px, 0); clip-path: inset(62% 0 8% 0); }
-  80% { transform: translate(1px, 1px); clip-path: none; }
-  100% { transform: translate(0); }
-}
 /* помехи (22.11): зерно + экранные надписи «Запись REC» (выбор Никиты; варианты «срыв кадра» и «битые пиксели» — в .tmp/index-before-pwrec-2026-11-22.html) */
 .pw-fx { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .pw-fx > * { display: none; position: absolute; }
@@ -740,7 +731,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 #ritual[data-fx="rec"] .pw-osd--tc { display: flex; justify-content: flex-start; align-items: center; }
 .pw-osd--ch { bottom: 52px; opacity: .7; }
 @media (max-width: 900px) { .pw-fx { display: none; } }
-@media (prefers-reduced-motion: reduce) { .pw-stick::before, .pw-play, .pw-fx * { animation: none !important; } .pw-imgs.is-glitch { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .pw-stick::before, .pw-play, .pw-fx * { animation: none !important; } }
 /* пасхалка под купоном (22.11): видна, когда купон утащили; выбор Никиты — «Накрась ноготки» */
 .egg { position: absolute; inset: 0; z-index: 0; }
 .egg * { font-size-adjust: none; }
@@ -1192,7 +1183,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div class="pw-right">
 <div class="pw-frame">
 <div class="pw-bar" aria-hidden="true"><span class="pw-bar__f">kino_v_kresle.jpg</span><span>_ □ ×</span></div>
-<div class="pw-imgs"><figure class="pw-img" data-i="0" data-file="kino_v_kresle.jpg"><img src="assets/pros/kino-v-kresle.webp" alt="Педикюрное кресло с планшетом" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="1" data-file="massazh_dlya_ruk.jpg"><img src="assets/pros/massazher-dlya-ruk.webp" alt="Руки в массажёре для рук" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="2" data-file="menyu_napitkov.jpg"><img src="assets/pros/menyu-napitkov.webp" alt="Меню напитков бэсти на столике студии: кофе, чай, матча и какао" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="3" data-file="uhod_zielinski.jpg"><img src="assets/pros/uhod-zielinski.webp" alt="Средства Zielinski & Rozen на полке студии" loading="lazy" decoding="async"></figure><span class="pw-scan" aria-hidden="true"></span><span class="pw-tag" aria-hidden="true">бэсти · <b>01</b>/04</span><span class="pw-play" aria-hidden="true">▶ play</span></div>
+<div class="pw-imgs"><figure class="pw-img" data-i="0" data-file="kino_v_kresle.jpg"><img src="assets/pros/kino-v-kresle.webp" alt="Педикюрное кресло с планшетом" loading="eager" decoding="async"></figure><figure class="pw-img" data-i="1" data-file="massazh_dlya_ruk.jpg"><img src="assets/pros/massazher-dlya-ruk.webp" alt="Руки в массажёре для рук" loading="eager" decoding="async"></figure><figure class="pw-img" data-i="2" data-file="menyu_napitkov.jpg"><img src="assets/pros/menyu-napitkov.webp" alt="Меню напитков бэсти на столике студии: кофе, чай, матча и какао" loading="eager" decoding="async"></figure><figure class="pw-img" data-i="3" data-file="uhod_zielinski.jpg"><img src="assets/pros/uhod-zielinski.webp" alt="Средства Zielinski & Rozen на полке студии" loading="eager" decoding="async"></figure><span class="pw-scan" aria-hidden="true"></span><span class="pw-tag" aria-hidden="true">бэсти · <b>01</b>/04</span><span class="pw-play" aria-hidden="true">▶ play</span></div>
 <i class="pw-plus pw-plus--tl" aria-hidden="true"></i><i class="pw-plus pw-plus--tr" aria-hidden="true"></i><i class="pw-plus pw-plus--bl" aria-hidden="true"></i><i class="pw-plus pw-plus--br" aria-hidden="true"></i>
 </div>
 </div>
