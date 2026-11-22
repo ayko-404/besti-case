@@ -431,10 +431,9 @@ html.lenis body {
 <script>
 /* «Почему бэсти» (22.11): по прокрутке закреплённого экрана — активная вкладка и текст, фото меняется «сканированием»
    снизу вверх (как ref-278: уходящее фото срезается снизу и слегка тускнеет, новое открывается снизу; привязано к прокрутке).
-   Варианты оформления: data-pv2 = heron / bordo / window; окно «почему.exe» по ссылке с ?variants. */
+   Оформление «Окно» (выбор Никиты 22.11); тексты едут с прокруткой, как у Heron. */
 (function () {
-  var V = [['heron', 'Как у Heron'], ['bordo', 'Бордо'], ['window', 'Окно']], pv = 'heron';
-  try { pv = localStorage.getItem('besti:pv2') || 'heron'; } catch (e) {}
+  var pv = 'window'; // выбран Никитой 22.11
   var ticking = false, lastK = -1;
   function upd() {
     ticking = false;
@@ -455,11 +454,17 @@ html.lenis body {
     if (scan) { scan.style.top = ((1 - loc) * 100).toFixed(2) + '%'; scan.style.visibility = (loc > .01 && loc < .99) ? 'visible' : 'hidden'; }
     var k = Math.min(N - 1, Math.round(f));
     sec.style.setProperty('--pp', p.toFixed(4));
+    // тексты едут вместе с прокруткой (как у Heron): пункт k в центре колонки, когда его фото открыто целиком
+    var box = sec.querySelector('.pw-txts'), list = sec.querySelector('.pw-list');
+    if (box && list) {
+      var slot = run * .86 / Math.max(1, N - 1), cy = box.clientHeight / 2;
+      sec.querySelectorAll('.pw-txt').forEach(function (el, i) { el.style.top = (cy + i * slot).toFixed(1) + 'px'; });
+      list.style.transform = 'translateY(' + (-f * slot).toFixed(1) + 'px)';
+    }
     if (k !== lastK || !sec.querySelector('.pw-tab.is-on')) {
       lastK = k;
       sec.querySelector('.pw-tabs').style.setProperty('--k', k);
       sec.querySelectorAll('.pw-tab').forEach(function (el, i) { el.classList.toggle('is-on', i === k); });
-      sec.querySelectorAll('.pw-txt').forEach(function (el, i) { el.classList.toggle('is-on', i === k); el.classList.toggle('is-past', i < k); });
       var n = ('0' + (k + 1)).slice(-2), ru = sec.querySelector('.pw-ruler__n'), tg = sec.querySelector('.pw-tag b'), bf = sec.querySelector('.pw-bar__f');
       if (ru) ru.textContent = '[' + n + ']'; if (tg) tg.textContent = n; if (bf) bf.textContent = imgs[k].getAttribute('data-file');
     }
@@ -474,24 +479,6 @@ html.lenis body {
     var y = sec.getBoundingClientRect().top + scrollY + (sec.offsetHeight - innerHeight) * (i / (N - 1)) + 2;
     if (window.__lenis) window.__lenis.scrollTo(y); else scrollTo({ top: y, behavior: 'smooth' });
   });
-  if (/[?&]variants/.test(location.search)) {
-    var mk = function () {
-      var box = document.createElement('div');
-      box.style.cssText = "position:fixed;right:16px;bottom:16px;z-index:9000;width:244px;background:#FFFFFF;border:1px solid #2B1A17;box-shadow:5px 5px 0 #2B1A17;font-family:'PT Mono',monospace;font-size:12px;color:#2B1A17";
-      box.innerHTML = '<div style="display:flex;justify-content:space-between;padding:5px 8px;background:#85231A;color:#FFFAF6;font-size:11px;letter-spacing:.06em;text-transform:uppercase"><span>почему.exe</span><span>_ □ ×</span></div>' +
-        V.map(function (v, i) { return '<button data-v2="' + v[0] + '" style="display:flex;gap:8px;width:100%;padding:7px 10px;border:0;border-top:1px solid rgba(43,26,23,.12);background:transparent;font:inherit;text-align:left;cursor:pointer;color:inherit"><b style="color:#85231A">' + (i + 1) + '</b>' + v[1] + '</button>'; }).join('') +
-        '<button data-go style="width:100%;padding:9px 10px;border:0;border-top:1px solid #2B1A17;background:#FFACE4;font:inherit;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;color:#85231A">↓ к блоку</button>';
-      document.body.appendChild(box);
-      var mark = function () { box.querySelectorAll('[data-v2]').forEach(function (b) { var on = b.getAttribute('data-v2') === pv; b.style.background = on ? '#FFF1F9' : 'transparent'; b.style.fontWeight = on ? '700' : '400'; }); };
-      box.addEventListener('click', function (e) {
-        var b = e.target.closest('button'); if (!b) return;
-        if (b.hasAttribute('data-v2')) { pv = b.getAttribute('data-v2'); try { localStorage.setItem('besti:pv2', pv); } catch (x) {} mark(); req(); }
-        var s = document.getElementById('ritual'); if (s) { var y = s.getBoundingClientRect().top + scrollY + 2; if (window.__lenis) window.__lenis.scrollTo(y); else scrollTo({ top: y, behavior: 'smooth' }); }
-      });
-      mark();
-    };
-    if (document.body) mk(); else document.addEventListener('DOMContentLoaded', mk);
-  }
   req();
 })();
 </script>
@@ -622,7 +609,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .ga__t { padding: 28px 0 40px !important; }
 }
 /* ── «Почему бэсти» (22.11): механика ref-278 — закреплённый экран, вкладки, смена фото «сканированием» по прокрутке. Варианты: heron / bordo / window (?variants) ── */
-.pw { --n: 4; height: calc(var(--n) * 90vh + 100vh); padding: 0 !important; }
+.pw { --n: 4; height: calc(var(--n) * 70vh + 100vh); padding: 0 !important; }
 .pw-stick { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px max(16px, calc((100% - 1600px) / 2)) 28px; box-sizing: border-box; overflow: hidden; }
 .pw-tabs { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(43, 26, 23, .28); border-bottom: 1px solid rgba(43, 26, 23, .28); }
 .pw-tab { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; padding: 12px 14px 14px; border-left: 1px solid rgba(43, 26, 23, .28); font-family: 'PT Mono', monospace; color: #2B1A17; cursor: pointer; transition: color .35s ease; }
@@ -636,10 +623,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-ruler { position: absolute; left: 0; top: 0; bottom: 0; width: 40px; background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .35) 0 1px, transparent 1px 16px) right / 8px 100% no-repeat; }
 .pw-ruler__n { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; }
 .pw-label { position: absolute; top: 28px; left: 64px; margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
-.pw-txts { position: relative; min-height: 260px; }
-.pw-txt { position: absolute; left: 0; right: 0; top: 50%; opacity: 0; transform: translateY(calc(-50% + 24px)); transition: opacity .45s cubic-bezier(.23, 1, .32, 1), transform .6s cubic-bezier(.23, 1, .32, 1); pointer-events: none; }
-.pw-txt.is-on { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
-.pw-txt.is-past { transform: translateY(calc(-50% - 24px)); }
+.pw-txts { position: absolute; left: 64px; right: 0; top: 64px; bottom: 0; overflow: hidden; }
+.pw-list { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+.pw-txt { position: absolute; left: 0; right: 16px; transform: translateY(-50%); }
 .pw-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; font-size-adjust: none; }
 .pw-h { margin: 14px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(40px, 4vw, 64px); line-height: 1; font-weight: 500; letter-spacing: -.015em; color: #2B1A17; }
 .pw-h em { font-style: italic; font-weight: 400; color: #85231A; }
@@ -689,7 +675,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .pw-m .pw-h { font-size: 34px; }
   #ritual[data-pv2="bordo"] .pw-mob__h { color: #FFFAF6; }
 }
-@media (prefers-reduced-motion: reduce) { .pw-tabs__bg, .pw-txt { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .pw-tabs__bg { transition: none; } }
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
 @media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
@@ -1102,14 +1088,14 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 03 ПОЧЕМУ БЭСТИ · контент с bestie-nails.ru (22.11); механика по ref-278 (heronaiapp.com): закреплённый экран, вкладки сверху, смена фото «сканированием» снизу вверх по прокрутке -->
-<section id="ritual" class="pw" data-pv2="heron" style="position: relative; background: #FFFAF6; color: #85231A;">
+<section id="ritual" class="pw" data-pv2="window" style="position: relative; background: #FFFAF6; color: #85231A;">
 <div class="pw-stick">
 <ol class="pw-tabs" aria-label="Почему бэсти — шаги"><li class="pw-tab" data-i="0"><span class="pw-tab__n">[01]</span><span class="pw-tab__t">Кино в кресле</span></li><li class="pw-tab" data-i="1"><span class="pw-tab__n">[02]</span><span class="pw-tab__t">Массаж для рук</span></li><li class="pw-tab" data-i="2"><span class="pw-tab__n">[03]</span><span class="pw-tab__t">Меню напитков</span></li><li class="pw-tab" data-i="3"><span class="pw-tab__n">[04]</span><span class="pw-tab__t">Уход Zielinski & Rozen</span></li><li class="pw-tabs__bg" aria-hidden="true"></li></ol>
 <div class="pw-main">
 <div class="pw-left">
 <div class="pw-ruler" aria-hidden="true"><span class="pw-ruler__n">[01]</span></div>
 <p class="pw-label">Почему бэсти</p>
-<div class="pw-txts"><div class="pw-txt" data-i="0"><p class="pw-kick">[01] почему бэсти</p><h3 class="pw-h">Кино <em>в&nbsp;кресле</em></h3><p class="pw-p">У&nbsp;педикюрного кресла свой планшет с&nbsp;наушниками: включите фильм или сериал, пока мастер работает.</p></div><div class="pw-txt" data-i="1"><p class="pw-kick">[02] почему бэсти</p><h3 class="pw-h">Массаж <em>для&nbsp;рук</em></h3><p class="pw-p">В&nbsp;конце процедуры предложим расслабить руки в&nbsp;массажёре. Бесплатно&nbsp;— гости пишут, что видят такое впервые.</p></div><div class="pw-txt" data-i="2"><p class="pw-kick">[03] почему бэсти</p><h3 class="pw-h">Меню <em>напитков</em></h3><p class="pw-p">Кофе на&nbsp;обычном или растительном молоке, гречишный чай, матча и&nbsp;какао на&nbsp;банановом молоке.</p></div><div class="pw-txt" data-i="3"><p class="pw-kick">[04] почему бэсти</p><h3 class="pw-h">Уход <em>Zielinski &amp;&nbsp;Rozen</em></h3><p class="pw-p">Питательный уход входит почти во&nbsp;все виды маникюра и&nbsp;педикюра&nbsp;— доплачивать за&nbsp;него не&nbsp;нужно.</p></div></div>
+<div class="pw-txts"><div class="pw-list"><div class="pw-txt" data-i="0"><p class="pw-kick">[01] почему бэсти</p><h3 class="pw-h">Кино <em>в&nbsp;кресле</em></h3><p class="pw-p">У&nbsp;педикюрного кресла свой планшет с&nbsp;наушниками: включите фильм или сериал, пока мастер работает.</p></div><div class="pw-txt" data-i="1"><p class="pw-kick">[02] почему бэсти</p><h3 class="pw-h">Массаж <em>для&nbsp;рук</em></h3><p class="pw-p">В&nbsp;конце процедуры предложим расслабить руки в&nbsp;массажёре. Бесплатно&nbsp;— гости пишут, что видят такое впервые.</p></div><div class="pw-txt" data-i="2"><p class="pw-kick">[03] почему бэсти</p><h3 class="pw-h">Меню <em>напитков</em></h3><p class="pw-p">Кофе на&nbsp;обычном или растительном молоке, гречишный чай, матча и&nbsp;какао на&nbsp;банановом молоке.</p></div><div class="pw-txt" data-i="3"><p class="pw-kick">[04] почему бэсти</p><h3 class="pw-h">Уход <em>Zielinski &amp;&nbsp;Rozen</em></h3><p class="pw-p">Питательный уход входит почти во&nbsp;все виды маникюра и&nbsp;педикюра&nbsp;— доплачивать за&nbsp;него не&nbsp;нужно.</p></div></div></div>
 </div>
 <div class="pw-right">
 <div class="pw-frame">
