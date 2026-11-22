@@ -610,7 +610,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 }
 /* ── «Почему бэсти» (22.11): механика ref-278 — закреплённый экран, вкладки, смена фото «сканированием» по прокрутке. Варианты: heron / bordo / window (?variants) ── */
 .pw { --n: 4; height: calc(var(--n) * 70vh + 100vh); padding: 0 !important; }
-.pw-stick { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px max(16px, calc((100% - 1600px) / 2)) 28px; box-sizing: border-box; overflow: hidden; }
+.pw-stick { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px 0 28px; box-sizing: border-box; overflow: hidden; }
+/* вкладки и линейка — от края до края экрана, контент — в сетке сайта */
+.pw-main { padding: 0 max(16px, calc((100% - 1600px) / 2)); }
+.pw-tab:first-of-type { border-left: 0; } .pw-tab:last-of-type { border-right: 0 !important; }
 .pw-tabs { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(43, 26, 23, .28); border-bottom: 1px solid rgba(43, 26, 23, .28); }
 .pw-tab { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; padding: 12px 14px 14px; border-left: 1px solid rgba(43, 26, 23, .28); font-family: 'PT Mono', monospace; color: #2B1A17; cursor: pointer; transition: color .35s ease; }
 .pw-tab:last-of-type { border-right: 1px solid rgba(43, 26, 23, .28); }
@@ -619,11 +622,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-tab.is-on { color: #FFFAF6; }
 .pw-tabs__bg { position: absolute; z-index: 0; top: 0; bottom: 0; left: 0; width: 25%; background: #85231A; transform: translateX(calc(var(--k, 0) * 100%)); transition: transform .55s cubic-bezier(.77, 0, .175, 1); }
 .pw-main { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; }
-.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding-left: 64px; }
-.pw-ruler { position: absolute; left: 0; top: 0; bottom: 0; width: 40px; background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .35) 0 1px, transparent 1px 16px) right / 8px 100% no-repeat; }
-.pw-ruler__n { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; }
-.pw-label { position: absolute; top: 28px; left: 64px; margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
-.pw-txts { position: absolute; left: 64px; right: 0; top: 64px; bottom: 0; overflow: hidden; }
+.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin-left: calc(max(68px, (100vw - 1600px) / 2) - max(16px, (100vw - 1600px) / 2)); }
+.pw-ruler { position: absolute; left: 0; top: 190px; bottom: 60px; width: 52px; background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .35) 0 1px, transparent 1px 16px) right / 8px 100% no-repeat; }
+.pw-ruler__n { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; }
+.pw-label { position: absolute; top: 28px; left: 0; margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
+.pw-txts { position: absolute; left: 0; right: 0; top: 64px; bottom: 0; overflow: hidden; }
 .pw-list { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
 .pw-txt { position: absolute; left: 0; right: 16px; transform: translateY(-50%); }
 .pw-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; font-size-adjust: none; }
@@ -643,7 +646,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-plus::before { left: 6px; top: 0; width: 1px; height: 14px; } .pw-plus::after { top: 6px; left: 0; height: 1px; width: 14px; }
 .pw-plus--tl { left: 0; top: 0; } .pw-plus--tr { right: 0; top: 0; } .pw-plus--bl { left: 0; bottom: 0; } .pw-plus--br { right: 0; bottom: 0; }
 .pw-bar { display: none; }
-.pw-line { display: block; height: 1px; margin-top: 18px; background: rgba(133, 35, 26, .25); }
+.pw-line { display: block; height: 1px; margin: 18px 0 0; background: rgba(133, 35, 26, .25); }
 .pw-line i { display: block; height: 100%; width: calc(var(--pp, 0) * 100%); background: #85231A; }
 .pw-mob { display: none; }
 /* вариант «Бордо» */
@@ -1092,8 +1095,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div class="pw-stick">
 <ol class="pw-tabs" aria-label="Почему бэсти — шаги"><li class="pw-tab" data-i="0"><span class="pw-tab__n">[01]</span><span class="pw-tab__t">Кино в кресле</span></li><li class="pw-tab" data-i="1"><span class="pw-tab__n">[02]</span><span class="pw-tab__t">Массаж для рук</span></li><li class="pw-tab" data-i="2"><span class="pw-tab__n">[03]</span><span class="pw-tab__t">Меню напитков</span></li><li class="pw-tab" data-i="3"><span class="pw-tab__n">[04]</span><span class="pw-tab__t">Уход Zielinski & Rozen</span></li><li class="pw-tabs__bg" aria-hidden="true"></li></ol>
 <div class="pw-main">
-<div class="pw-left">
 <div class="pw-ruler" aria-hidden="true"><span class="pw-ruler__n">[01]</span></div>
+<div class="pw-left">
 <p class="pw-label">Почему бэсти</p>
 <div class="pw-txts"><div class="pw-list"><div class="pw-txt" data-i="0"><p class="pw-kick">[01] почему бэсти</p><h3 class="pw-h">Кино <em>в&nbsp;кресле</em></h3><p class="pw-p">У&nbsp;педикюрного кресла свой планшет с&nbsp;наушниками: включите фильм или сериал, пока мастер работает.</p></div><div class="pw-txt" data-i="1"><p class="pw-kick">[02] почему бэсти</p><h3 class="pw-h">Массаж <em>для&nbsp;рук</em></h3><p class="pw-p">В&nbsp;конце процедуры предложим расслабить руки в&nbsp;массажёре. Бесплатно&nbsp;— гости пишут, что видят такое впервые.</p></div><div class="pw-txt" data-i="2"><p class="pw-kick">[03] почему бэсти</p><h3 class="pw-h">Меню <em>напитков</em></h3><p class="pw-p">Кофе на&nbsp;обычном или растительном молоке, гречишный чай, матча и&nbsp;какао на&nbsp;банановом молоке.</p></div><div class="pw-txt" data-i="3"><p class="pw-kick">[04] почему бэсти</p><h3 class="pw-h">Уход <em>Zielinski &amp;&nbsp;Rozen</em></h3><p class="pw-p">Питательный уход входит почти во&nbsp;все виды маникюра и&nbsp;педикюра&nbsp;— доплачивать за&nbsp;него не&nbsp;нужно.</p></div></div></div>
 </div>
