@@ -516,6 +516,28 @@ html.lenis body {
   });
 })();
 </script>
+<script>
+/* «Команда» (22.11): при наведении на фото мастера из-под курсора вылетают пиксельные сердечки */
+(function () {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var HEART = '<svg width="27" height="24" viewBox="-1 -1 9 8" shape-rendering="crispEdges"><rect x="1" y="-1" width="2" height="1" fill="#2B1A17"></rect><rect x="4" y="-1" width="2" height="1" fill="#2B1A17"></rect><rect x="0" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="6" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="-1" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="7" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="-1" y="2" width="1" height="1" fill="#2B1A17"></rect><rect x="7" y="2" width="1" height="1" fill="#2B1A17"></rect><rect x="0" y="3" width="1" height="1" fill="#2B1A17"></rect><rect x="6" y="3" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="4" width="1" height="1" fill="#2B1A17"></rect><rect x="5" y="4" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="5" width="1" height="1" fill="#2B1A17"></rect><rect x="4" y="5" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="6" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="0" width="2" height="1" fill="#FFACE4"></rect><rect x="4" y="0" width="2" height="1" fill="#FFACE4"></rect><rect x="0" y="1" width="1" height="1" fill="#FFACE4"></rect><rect x="1" y="1" width="1" height="1" fill="#FFFFFF"></rect><rect x="2" y="1" width="5" height="1" fill="#FFACE4"></rect><rect x="0" y="2" width="7" height="1" fill="#FFACE4"></rect><rect x="1" y="3" width="5" height="1" fill="#FFACE4"></rect><rect x="2" y="4" width="3" height="1" fill="#FFACE4"></rect><rect x="3" y="5" width="1" height="1" fill="#FFACE4"></rect></svg>', last = null, alive = 0;
+  document.addEventListener('pointermove', function (e) {
+    var ph = e.target.closest && e.target.closest('#team .tm-ph'); if (!ph) { last = null; return; }
+    var card = ph.parentElement, r = card.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (last && Math.hypot(x - last[0], y - last[1]) < 34) return;
+    last = [x, y]; if (alive > 12) return;
+    var h = document.createElement('span'); h.className = 'tm-heart'; h.innerHTML = HEART;
+    h.style.left = x + 'px'; h.style.top = y + 'px'; card.appendChild(h); alive++;
+    var dx = (Math.random() - .5) * 40, s = .7 + Math.random() * .6;
+    var a = h.animate([
+      { transform: 'translate(0, 0) scale(' + (s * .4) + ')', opacity: 1 },
+      { transform: 'translate(' + (dx * .4) + 'px, -26px) scale(' + s + ')', opacity: 1, offset: .35 },
+      { transform: 'translate(' + dx + 'px, -78px) scale(' + s + ')', opacity: 0 }
+    ], { duration: 950, easing: 'steps(9, end)', fill: 'forwards' });
+    a.onfinish = function () { h.remove(); alive--; };
+  }, { passive: true });
+})();
+</script>
 <x-dc>
 <helmet>
 <style>
@@ -778,6 +800,23 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .fnd__ph, .fnd__txt { grid-column: 1; }
   .fnd__ph { width: 64%; }
 }
+/* «Команда» (22.11): контент с bestie-nails.ru — 5 мастеров; наведение — карточка приподнимается, из-под курсора вылетают пиксельные сердечки */
+.team-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 16px; align-items: stretch; }
+.tm { position: relative; display: flex; flex-direction: column; }
+.tm-ph { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; transition: transform .24s steps(3), box-shadow .24s steps(3); }
+.tm-ph img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.tm-n { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid #85231A; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.15; font-weight: 500; color: #85231A; }
+.tm-r { margin: 4px 0 0; font-size: 11px; color: #7E4F48; }
+.tm-d { margin: 8px 0 0; font-size: 13px; line-height: 1.45; color: #2B1A17; }
+.tm-b { display: flex !important; align-items: center; justify-content: center; text-align: center; min-height: 44px; margin-top: auto; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.tm-d { margin-bottom: 16px; }
+.tm-heart { position: absolute; z-index: 5; width: 27px; height: 24px; margin: -12px 0 0 -13px; pointer-events: none; }
+.tm-heart svg { display: block; }
+@media (hover: hover) and (pointer: fine) {
+  .tm:hover .tm-ph { transform: translate(-4px, -4px); box-shadow: 9px 9px 0 #2B1A17; }
+  .tm:hover .tm-ph img { transform: scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) { .tm-ph, .tm-ph img { transition: none; } .tm-heart { display: none; } }
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
 @media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #founder, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
@@ -1283,48 +1322,46 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <section id="team" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
 <div style="grid-column: 7 / span 6;">
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Команда</p>
-<h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Мастера и команда бэсти</h2>
-<p style="margin: 16px 0 0; font-size: 13px; line-height: 1.45; color: #2B1A17;">Ваши будущие бэсти — знакомьтесь заранее и записывайтесь к своему мастеру</p>
+<h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Мастера <em style="font-style: italic; font-weight: 400;">и&nbsp;команда бэсти</em></h2>
+<p style="margin: 16px 0 0; font-size: 13px; line-height: 1.45; color: #2B1A17;">Ваши будущие бэсти&nbsp;— знакомьтесь заранее.</p>
 </div>
-<div class="stack team-grid" style="grid-column: 1 / -1; margin-top: 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 16px; align-items: stretch;">
-<article style="display: flex; flex-direction: column;">
-<div style="position: relative; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;"><img loading="lazy" decoding="async" src="assets/team-zuhra.webp" alt="Зухра, основательница бэсти, бровист" style="width: 100%; height: 100%; object-fit: cover; display: block;"><span class="chip">(01)</span><span class="chip" style="left: auto; right: 8px; background: #85231A; color: #FFFAF6;">основательница</span></div>
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #85231A;">
-<h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 500;">Зухра</h3>
-<span style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;"><svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>5,0 · 11 отзывов</span>
-</div>
-<p style="margin: 4px 0 0; font-size: 11px; color: #2B1A17;">Основательница бэсти, бровист</p>
-<div style="margin-top: auto;"><a class="btn" href="https://n2379744.yclients.com/company/2062923/personal/select-master?o=m6076719" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase;">Записаться к Зухре</a></div>
+<div class="stack team-grid" style="grid-column: 1 / -1; margin-top: 32px;">
+<article class="tm">
+<div class="tm-ph"><img loading="lazy" decoding="async" src="assets/team-anastasiya-live.webp" alt="Анастасия, мастер маникюра и педикюра" width="800" height="800"><span class="chip">(01)</span></div>
+<h3 class="tm-n">Анастасия</h3>
+<p class="tm-r">Мастер маникюра и педикюра</p>
+<p class="tm-d">Чистый маникюр и&nbsp;покрытие под кутикулу&nbsp;— тонко и&nbsp;аккуратно.</p>
+<a class="btn tm-b" href="https://n2379744.yclients.com/company/2062923/personal/select-master/master-info/2062923/6134247" target="_blank" rel="noopener">Записаться к Анастасии</a>
 </article>
-<article style="display: flex; flex-direction: column;">
-<div style="position: relative; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;"><img loading="lazy" decoding="async" src="assets/team-natasha.webp" alt="Наташа, мастер маникюра и педикюра" style="width: 100%; height: 100%; object-fit: cover; display: block;"><span class="chip">(02)</span></div>
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #85231A;">
-<h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 500;">Наташа</h3>
-<span style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;"><svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>5,0 · 6 отзывов</span>
-</div>
-<p style="margin: 4px 0 0; font-size: 11px; color: #2B1A17;">Мастер маникюра и педикюра</p><p style="margin: 4px 0 0; font-size: 11px; color: #7E4F48;">Работает с короткой длиной ногтей</p>
-<div style="margin-top: auto;"><a class="btn" href="https://n2379744.yclients.com/company/2062923/personal/select-master?o=m5799996" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase;">Записаться к Наташе</a></div>
+<article class="tm">
+<div class="tm-ph"><img loading="lazy" decoding="async" src="assets/team-natasha-live.webp" alt="Наташа, мастер маникюра и педикюра" width="800" height="800"><span class="chip">(02)</span></div>
+<h3 class="tm-n">Наташа</h3>
+<p class="tm-r">Мастер маникюра и педикюра</p>
+<p class="tm-d">Эстетический и&nbsp;японский маникюр. Работает только с&nbsp;короткой длиной.</p>
+<a class="btn tm-b" href="https://n2379744.yclients.com/company/2062923/personal/select-master/master-info/2062923/5799996" target="_blank" rel="noopener">Записаться к Наташе</a>
 </article>
-<article style="display: flex; flex-direction: column;">
-<div style="position: relative; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;"><img loading="lazy" decoding="async" src="assets/team-anastasia.webp" alt="Анастасия, мастер маникюра и педикюра" style="width: 100%; height: 100%; object-fit: cover; display: block;"><span class="chip">(03)</span></div>
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #85231A;">
-<h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 500;">Анастасия</h3>
-<span style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;"><svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>5,0 · 3 отзыва</span>
-</div>
-<p style="margin: 4px 0 0; font-size: 11px; color: #2B1A17;">Мастер маникюра и педикюра</p>
-<div style="margin-top: auto;"><a class="btn" href="https://n2379744.yclients.com/company/2062923/personal/select-master?o=m6134247" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase;">Записаться к Анастасии</a></div>
+<article class="tm">
+<div class="tm-ph"><img loading="lazy" decoding="async" src="assets/team-adel-live.webp" alt="Адель, мастер маникюра и педикюра" width="800" height="800"><span class="chip">(03)</span></div>
+<h3 class="tm-n">Адель</h3>
+<p class="tm-r">Мастер маникюра и педикюра</p>
+<p class="tm-d">Архитектура ногтя: наращивание и&nbsp;укрепление гелем, подбор длины и&nbsp;формы.</p>
+<a class="btn tm-b" href="https://n2379744.yclients.com/company/2062923/personal/select-master/master-info/2062923/6290514" target="_blank" rel="noopener">Записаться к Адель</a>
 </article>
-<article style="display: flex; flex-direction: column;">
-<div style="position: relative; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;"><img loading="lazy" decoding="async" src="assets/team-katya.webp" alt="Катя, мастер маникюра и педикюра" style="width: 100%; height: 100%; object-fit: cover; display: block;"><span class="chip">(04)</span></div>
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #85231A;">
-<h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 500;">Катя</h3>
-<span style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;"><svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>5,0 · 2 отзыва</span>
-</div>
-<p style="margin: 4px 0 0; font-size: 11px; color: #2B1A17;">Мастер маникюра и педикюра</p>
-<div style="margin-top: auto;"><a class="btn" href="https://n2379744.yclients.com/company/2062923/personal/select-master?o=m5895762" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase;">Записаться к Кате</a></div>
+<article class="tm">
+<div class="tm-ph"><img loading="lazy" decoding="async" src="assets/team-katya-live.webp" alt="Катя, мастер маникюра и педикюра" width="800" height="800"><span class="chip">(04)</span></div>
+<h3 class="tm-n">Катя</h3>
+<p class="tm-r">Мастер маникюра и педикюра</p>
+<p class="tm-d">Быстро и&nbsp;аккуратно&nbsp;— когда хочется красивый результат и&nbsp;сэкономить время.</p>
+<a class="btn tm-b" href="https://n2379744.yclients.com/company/2062923/personal/select-master/master-info/2062923/5895762" target="_blank" rel="noopener">Записаться к Кате</a>
+</article>
+<article class="tm">
+<div class="tm-ph"><img loading="lazy" decoding="async" src="assets/team-marianna-live.webp" alt="Марианна, мастер маникюра и педикюра" width="800" height="800"><span class="chip">(05)</span></div>
+<h3 class="tm-n">Марианна</h3>
+<p class="tm-r">Мастер маникюра и педикюра</p>
+<p class="tm-d">Бережное покрытие гель-лаком и&nbsp;укрепление гелем на&nbsp;каждый день.</p>
+<a class="btn tm-b" href="https://n2379744.yclients.com/company/2062923/personal/select-master/master-info/2062923/6252479" target="_blank" rel="noopener">Записаться к Марианне</a>
 </article>
 </div>
-<p style="grid-column: 7 / span 6; margin: 28px 0 0; font-size: 13px; line-height: 1.45; color: #2B1A17;">Всех мастеров и свободное время смотрите в <a class="tap" href="https://n2379744.yclients.com/company/2062923/personal/select-master" target="_blank" rel="noopener" style="color: #85231A; text-underline-offset: 3px;">YCLIENTS</a></p>
 </section>
 
 <!-- 09 ОТЗЫВЫ · «шахматка» (выбрана 29.10): лёгкие карточки через клетку, аватары с Яндекс Карт -->
