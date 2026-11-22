@@ -460,6 +460,7 @@ html.lenis body {
       var slot = run * .86 / Math.max(1, N - 1), cy = box.clientHeight / 2;
       sec.querySelectorAll('.pw-txt').forEach(function (el, i) { el.style.top = (cy + i * slot).toFixed(1) + 'px'; });
       list.style.transform = 'translateY(' + (-f * slot).toFixed(1) + 'px)';
+      st.style.setProperty('--ty', (-(f * slot) % 14).toFixed(1) + 'px');
     }
     if (k !== lastK || !sec.querySelector('.pw-tab.is-on')) {
       lastK = k;
@@ -610,27 +611,27 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 }
 /* ── «Почему бэсти» (22.11): механика ref-278 — закреплённый экран, вкладки, смена фото «сканированием» по прокрутке. Варианты: heron / bordo / window (?variants) ── */
 .pw { --n: 4; height: calc(var(--n) * 70vh + 100vh); padding: 0 !important; }
-.pw-stick { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px 0 28px; box-sizing: border-box; overflow: hidden; }
+.pw-stick { --rw: 64px; --ln: rgba(43, 26, 23, .22); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px 0 28px; box-sizing: border-box; overflow: hidden; }
 /* вкладки и линейка — от края до края экрана, контент — в сетке сайта */
-.pw-main { padding: 0 max(16px, calc((100% - 1600px) / 2)); }
-.pw-tab:first-of-type { border-left: 0; } .pw-tab:last-of-type { border-right: 0 !important; }
-.pw-tabs { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(43, 26, 23, .28); border-bottom: 1px solid rgba(43, 26, 23, .28); }
-.pw-tab { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; padding: 12px 14px 14px; border-left: 1px solid rgba(43, 26, 23, .28); font-family: 'PT Mono', monospace; color: #2B1A17; cursor: pointer; transition: color .35s ease; }
-.pw-tab:last-of-type { border-right: 1px solid rgba(43, 26, 23, .28); }
-.pw-tab__n { font-size: 12px; letter-spacing: .04em; }
-.pw-tab__t { font-size: 14px; letter-spacing: .04em; text-transform: uppercase; }
+.pw-main { padding: 0 max(calc(var(--rw) + 24px), calc((100% - 1600px) / 2)); }
+.pw-tabs__edge { border-left: 1px solid var(--ln); } .pw-tabs__edge:first-child { border-left: 0; }
+.pw-tabs { position: relative; display: grid; grid-template-columns: var(--rw) repeat(4, minmax(0, 1fr)) var(--rw); height: 80px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ln); border-bottom: 1px solid var(--ln); }
+.pw-tab { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 13px 14px 14px; border-left: 1px solid var(--ln); font-family: 'PT Mono', monospace; color: #2B1A17; cursor: pointer; transition: color .35s ease; }
+
+.pw-tab__n { font-size: 13px; letter-spacing: .04em; opacity: .72; font-size-adjust: none; }
+.pw-tab__t { font-size: 13px; letter-spacing: .04em; text-transform: uppercase; font-size-adjust: none; }
 .pw-tab.is-on { color: #FFFAF6; }
-.pw-tabs__bg { position: absolute; z-index: 0; top: 0; bottom: 0; left: 0; width: 25%; background: #85231A; transform: translateX(calc(var(--k, 0) * 100%)); transition: transform .55s cubic-bezier(.77, 0, .175, 1); }
+.pw-tabs__bg { position: absolute; z-index: 0; top: 0; bottom: 0; left: calc(var(--rw) + 1px); width: calc((100% - 2 * var(--rw)) / 4 - 1px); background: #85231A; transform: translateX(calc(var(--k, 0) * 100%)); transition: transform .55s cubic-bezier(.77, 0, .175, 1); }
 .pw-main { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; }
-.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin-left: calc(max(68px, (100vw - 1600px) / 2) - max(16px, (100vw - 1600px) / 2)); }
-.pw-ruler { position: absolute; left: 0; top: 190px; bottom: 60px; width: 52px; background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .35) 0 1px, transparent 1px 16px) right / 8px 100% no-repeat; }
-.pw-ruler__n { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; }
+.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin-left: calc(max(calc(var(--rw) + 56px), (100vw - 1600px) / 2) - max(calc(var(--rw) + 24px), (100vw - 1600px) / 2)); }
+.pw-ruler { position: absolute; left: 0; top: 185px; bottom: 28px; width: calc(var(--rw) + 4px); background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .38) 0 1px, transparent 1px 14px) calc(var(--rw) - 3px) var(--ty, 0px) / 6px 14px repeat-y; }
+.pw-ruler__n { position: absolute; left: 0; width: var(--rw); top: 50%; transform: translateY(-50%); text-align: center; font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; font-size-adjust: none; }
 .pw-label { position: absolute; top: 28px; left: 0; margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
 .pw-txts { position: absolute; left: 0; right: 0; top: 64px; bottom: 0; overflow: hidden; }
 .pw-list { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
 .pw-txt { position: absolute; left: 0; right: 16px; transform: translateY(-50%); }
 .pw-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; font-size-adjust: none; }
-.pw-h { margin: 14px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(40px, 4vw, 64px); line-height: 1; font-weight: 500; letter-spacing: -.015em; color: #2B1A17; }
+.pw-h { margin: 14px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(40px, 4vw, 64px); line-height: 1; font-weight: 500; letter-spacing: -.015em; color: #85231A; }
 .pw-h em { font-style: italic; font-weight: 400; color: #85231A; }
 .pw-p { margin: 18px 0 0; max-width: 30em; font-family: 'PT Mono', monospace; font-size: 16px; line-height: 1.55; color: #2B1A17; font-size-adjust: none; }
 .pw-right { grid-column: 7 / span 6; align-self: center; }
@@ -1093,7 +1094,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <!-- 03 ПОЧЕМУ БЭСТИ · контент с bestie-nails.ru (22.11); механика по ref-278 (heronaiapp.com): закреплённый экран, вкладки сверху, смена фото «сканированием» снизу вверх по прокрутке -->
 <section id="ritual" class="pw" data-pv2="window" style="position: relative; background: #FFFAF6; color: #85231A;">
 <div class="pw-stick">
-<ol class="pw-tabs" aria-label="Почему бэсти — шаги"><li class="pw-tab" data-i="0"><span class="pw-tab__n">[01]</span><span class="pw-tab__t">Кино в кресле</span></li><li class="pw-tab" data-i="1"><span class="pw-tab__n">[02]</span><span class="pw-tab__t">Массаж для рук</span></li><li class="pw-tab" data-i="2"><span class="pw-tab__n">[03]</span><span class="pw-tab__t">Меню напитков</span></li><li class="pw-tab" data-i="3"><span class="pw-tab__n">[04]</span><span class="pw-tab__t">Уход Zielinski & Rozen</span></li><li class="pw-tabs__bg" aria-hidden="true"></li></ol>
+<ol class="pw-tabs" aria-label="Почему бэсти — шаги"><li class="pw-tabs__edge" aria-hidden="true"></li><li class="pw-tab" data-i="0"><span class="pw-tab__n">[01]</span><span class="pw-tab__t">Кино в кресле</span></li><li class="pw-tab" data-i="1"><span class="pw-tab__n">[02]</span><span class="pw-tab__t">Массаж для рук</span></li><li class="pw-tab" data-i="2"><span class="pw-tab__n">[03]</span><span class="pw-tab__t">Меню напитков</span></li><li class="pw-tab" data-i="3"><span class="pw-tab__n">[04]</span><span class="pw-tab__t">Уход Zielinski & Rozen</span></li><li class="pw-tabs__edge" aria-hidden="true"></li><li class="pw-tabs__bg" aria-hidden="true"></li></ol>
 <div class="pw-main">
 <div class="pw-ruler" aria-hidden="true"><span class="pw-ruler__n">[01]</span></div>
 <div class="pw-left">
