@@ -779,7 +779,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .fnd__ph { width: 64%; }
 }
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
-@media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #founder, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
+@media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #founder, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
 .tilt { transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .tilt:hover { transform: rotate(0deg) scale(1.04) !important; }
@@ -802,12 +802,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .bn .lbx, .bn .lbx * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, zoom-out; }
 .toast { animation: toastin .5s cubic-bezier(.2, .8, .2, 1) .9s both; }
 @keyframes toastin { from { transform: translateY(28px); opacity: 0; } to { transform: none; opacity: 1; } }
-.pk-strip { transform-box: fill-box; transform-origin: 0% 100%; animation: pkstrip 5s cubic-bezier(.3, .7, .2, 1) infinite; }
-@keyframes pkstrip { 0%, 18% { transform: none; } 40%, 82% { transform: translate(-6px, -18px) rotate(-16deg); } 100% { transform: none; } }
-.pk-tools { animation: pktools 5s cubic-bezier(.3, .7, .2, 1) infinite; }
-@keyframes pktools { 0%, 30% { transform: translateY(60px); } 50%, 80% { transform: translateY(0); } 100% { transform: translateY(60px); } }
-.tick { opacity: 0; transform: scale(.3); animation: tick .35s cubic-bezier(.2, .9, .3, 1.4) forwards; }
-@keyframes tick { to { opacity: 1; transform: none; } }
 .swatch { display: block; transform-origin: 50% 100%; animation: swatch 3.2s ease-in-out infinite; }
 @keyframes swatch { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(-4deg); } }
 .rcard { transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease; }
@@ -1282,32 +1276,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <p class="fnd__end">Заходите в гости</p>
 <p class="fnd__sign">Зухра</p>
 </div>
-</div>
-</section>
-
-<!-- 07 СТЕРИЛЬНОСТЬ · вариант «крафт-пакет» (выбран 29.10): иллюстрация слева, чек-лист справа -->
-<section id="clean" class="stack sec" style="position: relative; background: #F7EEE8; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
-<div style="grid-column: 1 / span 5; position: relative; display: grid; place-items: center; min-height: 420px; background: #EFE2DA; border: 1px solid rgba(43, 26, 23, .3);">
-<div class="pk"><svg aria-hidden="true" viewBox="0 0 300 360" width="300" height="360" style="display: block; overflow: visible;">
-<g class="pk-tools"><rect x="128" y="40" width="10" height="150" rx="5" fill="#7E4F48" stroke="#2B1A17" stroke-width="1.5"></rect><path d="M126 40 q7 -26 14 0 z" fill="#B9A49A" stroke="#2B1A17" stroke-width="1.5"></path>
-<path d="M160 62 L176 190 M190 62 L168 190" stroke="#2B1A17" stroke-width="6" stroke-linecap="round"></path><path d="M160 62 L176 190 M190 62 L168 190" stroke="#B9A49A" stroke-width="3" stroke-linecap="round"></path><circle cx="172" cy="150" r="5" fill="#85231A" stroke="#2B1A17" stroke-width="1.5"></circle></g>
-<path d="M40 70 L260 70 L260 340 Q260 350 250 350 L50 350 Q40 350 40 340 Z" fill="#D8B48C" stroke="#2B1A17" stroke-width="2"></path>
-<rect x="70" y="120" width="160" height="150" rx="6" fill="#FFFAF6" fill-opacity=".72" stroke="#2B1A17" stroke-width="1.5"></rect>
-<path d="M98 248 L98 140 M150 140 L168 248 M178 140 L160 248" stroke="#7E4F48" stroke-width="5" stroke-linecap="round" opacity=".5"></path>
-<rect x="70" y="292" width="64" height="16" fill="#FFACE4" stroke="#2B1A17" stroke-width="1.5"></rect><rect x="134" y="292" width="40" height="16" fill="#85231A" stroke="#2B1A17" stroke-width="1.5"></rect>
-<line x1="40" y1="96" x2="260" y2="96" stroke="#2B1A17" stroke-width="1.5" stroke-dasharray="6 5"></line>
-<g class="pk-strip"><path d="M40 70 L260 70 L260 96 L40 96 Z" fill="#C29A70" stroke="#2B1A17" stroke-width="2"></path><path d="M40 70 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10 l10 -10 l10 10" fill="#C29A70" stroke="#2B1A17" stroke-width="2" stroke-linejoin="round"></path></g>
-</svg></div>
-<span style="position: absolute; left: 12px; bottom: 10px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">(a) пакет вскрывают при вас</span>
-</div>
-<div style="grid-column: 7 / span 5; align-self: center;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Стерильность и материалы</p>
-<h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.01em;">Стерильно, но уютно</h2>
-<ul style="list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px;">
-<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 0.6s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(a)</span><span style="display: block; margin-top: 4px; font-size: 15px; line-height: 1.35; color: #2B1A17;">Инструменты распаковывают при вас — из стерильного пакета</span></span></li>
-<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 1.2999999999999998s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(b)</span><span style="display: block; margin-top: 4px; font-size: 15px; line-height: 1.35; color: #2B1A17;">Большая палитра Luxio</span></span></li>
-<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 2.0s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(c)</span><span style="display: block; margin-top: 4px; font-size: 15px; line-height: 1.35; color: #2B1A17;">Уход PREDUBEZHDAI в студии</span></span></li>
-</ul>
 </div>
 </section>
 
@@ -2137,7 +2105,7 @@ class Component extends DCLogic {
       menuOpen: st.menuOpen, menuLabel: st.menuOpen ? 'закрыть' : 'меню', menuBg: st.menuOpen ? '#FFACE4' : 'transparent',
       menuToggle: () => this.setState({ menuOpen: !st.menuOpen }), menuClose: () => this.setState({ menuOpen: false }),
       menuItems: [['#promo', 'Акция для новых гостей'], ['#price', 'Услуги и цены'], ['#studio', 'Студия'], ['#ritual', 'Почему бэсти'], ['#drinks', 'Меню напитков'],
-        ['#works', 'Работы'], ['#clean', 'Стерильность'], ['#team', 'Команда'], ['#reviews', 'Отзывы'], ['#cert', 'Сертификат'], ['#faq', 'Вопросы'], ['#route', 'Как дойти']]
+        ['#works', 'Работы'], ['#team', 'Команда'], ['#reviews', 'Отзывы'], ['#cert', 'Сертификат'], ['#faq', 'Вопросы'], ['#route', 'Как дойти']]
         .map((x, i) => ({ href: x[0], label: x[1], n: (i < 9 ? '0' : '') + (i + 1) })),
       // «о_студии»: открыта наверху страницы, прячется при прокрутке; стрелка — вручную (21.11)
       infoOpen: infoShow,
