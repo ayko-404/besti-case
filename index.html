@@ -528,7 +528,10 @@ a:hover { color: #6F1D15; }
 .bn, .bn * { cursor: url('assets/cursor-nail-sm.png') 7 0, auto; }
 .bn a, .bn a *, .bn button, .bn button * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
 a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offset: 3px; }
-.bt { font-size-adjust: 0.4; font-synthesis: none; line-height: 1.5; }
+/* единая шкала шрифтов (22.11): размеры в коде = отрисованные, подгонка font-size-adjust убрана.
+   Наборный: 10 (micro, капс) · 11 (подпись) · 12 (метка, капс) · 13 (s) · 15 (m) · 24 (капс) · 44.
+   Заголовочный: 22 (h3, цитата) · 48 (h2) · 56 (цифры) · 60 (h1). Рукописный: 34 · 56. */
+.bt { font-size: 13px; font-size-adjust: none; font-synthesis: none; line-height: 1.5; }
 .bt h1, .bt h2, .bt h3 { font-family: 'Cormorant Garamond', Georgia, serif; }
 .bt h1, .bt h2, .bt h3, .bt [style*="Cormorant"], .bt [style*="Gogol"], .bt [style*="PT Mono"], .bt .wait, .bt .chip { font-size-adjust: none; }
 .btn { box-shadow: 3px 3px 0 #2B1A17, inset 1px 1px 0 rgba(255, 255, 255, .55), inset -2px -2px 0 rgba(43, 26, 23, .25); transition: transform .12s ease, box-shadow .12s ease; }
@@ -547,11 +550,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pl-row { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; column-gap: 10px; width: 100%; min-height: 52px; padding: 0 10px 0 8px; background: transparent; border: 0; border-bottom: 1px solid rgba(43, 26, 23, .25); text-align: left; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1.3; color: #2B1A17; cursor: pointer; transition: background-color .16s ease; }
 .pl-row:hover { background: rgba(255, 172, 228, .14); }
 .pl-row[aria-pressed="true"] { background: #FFF6F0; color: #85231A; }
-.pl-mark { font-size: 10px; color: #85231A; }
+.pl-mark { font-size: 11px; color: #85231A; }
 .pl-price { white-space: nowrap; color: #85231A; }
 .pl-det { grid-column: 7 / span 6; align-self: start; padding: 4px 40px 0 0; }
 .pl-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; }
-.pl-title { margin: 12px 0 0; font-family: 'PT Mono', monospace !important; font-size: 26px !important; line-height: 1.2; font-weight: 400; letter-spacing: .02em; text-transform: uppercase; color: #2B1A17; }
+.pl-title { margin: 12px 0 0; font-family: 'PT Mono', monospace !important; font-size: 24px !important; line-height: 1.2; font-weight: 400; letter-spacing: .02em; text-transform: uppercase; color: #2B1A17; }
 .pl-big { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 18px 0 0; font-family: 'PT Mono', monospace; font-size: 44px; line-height: 1; color: #85231A; }
 .pl-time { padding: 4px 10px; border: 1px solid #2B1A17; font-size: 13px; line-height: 1.2; letter-spacing: .02em; color: #2B1A17; }
 .pl-label { margin: 26px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; }
@@ -566,7 +569,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .pl-det { display: none; }
   .pl-inline { display: block; padding: 6px 8px 18px; border-bottom: 1px solid rgba(43, 26, 23, .25); background: #FFF6F0; }
   .pl-inline .pl-big { margin-top: 8px; font-size: 30px; }
-  .pl-row { font-size: 14px; }
+  .pl-row { font-size: 13px; }
 }
 #price[data-pv="desk"] .pr-tabs { gap: 8px 18px !important; justify-content: center; }
 #price[data-pv="desk"] .pr-tab { flex: 0 0 140px !important; min-width: 0 !important; flex-direction: column; justify-content: flex-start; gap: 8px !important; padding: 8px 6px !important; background: transparent !important; border: 1px dashed transparent !important; text-align: center !important; }
@@ -577,8 +580,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 #price[data-pv="desk"] .pr-ic { position: relative; width: 74px; height: 60px; display: grid !important; place-items: center; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 37 30' shape-rendering='crispEdges'%3E%3Cpath d='M1 1h14v4h21v24H1z' fill='%232B1A17'/%3E%3Cpath d='M2 2h12v4h21v22H2z' fill='%23FFCDEB'/%3E%3Cpath d='M2 10h33v18H2z' fill='%23FFACE4'/%3E%3Cpath d='M2 9h33v1H2z' fill='%2385231A'/%3E%3C/svg%3E") center / 100% 100% no-repeat; image-rendering: pixelated; }
 #price[data-pv="desk"] .pr-ic img { width: 34px !important; height: 34px !important; margin-top: 8px; }
 #price[data-pv="desk"] .pr-panel { position: relative; margin-top: 20px !important; padding: 64px 0 40px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 6px 6px 0 #2B1A17; }
-#price[data-pv="desk"] .pr-panel::before { content: attr(aria-label) ".txt"; position: absolute; left: 0; right: 0; top: 0; height: 30px; padding: 0 12px; display: flex; align-items: center; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: lowercase; }
-#price[data-pv="desk"] .pr-panel::after { content: '_ □ ×'; position: absolute; right: 12px; top: 0; height: 30px; display: flex; align-items: center; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .1em; }
+#price[data-pv="desk"] .pr-panel::before { content: attr(aria-label) ".txt"; position: absolute; left: 0; right: 0; top: 0; height: 30px; padding: 0 12px; display: flex; align-items: center; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: lowercase; }
+#price[data-pv="desk"] .pr-panel::after { content: '_ □ ×'; position: absolute; right: 12px; top: 0; height: 30px; display: flex; align-items: center; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .1em; }
 @media (max-width: 900px) {
   #price[data-pv] .pr-panel { padding: 16px 12px 12px; box-shadow: 4px 4px 0 #2B1A17; }
   #price[data-pv="desk"] .pr-panel { padding-top: 44px; }
@@ -616,10 +619,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .ga__t--3 { grid-row: 3; justify-content: flex-end; padding-bottom: 72px; }
 .ga__t--4 { grid-row: 4; justify-content: center; }
 .ga__t--4 .ga__btn { align-self: flex-start; margin-top: 32px; }
-.ga__label { margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
+.ga__label { margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
 .ga__h { margin: 10px 0 0; font-family: 'PT Mono', monospace; font-size: 24px; line-height: 1.2; text-transform: uppercase; color: #2B1A17; }
-.ga__p { margin: 12px 0 0; font-family: 'PT Mono', monospace; font-size: 13.5px; line-height: 1.55; color: #2B1A17; }
-.ga__note { margin: 28px 0 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 40px; line-height: 1; color: #85231A; transform: rotate(-4deg); transform-origin: left; }
+.ga__p { margin: 12px 0 0; font-family: 'PT Mono', monospace; font-size: 13px; line-height: 1.55; color: #2B1A17; }
+.ga__note { margin: 28px 0 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 34px; line-height: 1; color: #85231A; transform: rotate(-4deg); transform-origin: left; }
 .ga__label, .ga__h, .ga__p, .ga__note { font-size-adjust: none !important; }
 .dd { position: absolute; z-index: 0; height: auto; pointer-events: none; overflow: visible; transform: rotate(var(--r, 0deg)); animation: dd-wobble 5.5s ease-in-out infinite; }
 .dd--cup { animation-delay: -1.4s; } .dd--pop { animation-delay: -2.6s; } .dd--bub { animation-delay: -3.8s; } .dd--spark { animation-duration: 3.2s; }
@@ -651,22 +654,22 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-tabs { position: relative; display: grid; grid-template-columns: var(--rw) repeat(4, minmax(0, 1fr)) var(--rw); height: 80px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ln); border-bottom: 1px solid var(--ln); }
 .pw-tab { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 13px 14px 14px; border-left: 1px solid var(--ln); font-family: 'PT Mono', monospace; color: #2B1A17; cursor: pointer; transition: color .35s ease; }
 
-.pw-tab__n { font-size: 13px; letter-spacing: .04em; opacity: .72; font-size-adjust: none; }
-.pw-tab__t { font-size: 13px; letter-spacing: .04em; text-transform: uppercase; font-size-adjust: none; }
+.pw-tab__n { font-size: 12px; letter-spacing: .04em; opacity: .72; font-size-adjust: none; }
+.pw-tab__t { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; font-size-adjust: none; }
 .pw-tab.is-on { color: #FFFAF6; }
 .pw-tabs__bg { position: absolute; z-index: 0; top: 0; bottom: 0; left: calc(var(--rw) + 1px); width: calc((100% - 2 * var(--rw)) / 4 - 1px); background: #85231A; transform: translateX(calc(var(--k, 0) * 100%)); transition: transform .55s cubic-bezier(.77, 0, .175, 1); }
 .pw-main { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; }
 .pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin-left: calc(max(calc(var(--rw) + 56px), (100vw - 1600px) / 2) - max(calc(var(--rw) + 24px), (100vw - 1600px) / 2)); }
 .pw-ruler { position: absolute; left: 0; top: 185px; bottom: 28px; width: calc(var(--rw) + 4px); background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .38) 0 1px, transparent 1px 14px) calc(var(--rw) - 3px) var(--ty, 0px) / 6px 14px repeat-y; }
-.pw-ruler__n { position: absolute; left: 0; width: var(--rw); top: 50%; transform: translateY(-50%); text-align: center; font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; font-size-adjust: none; }
-.pw-label { position: absolute; top: 28px; left: 0; margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
+.pw-ruler__n { position: absolute; left: 0; width: var(--rw); top: 50%; transform: translateY(-50%); text-align: center; font-family: 'PT Mono', monospace; font-size: 11px; color: #2B1A17; font-size-adjust: none; }
+.pw-label { position: absolute; top: 28px; left: 0; margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
 .pw-txts { position: absolute; left: 0; right: 0; top: 64px; bottom: 0; overflow: hidden; }
 .pw-list { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
 .pw-txt { position: absolute; left: 0; right: 16px; transform: translateY(-50%); }
-.pw-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; font-size-adjust: none; }
-.pw-h { margin: 14px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(40px, 4vw, 64px); line-height: 1; font-weight: 500; letter-spacing: -.015em; color: #85231A; }
+.pw-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; font-size-adjust: none; }
+.pw-h { margin: 14px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em; color: #85231A; }
 .pw-h em { font-style: italic; font-weight: 400; color: #85231A; }
-.pw-p { margin: 18px 0 0; max-width: 30em; font-family: 'PT Mono', monospace; font-size: 16px; line-height: 1.55; color: #2B1A17; font-size-adjust: none; }
+.pw-p { margin: 18px 0 0; max-width: 30em; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1.55; color: #2B1A17; font-size-adjust: none; }
 .pw-right { grid-column: 7 / span 6; align-self: center; }
 .pw-frame { position: relative; padding: 22px; }
 .pw-imgs { position: relative; aspect-ratio: 4 / 3; max-height: calc(100vh - 300px); margin: 0 auto; overflow: hidden; background: #2B1A17; }
@@ -674,7 +677,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-img[data-i="0"] { clip-path: inset(0 0 0 0); }
 .pw-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .pw-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: #FFACE4; box-shadow: 0 0 12px #FFACE4; opacity: 0; pointer-events: none; }
-.pw-tag { position: absolute; left: 14px; top: 14px; padding: 4px 8px; background: #FFACE4; color: #85231A; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; border: 1px solid #2B1A17; }
+.pw-tag { position: absolute; left: 14px; top: 14px; padding: 4px 8px; background: #FFACE4; color: #85231A; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; border: 1px solid #2B1A17; }
 .pw-plus { position: absolute; width: 14px; height: 14px; }
 .pw-plus::before, .pw-plus::after { content: ''; position: absolute; background: #2B1A17; }
 .pw-plus::before { left: 6px; top: 0; width: 1px; height: 14px; } .pw-plus::after { top: 6px; left: 0; height: 1px; width: 14px; }
@@ -696,7 +699,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 #ritual[data-pv2="bordo"] .pw-line { background: rgba(255, 250, 246, .25); } #ritual[data-pv2="bordo"] .pw-line i { background: #FFACE4; }
 /* вариант «Окно» */
 #ritual[data-pv2="window"] .pw-frame { padding: 0; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 8px 8px 0 #2B1A17; transform: rotate(-1deg); }
-#ritual[data-pv2="window"] .pw-bar { display: flex; justify-content: space-between; align-items: center; height: 30px; padding: 0 12px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; }
+#ritual[data-pv2="window"] .pw-bar { display: flex; justify-content: space-between; align-items: center; height: 30px; padding: 0 12px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; }
 #ritual[data-pv2="window"] .pw-imgs { margin: 10px; }
 #ritual[data-pv2="window"] .pw-plus { display: none; }
 #ritual[data-pv2="window"] .pw-scan { opacity: 1; }
@@ -718,14 +721,14 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-tabs, .pw-line, .pw-left, .pw-right { position: relative; z-index: 1; }
 .pw-ruler { z-index: 1; }
 @keyframes pw-grain { 0% { transform: translate(0, 0); } 14% { transform: translate(-37px, 61px); } 28% { transform: translate(83px, -22px); } 42% { transform: translate(-91px, -74px); } 57% { transform: translate(49px, 103px); } 71% { transform: translate(-12px, -118px); } 85% { transform: translate(126px, 37px); } 100% { transform: translate(0, 0); } }
-.pw-play { position: absolute; right: 12px; bottom: 12px; padding: 3px 7px; background: rgba(43, 26, 23, .72); color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; animation: pw-blink 1.6s steps(2) infinite; font-size-adjust: none; }
+.pw-play { position: absolute; right: 12px; bottom: 12px; padding: 3px 7px; background: rgba(43, 26, 23, .72); color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; animation: pw-blink 1.6s steps(2) infinite; font-size-adjust: none; }
 @keyframes pw-blink { 50% { opacity: .35; } }
 /* помехи (22.11): зерно + экранные надписи «Запись REC» (выбор Никиты; варианты «срыв кадра» и «битые пиксели» — в .tmp/index-before-pwrec-2026-11-22.html) */
 .pw-fx { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .pw-fx > * { display: none; position: absolute; }
 #ritual[data-fx="rec"] .pw-osd { display: block; }
 /* запись: экранные надписи видеокамеры в правой пустой ячейке */
-.pw-osd { right: 0; width: var(--rw); text-align: center; color: #85231A; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; font-size-adjust: none; line-height: 1; }
+.pw-osd { right: 0; width: var(--rw); text-align: center; color: #85231A; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-size-adjust: none; line-height: 1; }
 .pw-osd--rec { top: 208px; } .pw-osd--rec i { display: inline-block; width: 7px; height: 7px; margin-right: 5px; background: #85231A; vertical-align: 1px; animation: pw-blink 1.2s steps(2) infinite; }
 .pw-osd--tc { top: 238px; writing-mode: vertical-rl; display: none; margin: 0 auto; left: auto; letter-spacing: .14em; font-variant-numeric: tabular-nums; }
 #ritual[data-fx="rec"] .pw-osd--tc { display: flex; justify-content: flex-start; align-items: center; }
@@ -739,7 +742,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .egg-v { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; }
 .egg-v3 { display: flex; }
 .egg-k { display: inline-block; padding: 4px 10px; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
-.egg-h { font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 44px; line-height: 1.05; color: #85231A; }
+.egg-h { font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 34px; line-height: 1.05; color: #85231A; }
 .egg-t { font-family: 'PT Mono', monospace; font-size: 13px; line-height: 1.55; color: #2B1A17; }
 /* ноготки: клик по ногтю красит его бордовым */
 .egg-v3 { gap: 36px; padding: 16px 24px; }
@@ -747,7 +750,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .egg-nail { cursor: pointer; transition: fill .12s steps(2); }
 .egg-nail:not([data-ci]):hover { fill: #E3B6B0; } .egg-nail[data-ci] { cursor: default; }
 .egg-side { display: flex; flex-direction: column; gap: 12px; max-width: 300px; }
-.egg-side .egg-h { font-size: 38px; transform: rotate(-3deg); transform-origin: left center; }
+.egg-side .egg-h { transform: rotate(-3deg); transform-origin: left center; }
 .egg-cnt { color: #85231A; }
 .egg-done { visibility: hidden; font-family: 'PT Mono', monospace; font-size: 13px; line-height: 1.5; color: #2B1A17; }
 .egg-done a { color: #85231A; }
@@ -761,13 +764,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .fnd__ph { grid-column: 2 / span 3; margin: 0; }
 .fnd__ph img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1) contrast(1.05); border: 1px solid #2B1A17; }
 .fnd__ph figcaption { margin-top: 14px; font-family: 'PT Mono', monospace; }
-.fnd__ph figcaption b { display: block; font-weight: 400; font-size: 16px; color: #2B1A17; }
-.fnd__ph figcaption span { display: block; margin-top: 4px; font-size: 12px; color: #7E4F48; }
-.fnd__txt { grid-column: 8 / span 4; }
-.fnd__txt p { margin: 18px 0 0; font-family: 'PT Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #2B1A17; }
+.fnd__ph figcaption b { display: block; font-weight: 400; font-size: 15px; color: #2B1A17; }
+.fnd__ph figcaption span { display: block; margin-top: 4px; font-size: 11px; color: #7E4F48; }
+.fnd__txt { grid-column: 7 / span 5; max-width: 560px; } /* от центральной линии сайта, как тезисы «Студии» */
+.fnd__txt p { margin: 18px 0 0; font-family: 'PT Mono', monospace; font-size: 13px; line-height: 1.7; color: #2B1A17; }
 .fnd__txt p:first-child { margin-top: 0; }
 .fnd__txt .fnd__end { margin-top: 56px; }
-.fnd__txt .fnd__sign { margin: 6px 0 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 44px; line-height: 1; color: #85231A; transform: rotate(-4deg); transform-origin: left; }
+.fnd__txt .fnd__sign { margin: 6px 0 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 56px; line-height: 1; color: #85231A; transform: rotate(-4deg); transform-origin: left; }
 @media (max-width: 900px) {
   .fnd__q { margin: 0; font-size: 28px; }
   .fnd__hand { font-size: 34px; }
@@ -866,7 +869,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .h1 { font-size: 44px !important; }
   .hx { font-size: 40px !important; }
   .hide-m { display: none !important; }
-  .bt [style*="font-size: 9px"], .bt [style*="font-size: 10px"] { font-size: 11px !important; }
+  .bt [style*="font-size: 10px"] { font-size: 11px !important; }
   .off-m { margin: 8px 0 0 !important; }
   .prow { grid-template-columns: minmax(0, 1fr) auto auto auto !important; }
   .col-m { padding-left: 0 !important; padding-right: 0 !important; border-left: 0 !important; }
@@ -900,8 +903,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   #top .tilt { width: 116px !important; }
   #top .tilt:nth-child(2) { width: 136px !important; }
   .ctacoupon > div:first-child { grid-template-columns: minmax(0, 1fr) 100px !important; }
-  .ctacoupon [style*="font-size: 54px"] { font-size: 38px !important; }
-  .ctacoupon [style*="font-size: 46px"] { font-size: 34px !important; }
+  .ctacoupon [style*="font-size: 56px"] { font-size: 36px !important; }
   .ctacoupon > span[style*="right: 123px"] { right: 87px !important; }
   .ctacoupon ul { grid-template-columns: minmax(0, 1fr) !important; }
   .bigletter span { font-size: 84px; }
@@ -911,11 +913,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 @media (max-width: 600px) {
   .pcoupon { grid-template-columns: minmax(0, 1fr) 96px !important; }
   .pcoupon > div:first-child { padding: 16px 14px 16px !important; }
-  .pcoupon [style*="font-size: 60px"] { font-size: 40px !important; }
   .pcoupon [style*="font-size: 22px"] { font-size: 16px !important; }
-  .pcoupon [style*="font-size: 56px"] { font-size: 32px !important; }
-  .pcoupon ul { grid-template-columns: minmax(0, 1fr) !important; font-size: 14px !important; }
-  .pcoupon p[style*="font-size: 16px"] { font-size: 13px !important; }
+  .pcoupon [style*="font-size: 56px"] { font-size: 36px !important; }
+  .pcoupon ul { grid-template-columns: minmax(0, 1fr) !important; }
   .pcoupon > div:last-child { padding: 14px 8px 12px !important; }
   .pcoupon .btn { padding: 0 16px !important; }
   .pnotch { right: 83px !important; }
@@ -947,7 +947,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 
 <!-- БЕГУЩАЯ СТРОКА (Telepathic) -->
 <div aria-label="Коротко о студии" style="overflow: hidden; height: 30px; display: flex; align-items: center; background: #85231A; color: #FFFAF6;">
-<div class="marq" style="display: flex; width: max-content; font-family: 'PT Mono', monospace; font-size: 11px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;">
+<div class="marq" style="display: flex; width: max-content; font-family: 'PT Mono', monospace; font-size: 12px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;">
 <span style="display: flex; gap: 40px; padding-right: 40px;"><span>Сэт-комплекс Luxio — 2 890 ₽ для первого визита</span><span>·</span><span>Маникюр и педикюр в 3 минутах от метро «Трубная»</span><span>·</span><span>Каждый день 10:00–22:00</span><span>·</span><span>Запись онлайн в YCLIENTS</span><span>·</span></span>
 <span aria-hidden="true" style="display: flex; gap: 40px; padding-right: 40px;"><span>Сэт-комплекс Luxio — 2 890 ₽ для первого визита</span><span>·</span><span>Маникюр и педикюр в 3 минутах от метро «Трубная»</span><span>·</span><span>Каждый день 10:00–22:00</span><span>·</span><span>Запись онлайн в YCLIENTS</span><span>·</span></span>
 </div>
@@ -958,12 +958,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 8px 16px 0;">
 <nav aria-label="Основное меню" style="display: flex; align-items: stretch; background: #FFFAF6; border: 1px solid rgba(43, 26, 23, .4); box-shadow: 3px 3px 0 rgba(43, 26, 23, .16);">
 <a href="#top" aria-label="Бэсти — студия маникюра, наверх" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0 24px; min-height: 52px; box-sizing: border-box; text-decoration: none; color: #85231A;">
-<img fetchpriority="high" decoding="async" src="assets/besti-wordmark-bordo.svg" alt="бэсти" style="height: 29px; width: auto; display: block;"><span style="display: inline-block; transform: rotate(-4deg) skewX(-10deg) translateX(11px); margin-top: -6px; font-family: 'PT Mono', monospace; font-size: 10px; line-height: 1; letter-spacing: .02em; white-space: nowrap; color: #85231A;">студия маникюра</span>
+<img fetchpriority="high" decoding="async" src="assets/besti-wordmark-bordo.svg" alt="бэсти" style="height: 29px; width: auto; display: block;"><span style="display: inline-block; transform: rotate(-4deg) skewX(-10deg) translateX(11px); margin-top: -6px; font-family: 'PT Mono', monospace; font-size: 11px; line-height: 1; letter-spacing: .02em; white-space: nowrap; color: #85231A;">студия маникюра</span>
 </a>
-<a class="navlink" href="#price" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 14px;">Услуги и цены</a>
-<a class="navlink" href="#studio" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 14px;">Студия</a>
-<a class="navlink" href="#route" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 14px;">Как дойти</a>
-<button class="burger" onClick="{{menuToggle}}" aria-expanded="{{menuOpen}}" aria-controls="mob-menu" aria-label="Меню" style="display: none; align-items: center; gap: 8px; padding: 0 14px; min-height: 44px; background: {{menuBg}}; color: #85231A; border: 0; border-left: 1px solid rgba(43, 26, 23, .2); font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;"><svg aria-hidden="true" width="16" height="12" viewBox="0 0 16 12" shape-rendering="crispEdges"><rect x="0" y="0" width="16" height="2" fill="#85231A"></rect><rect x="0" y="5" width="16" height="2" fill="#85231A"></rect><rect x="0" y="10" width="16" height="2" fill="#85231A"></rect></svg>{{menuLabel}}</button>
+<a class="navlink" href="#price" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 11px;">Услуги и цены</a>
+<a class="navlink" href="#studio" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 11px;">Студия</a>
+<a class="navlink" href="#route" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 11px;">Как дойти</a>
+<button class="burger" onClick="{{menuToggle}}" aria-expanded="{{menuOpen}}" aria-controls="mob-menu" aria-label="Меню" style="display: none; align-items: center; gap: 8px; padding: 0 14px; min-height: 44px; background: {{menuBg}}; color: #85231A; border: 0; border-left: 1px solid rgba(43, 26, 23, .2); font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;"><svg aria-hidden="true" width="16" height="12" viewBox="0 0 16 12" shape-rendering="crispEdges"><rect x="0" y="0" width="16" height="2" fill="#85231A"></rect><rect x="0" y="5" width="16" height="2" fill="#85231A"></rect><rect x="0" y="10" width="16" height="2" fill="#85231A"></rect></svg>{{menuLabel}}</button>
 </nav>
 <div style="position: relative; display: flex; flex-direction: column; align-items: stretch;">
 <!-- соцсети (21.11): ссылки с bestie-nails.ru -->
@@ -972,22 +972,22 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <a class="navlink" href="https://t.me/bestie_nail" target="_blank" rel="noopener" aria-label="Telegram бэсти" title="Telegram" style="display: flex; align-items: center; justify-content: center; width: 52px; min-height: 52px; border-left: 1px solid rgba(43, 26, 23, .4); color: #2B1A17; text-decoration: none;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" style="display: block;"><path d="M21.5 3.5 2.8 10.7c-.8.3-.8 1.4 0 1.7l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.9 3.6c.6.4 1.4.1 1.6-.6L22.6 4.6c.2-.8-.4-1.4-1.1-1.1Z"></path><path d="m7.4 14 10.4-7.1-7.8 8.4"></path></svg></a>
 </div>
 <div style="display: flex; align-items: stretch; background: #FFFAF6; border: 1px solid rgba(43, 26, 23, .4); box-shadow: 3px 3px 0 rgba(43, 26, 23, .16);">
-<a class="navlink" href="https://yandex.by/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 6px; padding: 0 14px; color: #2B1A17; text-decoration: none; font-size: 14px;">
+<a class="navlink" href="https://yandex.by/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 6px; padding: 0 14px; color: #2B1A17; text-decoration: none; font-size: 11px;">
 <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" style="display: block;"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>
 5,0 на Яндекс Картах</a>
-<a class="hbtn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: flex; align-items: center; padding: 0 20px; min-height: 52px; background: #FFACE4; color: #85231A; border-left: 1px solid rgba(43, 26, 23, .4); text-decoration: none; font-family: 'PT Mono', monospace; font-size: 11px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase;">Записаться</a>
+<a class="hbtn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: flex; align-items: center; padding: 0 20px; min-height: 52px; background: #FFACE4; color: #85231A; border-left: 1px solid rgba(43, 26, 23, .4); text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase;">Записаться</a>
 </div>
-<button class="hide-m" onClick="{{infoToggle}}" aria-expanded="{{infoOpen}}" aria-controls="studio-info" style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: -1px; min-height: 26px; padding: 4px 10px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; text-align: left;"><span>о_студии.besti</span><span aria-hidden="true" style="font-size: 11px;">{{infoSign}}</span></button>
+<button class="hide-m" onClick="{{infoToggle}}" aria-expanded="{{infoOpen}}" aria-controls="studio-info" style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: -1px; min-height: 26px; padding: 4px 10px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; text-align: left;"><span>о_студии.besti</span><span aria-hidden="true" style="font-size: 12px;">{{infoSign}}</span></button>
 <div class="hide-m" style="position: absolute; left: 0; right: -8px; top: 100%; overflow: hidden; padding: 0 8px 10px 0; pointer-events: none;">
-<div id="studio-info" style="background: #FFFFFF; border: 1px solid #2B1A17; border-top: 0; box-shadow: 5px 5px 0 #2B1A17; text-align: left; transform: {{infoTf}}; opacity: {{infoOp}}; pointer-events: {{infoPe}}; transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .3s ease;"><div style="padding: 9px 14px 10px;"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Рейтинг на Яндекс Картах</p><p style="display: flex; align-items: center; gap: 10px; margin: 6px 0 0;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; line-height: 1; font-weight: 600; color: #85231A;">5,0</span><span aria-hidden="true" style="display: flex; gap: 2px;"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg></span></p><p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; color: #2B1A17;">152 оценки</p></div><div style="padding: 9px 14px 10px; border-top: 1px solid rgba(43, 26, 23, .35);"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Адрес</p><p style="margin: 6px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; line-height: 1.1; font-weight: 600; color: #85231A;">Печатников пер., 6</p><p style="margin: 6px 0 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; color: #2B1A17;">340 м от м. Трубная</p></div><div style="padding: 9px 14px 10px; border-top: 1px solid rgba(43, 26, 23, .35);"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Часы работы</p><p style="margin: 6px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; line-height: 1; font-weight: 600; color: #85231A;">10:00–22:00</p><p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; color: #2B1A17;">каждый день</p></div></div>
+<div id="studio-info" style="background: #FFFFFF; border: 1px solid #2B1A17; border-top: 0; box-shadow: 5px 5px 0 #2B1A17; text-align: left; transform: {{infoTf}}; opacity: {{infoOp}}; pointer-events: {{infoPe}}; transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .3s ease;"><div style="padding: 9px 14px 10px;"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Рейтинг на Яндекс Картах</p><p style="display: flex; align-items: center; gap: 10px; margin: 6px 0 0;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1; font-weight: 600; color: #85231A;">5,0</span><span aria-hidden="true" style="display: flex; gap: 2px;"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg></span></p><p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .04em; color: #2B1A17;">152 оценки</p></div><div style="padding: 9px 14px 10px; border-top: 1px solid rgba(43, 26, 23, .35);"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Адрес</p><p style="margin: 6px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.1; font-weight: 600; color: #85231A;">Печатников пер., 6</p><p style="margin: 6px 0 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .04em; color: #2B1A17;">340 м от м. Трубная</p></div><div style="padding: 9px 14px 10px; border-top: 1px solid rgba(43, 26, 23, .35);"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Часы работы</p><p style="margin: 6px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1; font-weight: 600; color: #85231A;">10:00–22:00</p><p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .04em; color: #2B1A17;">каждый день</p></div></div>
 </div>
 </div>
 </header>
 <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
 <div id="mob-menu" class="mobmenu" style="position: absolute; left: 16px; right: 16px; top: 60px; z-index: 60; background: #FFFAF6; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;">
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 4px 12px; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;"><span>меню.besti</span><button onClick="{{menuClose}}" aria-label="Закрыть меню" style="width: 32px; height: 28px; padding: 0; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 14px; line-height: 1;">×</button></div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 4px 12px; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;"><span>меню.besti</span><button onClick="{{menuClose}}" aria-label="Закрыть меню" style="width: 32px; height: 28px; padding: 0; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; line-height: 1;">×</button></div>
 <nav aria-label="Разделы страницы" style="display: flex; flex-direction: column;">
-<sc-for list="{{menuItems}}" as="mi" hint-placeholder-count="10"><a href="{{mi.href}}" onClick="{{menuClose}}" style="display: flex; justify-content: space-between; align-items: center; min-height: 46px; padding: 0 14px; border-top: 1px solid rgba(43, 26, 23, .15); color: #2B1A17; text-decoration: none; font-size: 16px;"><span>{{mi.label}}</span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">{{mi.n}}</span></a></sc-for>
+<sc-for list="{{menuItems}}" as="mi" hint-placeholder-count="10"><a href="{{mi.href}}" onClick="{{menuClose}}" style="display: flex; justify-content: space-between; align-items: center; min-height: 46px; padding: 0 14px; border-top: 1px solid rgba(43, 26, 23, .15); color: #2B1A17; text-decoration: none; font-size: 13px;"><span>{{mi.label}}</span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">{{mi.n}}</span></a></sc-for>
 </nav>
 <div style="padding: 12px 14px 14px; border-top: 1px solid rgba(43, 26, 23, .15);"><a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 48px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться онлайн</a></div>
 </div>
@@ -999,20 +999,20 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <section id="top" class="sec stack" style="position: relative; background: #FFFAF6; color: #2B1A17; padding: 30px 16px 26px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center;">
 <div class="hide-m" style="grid-column: 1 / span 3; align-self: center; display: flex; justify-content: center;">
 <figure class="levitate" style="margin: 0; width: 262px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17;">
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 2px 8px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 9px; letter-spacing: .06em; text-transform: uppercase;"><span>отзыв · Яндекс Карты</span><span aria-hidden="true">_ □ ×</span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 2px 8px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;"><span>отзыв · Яндекс Карты</span><span aria-hidden="true">_ □ ×</span></div>
 <div style="padding: 10px 12px 12px; text-align: left;">
 <figcaption style="display: flex; align-items: center; gap: 8px;">
 <img src="assets/sasha-vulf.jpg" alt="саша вульф" style="flex: none; width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid #2B1A17; display: block;">
-<span style="display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 13px; color: #2B1A17;">саша вульф</span><span style="display: flex; align-items: center; gap: 5px; font-family: 'PT Mono', monospace; font-size: 9px; letter-spacing: .04em; color: #7E4F48;"><span role="img" aria-label="5 из 5" style="display: flex; gap: 1px;"><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg></span>10.09.2026</span></span>
+<span style="display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 11px; color: #2B1A17;">саша вульф</span><span style="display: flex; align-items: center; gap: 5px; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .04em; color: #7E4F48;"><span role="img" aria-label="5 из 5" style="display: flex; gap: 1px;"><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="9" height="9" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg></span>10.09.2026</span></span>
 </figcaption>
-<blockquote style="margin: 8px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 17px; line-height: 1.2; font-style: italic; font-weight: 500; color: #85231A;">«ооооочень крутой салон 😍 в восторге от интерьера, заботы и качественного результата! … 10000/10»</blockquote>
+<blockquote style="margin: 8px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.2; font-style: italic; font-weight: 500; color: #85231A;">«ооооочень крутой салон 😍 в восторге от интерьера, заботы и качественного результата! … 10000/10»</blockquote>
 </div>
 </figure>
 </div>
 <div style="grid-column: 4 / span 6; display: flex; flex-direction: column; align-items: center; text-align: center;">
 <div style="display: flex; justify-content: center; align-items: flex-end;"><figure class="tilt zoomable" onClick="{{zA}}" style="position: relative; z-index: 1; width: 180px; margin: 0 -16px 0 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(-8deg) translateY(16px);"><img fetchpriority="high" decoding="async" src="assets/hero-left.webp" alt="Гостья в меховом пальто показывает свежий маникюр, розовая надпись «бэсти»" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(a) гостья бэсти</figcaption></figure><figure class="tilt zoomable" onClick="{{zB}}" style="position: relative; z-index: 2; width: 224px; margin: 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(3deg);"><video id="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-video-poster.webp" aria-label="Видео: день в студии бэсти — зал, процесс и готовый маникюр" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"><source src="assets/hero-video.mp4" type="video/mp4"></video><figcaption style="display: flex; justify-content: space-between; margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;"><span>(b) день в бэсти</span><span class="rec-m" aria-hidden="true" style="color: #C0392B;">● rec</span></figcaption></figure><figure class="tilt zoomable" onClick="{{zC}}" style="position: relative; z-index: 1; width: 180px; margin: 0 0 0 -16px; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(9deg) translateY(20px);"><img fetchpriority="high" decoding="async" src="assets/hero-c.webp" alt="Бордовое покрытие на фоне белого кирпича" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(c) бордо</figcaption></figure></div>
 <h1 class="h1" style="margin: 44px 0 0; font-size: 60px; line-height: .98; font-weight: 500; letter-spacing: -.02em; color: #85231A;">Студия маникюра,<br><em style="font-style: italic; font-weight: 400;">где тебя ждут</em></h1>
-<p style="margin: 12px 0 0; max-width: 520px; font-size: 18px; line-height: 1.45; color: #2B1A17;">Студия маникюра и педикюра в 3 минутах от метро «Трубная». Выберите услугу и запишитесь онлайн</p>
+<p style="margin: 12px 0 0; max-width: 520px; font-size: 15px; line-height: 1.45; color: #2B1A17;">Студия маникюра и педикюра в 3 минутах от метро «Трубная». Выберите услугу и запишитесь онлайн</p>
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px;"><a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться онлайн</a></div>
 </div>
 </section>
@@ -1022,17 +1022,17 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div style="grid-column: 1 / span 4; align-self: center;">
 <p class="retro-tag" style="display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 5px 12px 5px 9px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;"><span class="blink" aria-hidden="true" style="display: inline-flex;"><svg width="12" height="12" viewBox="0 0 5 5" shape-rendering="crispEdges"><rect x="2" y="0" width="1" height="1" fill="#FFFAF6"></rect><rect x="1" y="1" width="1" height="1" fill="#FFFAF6"></rect><rect x="2" y="1" width="1" height="1" fill="#FFACE4"></rect><rect x="3" y="1" width="1" height="1" fill="#FFFAF6"></rect><rect x="0" y="2" width="1" height="1" fill="#FFFAF6"></rect><rect x="1" y="2" width="1" height="1" fill="#FFACE4"></rect><rect x="2" y="2" width="1" height="1" fill="#FFFFFF"></rect><rect x="3" y="2" width="1" height="1" fill="#FFACE4"></rect><rect x="4" y="2" width="1" height="1" fill="#FFFAF6"></rect><rect x="1" y="3" width="1" height="1" fill="#FFFAF6"></rect><rect x="2" y="3" width="1" height="1" fill="#FFACE4"></rect><rect x="3" y="3" width="1" height="1" fill="#FFFAF6"></rect><rect x="2" y="4" width="1" height="1" fill="#FFFAF6"></rect></svg></span>Акция для новых гостей<span class="blink" aria-hidden="true">▍</span></p>
 <h2 class="hx" style="margin: 18px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Познакомимся?</h2>
-<p style="margin: 16px 0 0; max-width: 360px; font-size: 19px; line-height: 1.4; color: #2B1A17;">Сэт-комплекс Luxio за 2890 вместо 3400</p>
+<p style="margin: 16px 0 0; max-width: 360px; font-size: 15px; line-height: 1.4; color: #2B1A17;">Сэт-комплекс Luxio за 2890 вместо 3400</p>
 <sc-if value="{{cMoved}}" hint-placeholder-val="{{false}}"><button class="btn hide-m" onClick="{{cReset}}" style="margin: 26px 0 0; padding: 5px 10px; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;">↺ Вернуть купон на место</button></sc-if>
 </div>
 <figure class="floaty zoomable" onClick="{{zPromo}}" style="grid-column: 5 / span 2; align-self: center; position: relative; z-index: 3; width: 180px; margin: 0 auto; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 6px 8px 0 rgba(43, 26, 23, .28);">
 <img loading="lazy" decoding="async" src="assets/promo.webp" alt="Нюдовый маникюр" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;">
 <span class="hide-m" aria-hidden="true" style="position: absolute; top: -24px; right: -14px; transform: rotate(10deg);"><svg aria-hidden="true" width="48" height="45" viewBox="0 0 16 15" shape-rendering="crispEdges"><rect x="4" y="0" width="2" height="1" fill="#2B1A17"></rect><rect x="10" y="0" width="2" height="1" fill="#2B1A17"></rect><rect x="3" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="4" y="1" width="2" height="1" fill="#85231A"></rect><rect x="6" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="9" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="10" y="1" width="2" height="1" fill="#85231A"></rect><rect x="12" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="2" width="1" height="1" fill="#2B1A17"></rect><rect x="4" y="2" width="3" height="1" fill="#85231A"></rect><rect x="7" y="2" width="2" height="1" fill="#2B1A17"></rect><rect x="9" y="2" width="3" height="1" fill="#85231A"></rect><rect x="12" y="2" width="1" height="1" fill="#2B1A17"></rect><rect x="4" y="3" width="1" height="1" fill="#2B1A17"></rect><rect x="5" y="3" width="6" height="1" fill="#85231A"></rect><rect x="11" y="3" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="4" width="6" height="1" fill="#2B1A17"></rect><rect x="7" y="4" width="2" height="1" fill="#85231A"></rect><rect x="9" y="4" width="6" height="1" fill="#2B1A17"></rect><rect x="1" y="5" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="5" width="1" height="1" fill="#FFACE4"></rect><rect x="3" y="5" width="1" height="1" fill="#FFFFFF"></rect><rect x="4" y="5" width="3" height="1" fill="#FFACE4"></rect><rect x="7" y="5" width="2" height="1" fill="#85231A"></rect><rect x="9" y="5" width="5" height="1" fill="#FFACE4"></rect><rect x="14" y="5" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="6" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="6" width="5" height="1" fill="#FFACE4"></rect><rect x="7" y="6" width="2" height="1" fill="#85231A"></rect><rect x="9" y="6" width="5" height="1" fill="#FFACE4"></rect><rect x="14" y="6" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="7" width="14" height="1" fill="#2B1A17"></rect><rect x="2" y="8" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="8" width="4" height="1" fill="#FFACE4"></rect><rect x="7" y="8" width="2" height="1" fill="#85231A"></rect><rect x="9" y="8" width="4" height="1" fill="#FFACE4"></rect><rect x="13" y="8" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="9" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="9" width="1" height="1" fill="#FFACE4"></rect><rect x="4" y="9" width="1" height="1" fill="#FFFFFF"></rect><rect x="5" y="9" width="2" height="1" fill="#FFACE4"></rect><rect x="7" y="9" width="2" height="1" fill="#85231A"></rect><rect x="9" y="9" width="4" height="1" fill="#FFACE4"></rect><rect x="13" y="9" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="10" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="10" width="4" height="1" fill="#FFACE4"></rect><rect x="7" y="10" width="2" height="1" fill="#85231A"></rect><rect x="9" y="10" width="4" height="1" fill="#FFACE4"></rect><rect x="13" y="10" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="11" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="11" width="4" height="1" fill="#FFACE4"></rect><rect x="7" y="11" width="2" height="1" fill="#85231A"></rect><rect x="9" y="11" width="4" height="1" fill="#FFACE4"></rect><rect x="13" y="11" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="12" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="12" width="4" height="1" fill="#FFACE4"></rect><rect x="7" y="12" width="2" height="1" fill="#85231A"></rect><rect x="9" y="12" width="4" height="1" fill="#FFACE4"></rect><rect x="13" y="12" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="13" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="13" width="4" height="1" fill="#FFACE4"></rect><rect x="7" y="13" width="2" height="1" fill="#85231A"></rect><rect x="9" y="13" width="3" height="1" fill="#FFACE4"></rect><rect x="12" y="13" width="1" height="1" fill="#F08FCB"></rect><rect x="13" y="13" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="14" width="12" height="1" fill="#2B1A17"></rect></svg></span>
-<figcaption style="display: flex; justify-content: space-between; gap: 6px; margin-top: 6px; font-family: 'PT Mono', monospace; font-size: 9px; letter-spacing: .04em; text-transform: uppercase; color: #85231A;"><span>(a) нюдовый маникюр</span></figcaption>
+<figcaption style="display: flex; justify-content: space-between; gap: 6px; margin-top: 6px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A;"><span>(a) нюдовый маникюр</span></figcaption>
 </figure>
 <div style="grid-column: 7 / span 6;">
 <div class="hide-m" style="display: flex; align-items: flex-end; gap: 4px; margin: 0 0 2px 24px; transform: rotate(-3deg); transform-origin: left bottom;">
-<span style="font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 30px; line-height: 1; color: #85231A;">для первого визита</span>
+<span style="font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 34px; line-height: 1; color: #85231A;">для первого визита</span>
 <svg aria-hidden="true" width="70" height="46" viewBox="0 0 70 46" fill="none"><path d="M4 8 C 30 2, 54 10, 60 38" stroke="#85231A" stroke-width="2.5" stroke-linecap="round"></path><path d="M50 31 L61 41 L67 27" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 </div>
 <div class="cslot" data-egg="nails" style="position: relative;">
@@ -1044,15 +1044,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <span class="ctab hide-m" aria-hidden="true" style="position: absolute; left: 30px; top: 100%; margin-top: 8px; z-index: 1; display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 9px; background: #FFFAF6; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; white-space: nowrap;"><svg class="grip" width="10" height="14" viewBox="0 0 5 7" shape-rendering="crispEdges" style="display: block;"><rect x="0" y="0" width="2" height="1" fill="#85231A"></rect><rect x="3" y="0" width="2" height="1" fill="#85231A"></rect><rect x="0" y="3" width="2" height="1" fill="#85231A"></rect><rect x="3" y="3" width="2" height="1" fill="#85231A"></rect><rect x="0" y="6" width="2" height="1" fill="#85231A"></rect><rect x="3" y="6" width="2" height="1" fill="#85231A"></rect></svg><span>{{cTab}}</span><span aria-hidden="true" style="font-size: 12px; letter-spacing: 0;">↔</span></span>
 <div class="pcoupon" style="display: grid; grid-template-columns: minmax(0, 1fr) 176px; background: #FFACE4; border: 1px solid #2B1A17; box-shadow: 7px 7px 0 #2B1A17;">
 <div style="padding: 22px 26px 24px;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #85231A;">Купон · сэт-комплекс Luxio</p>
-<p style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin: 6px 0 0; color: #85231A;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 60px; line-height: 1; font-weight: 500; letter-spacing: -.02em; white-space: nowrap;">2 890 ₽</span><span class="sr">вместо</span><s style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 500; white-space: nowrap;">3 400 ₽</s></p>
-<ul style="list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; font-size: 17px; color: #2B1A17;">
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #85231A;">Купон · сэт-комплекс Luxio</p>
+<p style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin: 6px 0 0; color: #85231A;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 56px; line-height: 1; font-weight: 500; letter-spacing: -.02em; white-space: nowrap;">2 890 ₽</span><span class="sr">вместо</span><s style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 500; white-space: nowrap;">3 400 ₽</s></p>
+<ul style="list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; font-size: 13px; color: #2B1A17;">
 <li style="display: flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="flex: none; width: 16px; height: 16px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>снятие гель-лака</li>
 <li style="display: flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="flex: none; width: 16px; height: 16px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>маникюр</li>
 <li style="display: flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="flex: none; width: 16px; height: 16px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>выравнивание</li>
 <li style="display: flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="flex: none; width: 16px; height: 16px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>покрытие Luxio</li>
 </ul>
-<p style="margin: 14px 0 0; font-size: 16px; color: #2B1A17;">Для первого визита в бэсти</p>
+<p style="margin: 14px 0 0; font-size: 13px; color: #2B1A17;">Для первого визита в бэсти</p>
 <a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 26px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Познакомиться</a>
 </div>
 <div style="padding: 22px 16px 18px; background: #FFFFFF; border-left: 2px dashed #2B1A17; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 10px; text-align: center;">
@@ -1060,7 +1060,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <p style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 56px; line-height: .9; font-weight: 600; color: #85231A;">−15%</p>
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #2B1A17;">экономия 510 ₽</p>
 <span aria-hidden="true" style="display: block; width: 100%; height: 30px; background: repeating-linear-gradient(90deg, #2B1A17 0 2px, transparent 2px 4px, #2B1A17 4px 5px, transparent 5px 8px, #2B1A17 8px 11px, transparent 11px 13px);"></span>
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 9px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">первый визит</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">первый визит</p>
 </div>
 </div>
 <span aria-hidden="true" class="pnotch" style="position: absolute; top: -13px; right: 163px; width: 26px; height: 26px; border-radius: 50%; background: #FFFAF6; border: 1px solid; border-color: transparent transparent #2B1A17 #2B1A17; transform: rotate(-45deg);"></span>
@@ -1076,9 +1076,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <!-- 05 ПРАЙС · заголовок по центру, иконки категорий, две колонки -->
 <section id="price" data-pv="desk" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px;">
 <div style="grid-column: 7 / span 6; text-align: left;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Услуги и цены</p>
-<h2 class="hx" style="margin: 14px 0 0; font-size: 40px; line-height: 1.05; font-weight: 500; letter-spacing: -.01em;">От „Самой невинности“<br>до „Роскошного максимума“</h2>
-<p style="margin: 10px 0 0; font-size: 17px; line-height: 1.4; color: #2B1A17;">У каждого комплекса — состав и время. Без сюрпризов на кассе</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Услуги и цены</p>
+<h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1.05; font-weight: 500; letter-spacing: -.01em;">От „Самой невинности“<br>до „Роскошного максимума“</h2>
+<p style="margin: 10px 0 0; font-size: 13px; line-height: 1.4; color: #2B1A17;">У каждого комплекса — состав и время. Без сюрпризов на кассе</p>
 </div>
 
 <div role="tablist" class="pr-tabs" aria-label="Категории прайса" style="grid-column: 1 / -1; margin-top: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
@@ -1087,7 +1087,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <span class="pr-ic" style="flex: none; display: block; transform: {{n.lift}}; transition: transform .3s cubic-bezier(.2, .8, .2, 1);"><img loading="lazy" decoding="async" class="nail" src="{{n.icon}}" alt="" style="display: block; width: 40px; height: 40px; image-rendering: pixelated;"></span>
 <span style="display: flex; flex-direction: column; gap: 2px;">
 <span style="font-size: 12px; letter-spacing: .04em; text-transform: uppercase; line-height: 1.25;">{{n.label}}</span>
-<span style="font-size: 12px; color: #6F1D15;">{{n.count}}</span>
+<span style="font-size: 11px; color: #6F1D15;">{{n.count}}</span>
 </span>
 </button>
 </sc-for>
@@ -1116,7 +1116,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 </div>
 <div style="grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 18px; margin-top: 22px;">
-<span style="display: inline-flex; align-items: center; gap: 4px; transform: rotate(-2deg); transform-origin: right center;"><span style="font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 30px; line-height: 1; color: #85231A;">свободные окна — в онлайн-записи</span><svg class="hide-m" aria-hidden="true" width="72" height="34" viewBox="0 0 72 34" fill="none" style="flex: none; transform: translateY(6px);"><path d="M3 28 C 18 32, 40 30, 66 17" stroke="#85231A" stroke-width="2.5" stroke-linecap="round"></path><path d="M55 11 L67 16.5 L58 26" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<span style="display: inline-flex; align-items: center; gap: 4px; transform: rotate(-2deg); transform-origin: right center;"><span style="font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 34px; line-height: 1; color: #85231A;">свободные окна — в онлайн-записи</span><svg class="hide-m" aria-hidden="true" width="72" height="34" viewBox="0 0 72 34" fill="none" style="flex: none; transform: translateY(6px);"><path d="M3 28 C 18 32, 40 30, 66 17" stroke="#85231A" stroke-width="2.5" stroke-linecap="round"></path><path d="M55 11 L67 16.5 L58 26" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
 <a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Выбрать время</a>
 </div>
 </section>
@@ -1157,11 +1157,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <figcaption style="display: flex; align-items: center; gap: 10px;">
 <img src="assets/dasha.jpg" alt="dasha shutemova" loading="lazy" decoding="async" style="flex: none; width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid #2B1A17; display: block;">
 <span style="display: flex; flex-direction: column; gap: 2px; text-align: left;">
-<span style="font-size: 17px; color: #2B1A17;">dasha shutemova</span>
+<span style="font-size: 13px; color: #2B1A17;">dasha shutemova</span>
 <span style="font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">01.09.2026 · Яндекс Карты</span>
 </span>
 </figcaption>
-<blockquote style="margin: 12px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; line-height: 1.2; font-style: italic; font-weight: 500; color: #85231A;">«уже надоели бежевые минималистичные пространства, а здесь яркие детали, зеленые кресла, ковер на полу и кирпичные стены😍»</blockquote>
+<blockquote style="margin: 12px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.2; font-style: italic; font-weight: 500; color: #85231A;">«уже надоели бежевые минималистичные пространства, а здесь яркие детали, зеленые кресла, ковер на полу и кирпичные стены😍»</blockquote>
 </div>
 </figure>
 </div>
@@ -1227,20 +1227,20 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </figure>
 </div>
 <div style="grid-column: 7 / span 5;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Меню напитков</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Меню напитков</p>
 <div style="margin-top: 12px; padding: 6px; border: 1px solid #85231A;">
 <div style="position: relative; padding: 20px 22px 18px; border: 1px solid rgba(133, 35, 26, .45);">
 <svg aria-hidden="true" width="28" height="26" viewBox="0 0 24 22" fill="none" style="position: absolute; top: 14px; right: 16px; transform: rotate(12deg);"><path d="M12 20.5s-8-4.9-10.4-9.6A5.6 5.6 0 0 1 12 5.2a5.6 5.6 0 0 1 10.4 5.7C20 15.6 12 20.5 12 20.5z" fill="#FFACE4" stroke="#85231A" stroke-width="1.2"></path></svg>
-<h2 style="margin: 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 36px; line-height: 1; font-weight: 400; color: #85231A;">В гостях у бэсти</h2>
-<ul style="list-style: none; margin: 12px 0 0; padding: 0; font-size: 16px; color: #2B1A17;">
-<li style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 6px 0; border-bottom: 1px dotted rgba(133, 35, 26, .55);"><span style="color: #85231A;">кофе</span><span style="font-size: 13px; color: #7E4F48;">с обычным или растительным молоком</span></li>
+<h2 style="margin: 0; font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 34px; line-height: 1; font-weight: 400; color: #85231A;">В гостях у бэсти</h2>
+<ul style="list-style: none; margin: 12px 0 0; padding: 0; font-size: 13px; color: #2B1A17;">
+<li style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 6px 0; border-bottom: 1px dotted rgba(133, 35, 26, .55);"><span style="color: #85231A;">кофе</span><span style="font-size: 11px; color: #7E4F48;">с обычным или растительным молоком</span></li>
 <li style="padding: 6px 0; border-bottom: 1px dotted rgba(133, 35, 26, .55); color: #85231A;">гречишный чай</li>
 <li style="padding: 6px 0; border-bottom: 1px dotted rgba(133, 35, 26, .55); color: #85231A;">клубничный улун</li>
 <li style="padding: 6px 0; border-bottom: 1px dotted rgba(133, 35, 26, .55); color: #85231A;">матча</li>
 <li style="padding: 6px 0; border-bottom: 1px dotted rgba(133, 35, 26, .55); color: #85231A;">какао на банановом</li>
 <li style="padding: 6px 0; border-bottom: 1px dotted rgba(133, 35, 26, .55); color: #85231A;">мороженое</li>
 </ul>
-<p style="margin: 12px 0 0; font-size: 14px; color: #2B1A17;">Напитки и десерты во время визита</p>
+<p style="margin: 12px 0 0; font-size: 11px; color: #2B1A17;">Напитки и десерты во время визита</p>
 </div>
 </div>
 </div>
@@ -1249,9 +1249,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <!-- 06 РАБОТЫ · карточки «накиданы в кучу» (как у Mon Poney) -->
 <section id="works" class="sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 48px; overflow: hidden;">
 <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Работы</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Работы</p>
 <h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Результат <em style="font-style: italic; font-weight: 400;">после посещения</em></h2>
-<p style="margin: 12px auto 0; max-width: 640px; font-size: 17px; line-height: 1.5; color: #2B1A17;">Мы любим маникюр, который выглядит естественно. Поэтому кутикулу обрабатываем бережно, покрытие кладём тонко и&nbsp;близко к&nbsp;ней, а&nbsp;оттенок помогаем выбрать из&nbsp;большой палитры Luxio.</p>
+<p style="margin: 12px auto 0; max-width: 640px; font-size: 13px; line-height: 1.5; color: #2B1A17;">Мы любим маникюр, который выглядит естественно. Поэтому кутикулу обрабатываем бережно, покрытие кладём тонко и&nbsp;близко к&nbsp;ней, а&nbsp;оттенок помогаем выбрать из&nbsp;большой палитры Luxio.</p>
 </div>
 <div ref="{{setPile}}" class="pile" aria-label="Работы мастеров — листайте свайпом" style="position: relative; height: 470px; margin-top: 26px; touch-action: pan-y; user-select: none; -webkit-user-select: none;">
 <sc-for list="{{pile}}" as="c" hint-placeholder-count="18">
@@ -1266,7 +1266,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 <div style="display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 18px;">
 <button class="btn" aria-label="Предыдущая работа" onClick="{{worksPrev}}" style="width: 52px; height: 44px; padding: 0; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#85231A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
-<span style="min-width: 64px; text-align: center; font-family: 'PT Mono', monospace; font-size: 14px; color: #2B1A17;">{{workN}} / {{workTotal}}</span>
+<span style="min-width: 64px; text-align: center; font-family: 'PT Mono', monospace; font-size: 13px; color: #2B1A17;">{{workN}} / {{workTotal}}</span>
 <button class="btn" aria-label="Следующая работа" onClick="{{worksNext}}" style="width: 52px; height: 44px; padding: 0; display: grid; place-items: center; background: #FFACE4; border: 1px solid #2B1A17;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="#85231A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
 </div>
 <p style="margin: 14px 0 0; text-align: center;"><!-- INSTAGRAM: заменить href="#works" на ссылку аккаунта, когда клиентка пришлёт --><a class="tap" href="#works" data-instagram-pending="1" style="font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-underline-offset: 4px;">Больше работ — в Instagram* →</a></p>
@@ -1301,12 +1301,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <span style="position: absolute; left: 12px; bottom: 10px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">(a) пакет вскрывают при вас</span>
 </div>
 <div style="grid-column: 7 / span 5; align-self: center;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Стерильность и материалы</p>
-<h2 class="hx" style="margin: 14px 0 0; font-size: 40px; line-height: 1; font-weight: 500; letter-spacing: -.01em;">Стерильно, но уютно</h2>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Стерильность и материалы</p>
+<h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.01em;">Стерильно, но уютно</h2>
 <ul style="list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px;">
-<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 0.6s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(a)</span><span style="display: block; margin-top: 4px; font-size: 18px; line-height: 1.35; color: #2B1A17;">Инструменты распаковывают при вас — из стерильного пакета</span></span></li>
-<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 1.2999999999999998s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(b)</span><span style="display: block; margin-top: 4px; font-size: 18px; line-height: 1.35; color: #2B1A17;">Большая палитра Luxio</span></span></li>
-<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 2.0s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(c)</span><span style="display: block; margin-top: 4px; font-size: 18px; line-height: 1.35; color: #2B1A17;">Уход PREDUBEZHDAI в студии</span></span></li>
+<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 0.6s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(a)</span><span style="display: block; margin-top: 4px; font-size: 15px; line-height: 1.35; color: #2B1A17;">Инструменты распаковывают при вас — из стерильного пакета</span></span></li>
+<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 1.2999999999999998s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(b)</span><span style="display: block; margin-top: 4px; font-size: 15px; line-height: 1.35; color: #2B1A17;">Большая палитра Luxio</span></span></li>
+<li style="display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(133, 35, 26, .45);"><span style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 2px 2px 0 #2B1A17;"><span class="tick" style="display: grid; animation-delay: 2.0s;"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span><span style="font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;">(c)</span><span style="display: block; margin-top: 4px; font-size: 15px; line-height: 1.35; color: #2B1A17;">Уход PREDUBEZHDAI в студии</span></span></li>
 </ul>
 </div>
 </section>
@@ -1314,9 +1314,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <!-- 08 КОМАНДА · текст от центральной линии (как чек-лист «Стерильности» выше), карточки во всю ширину -->
 <section id="team" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
 <div style="grid-column: 7 / span 6;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Команда</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Команда</p>
 <h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Мастера и команда бэсти</h2>
-<p style="margin: 16px 0 0; font-size: 17px; line-height: 1.45; color: #2B1A17;">Ваши будущие бэсти — знакомьтесь заранее и записывайтесь к своему мастеру</p>
+<p style="margin: 16px 0 0; font-size: 13px; line-height: 1.45; color: #2B1A17;">Ваши будущие бэсти — знакомьтесь заранее и записывайтесь к своему мастеру</p>
 </div>
 <div class="stack team-grid" style="grid-column: 1 / -1; margin-top: 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 16px; align-items: stretch;">
 <article style="display: flex; flex-direction: column;">
@@ -1325,7 +1325,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 500;">Зухра</h3>
 <span style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;"><svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>5,0 · 11 отзывов</span>
 </div>
-<p style="margin: 4px 0 0; font-size: 14px; color: #2B1A17;">Основательница бэсти, бровист</p>
+<p style="margin: 4px 0 0; font-size: 11px; color: #2B1A17;">Основательница бэсти, бровист</p>
 <div style="margin-top: auto;"><a class="btn" href="https://n2379744.yclients.com/company/2062923/personal/select-master?o=m6076719" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase;">Записаться к Зухре</a></div>
 </article>
 <article style="display: flex; flex-direction: column;">
@@ -1334,7 +1334,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 500;">Наташа</h3>
 <span style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;"><svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>5,0 · 6 отзывов</span>
 </div>
-<p style="margin: 4px 0 0; font-size: 14px; color: #2B1A17;">Мастер маникюра и педикюра</p><p style="margin: 4px 0 0; font-size: 14px; color: #7E4F48;">Работает с короткой длиной ногтей</p>
+<p style="margin: 4px 0 0; font-size: 11px; color: #2B1A17;">Мастер маникюра и педикюра</p><p style="margin: 4px 0 0; font-size: 11px; color: #7E4F48;">Работает с короткой длиной ногтей</p>
 <div style="margin-top: auto;"><a class="btn" href="https://n2379744.yclients.com/company/2062923/personal/select-master?o=m5799996" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase;">Записаться к Наташе</a></div>
 </article>
 <article style="display: flex; flex-direction: column;">
@@ -1343,7 +1343,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 500;">Анастасия</h3>
 <span style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;"><svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>5,0 · 3 отзыва</span>
 </div>
-<p style="margin: 4px 0 0; font-size: 14px; color: #2B1A17;">Мастер маникюра и педикюра</p>
+<p style="margin: 4px 0 0; font-size: 11px; color: #2B1A17;">Мастер маникюра и педикюра</p>
 <div style="margin-top: auto;"><a class="btn" href="https://n2379744.yclients.com/company/2062923/personal/select-master?o=m6134247" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase;">Записаться к Анастасии</a></div>
 </article>
 <article style="display: flex; flex-direction: column;">
@@ -1352,17 +1352,17 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 500;">Катя</h3>
 <span style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-family: 'PT Mono', monospace; font-size: 11px; color: #85231A;"><svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg>5,0 · 2 отзыва</span>
 </div>
-<p style="margin: 4px 0 0; font-size: 14px; color: #2B1A17;">Мастер маникюра и педикюра</p>
+<p style="margin: 4px 0 0; font-size: 11px; color: #2B1A17;">Мастер маникюра и педикюра</p>
 <div style="margin-top: auto;"><a class="btn" href="https://n2379744.yclients.com/company/2062923/personal/select-master?o=m5895762" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 14px; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase;">Записаться к Кате</a></div>
 </article>
 </div>
-<p style="grid-column: 7 / span 6; margin: 28px 0 0; font-size: 17px; line-height: 1.45; color: #2B1A17;">Всех мастеров и свободное время смотрите в <a class="tap" href="https://n2379744.yclients.com/company/2062923/personal/select-master" target="_blank" rel="noopener" style="color: #85231A; text-underline-offset: 3px;">YCLIENTS</a></p>
+<p style="grid-column: 7 / span 6; margin: 28px 0 0; font-size: 13px; line-height: 1.45; color: #2B1A17;">Всех мастеров и свободное время смотрите в <a class="tap" href="https://n2379744.yclients.com/company/2062923/personal/select-master" target="_blank" rel="noopener" style="color: #85231A; text-underline-offset: 3px;">YCLIENTS</a></p>
 </section>
 
 <!-- 09 ОТЗЫВЫ · «шахматка» (выбрана 29.10): лёгкие карточки через клетку, аватары с Яндекс Карт -->
 <section id="reviews" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 48px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px;">
 <div style="grid-column: 1 / span 6;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Отзывы</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Отзывы</p>
 <div style="display: flex; align-items: flex-end; gap: 12px; margin-top: 14px;">
 <h2 class="hx" style="margin: 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Что пишут гостьи</h2>
 <svg class="hide-m" aria-hidden="true" width="78" height="56" viewBox="0 0 78 56" fill="none" style="transform: rotate(-6deg) translateY(-14px);"><path d="M12 8 C 30 2, 62 2, 72 12 C 80 22, 70 34, 50 36 C 40 37, 30 37, 24 36 L 12 50 L 16 34 C 4 30, 0 14, 12 8 Z" stroke="#85231A" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"></path><path d="M22 20 h8 M36 20 h6 M48 20 h10" stroke="#85231A" stroke-width="2.6" stroke-linecap="round"></path></svg>
@@ -1383,8 +1383,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div style="grid-column: {{v.chCol}}; grid-row: {{v.chRow}}; transform: {{v.chTf}};"><figure class="rcard" style="margin: 0; padding: 16px 18px 18px; background: #FFFFFF; border: 1px solid rgba(43, 26, 23, .22); box-shadow: 3px 4px 0 rgba(43, 26, 23, .1); display: flex; flex-direction: column; justify-content: space-between; gap: 14px; text-align: left;">
 <blockquote style="margin: 0; font-family: {{v.ff}}; font-size: {{v.fs}}px; line-height: {{v.lh}}; font-style: {{v.fst}}; color: {{v.qc}};">{{v.qq}}</blockquote>
 <figcaption style="display: flex; align-items: center; gap: 10px;">
-<span style="flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: {{v.bg}}; overflow: hidden; border: 1px solid #2B1A17; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: #85231A;"><sc-if value="{{v.hasImg}}" hint-placeholder-val="{{false}}"><img src="{{v.img}}" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;"></sc-if>{{v.avT}}</span>
-<span style="display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 15px; color: #2B1A17;">{{v.who}}</span><span style="font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">{{v.date}} · Яндекс Карты</span></span>
+<span style="flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: {{v.bg}}; overflow: hidden; border: 1px solid #2B1A17; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 600; color: #85231A;"><sc-if value="{{v.hasImg}}" hint-placeholder-val="{{false}}"><img src="{{v.img}}" alt="" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block;"></sc-if>{{v.avT}}</span>
+<span style="display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 11px; color: #2B1A17;">{{v.who}}</span><span style="font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">{{v.date}} · Яндекс Карты</span></span>
 </figcaption>
 </figure></div>
 </sc-for>
@@ -1402,12 +1402,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 </div>
 <div class="cert-text" style="grid-column: 7 / span 5; padding: 56px 0;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Сертификат</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Сертификат</p>
 <div style="display: flex; align-items: flex-end; gap: 10px; margin-top: 14px;">
 <h2 class="hx" style="margin: 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Подарите подруге бэсти</h2>
 <svg class="hide-m" aria-hidden="true" width="64" height="44" viewBox="0 0 64 44" fill="none" style="flex: none; transform: translateY(-20px) rotate(-8deg);"><path d="M32 20 C 20 4, 4 6, 6 16 C 8 26, 22 24, 32 20 C 42 6, 58 6, 58 16 C 58 26, 44 26, 32 20 Z" stroke="#85231A" stroke-width="2" stroke-linejoin="round"></path><path d="M32 20 C 28 28, 22 34, 16 40 M32 20 C 38 28, 42 34, 50 40" stroke="#85231A" stroke-width="2" stroke-linecap="round"></path></svg>
 </div>
-<p style="margin: 18px 0 0; font-size: 17px; line-height: 1.5; color: #2B1A17;">Сертификат на маникюр и педикюр в гостях у бэсти</p>
+<p style="margin: 18px 0 0; font-size: 13px; line-height: 1.5; color: #2B1A17;">Сертификат на маникюр и педикюр в гостях у бэсти</p>
 <p style="margin: 22px 0 0;"><a class="btn" href="https://t.me/bestie_nail" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 28px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Купить</a></p>
 </div>
 </section>
@@ -1415,7 +1415,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <!-- 11 FAQ · заголовок и список по центру -->
 <section id="faq" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
 <div style="grid-column: 1 / span 5; text-align: left;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Вопросы</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Вопросы</p>
 <div style="display: flex; justify-content: flex-start; align-items: flex-end; gap: 6px; margin-top: 14px;">
 <h2 class="hx" style="margin: 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Частые вопросы</h2>
 <svg class="hide-m" aria-hidden="true" width="40" height="52" viewBox="0 0 40 52" fill="none" style="transform: translate(-6px, -52px) rotate(14deg) scale(.85);"><path d="M8 16 C 8 4, 32 2, 33 15 C 34 26, 20 27, 20 38" stroke="#85231A" stroke-width="2.4" stroke-linecap="round"></path><circle cx="20" cy="47" r="2.6" fill="#85231A"></circle></svg>
@@ -1427,11 +1427,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <h3 style="margin: 0;">
 <button onClick="{{f.toggle}}" aria-expanded="{{f.open}}" style="display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 18px; min-height: 52px; padding: 8px 0; background: transparent; border: 0; text-align: left; color: #85231A; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.2; font-weight: 500;">
 <span>{{f.q}}</span>
-<span aria-hidden="true" style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: {{f.bg}}; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 14px; line-height: 1;">{{f.sign}}</span>
+<span aria-hidden="true" style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: {{f.bg}}; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 13px; line-height: 1;">{{f.sign}}</span>
 </button>
 </h3>
 <sc-if value="{{f.open}}" hint-placeholder-val="{{false}}">
-<div style="padding: 0 44px 14px 0; font-size: 16px; line-height: 1.5; color: #2B1A17;">
+<div style="padding: 0 44px 14px 0; font-size: 13px; line-height: 1.5; color: #2B1A17;">
 <sc-if value="{{f.hasA}}" hint-placeholder-val="{{true}}"><p style="margin: 0;">{{f.a}}</p></sc-if>
 <sc-if value="{{f.hasW}}" hint-placeholder-val="{{false}}"><p style="margin: 6px 0 0;"><span class="wait">{{f.w}}</span></p></sc-if>
 </div>
@@ -1452,21 +1452,21 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 </div>
 <div class="route-text" style="grid-column: 7 / span 5; padding: 64px 0 56px;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Как дойти</p>
-<h2 class="hx" style="margin: 14px 0 0; font-size: 40px; line-height: 1.05; font-weight: 500; letter-spacing: -.01em;">340 метров от „Трубной“</h2>
-<p style="margin: 10px 0 0; font-size: 17px; color: #2B1A17;">Москва, Печатников переулок, 6</p>
-<ul style="list-style: none; margin: 14px 0 0; padding: 0; border-top: 1px solid rgba(133, 35, 26, .4); font-size: 15px; color: #2B1A17;">
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Как дойти</p>
+<h2 class="hx" style="margin: 14px 0 0; font-size: 48px; line-height: 1.05; font-weight: 500; letter-spacing: -.01em;">340 метров от „Трубной“</h2>
+<p style="margin: 10px 0 0; font-size: 13px; color: #2B1A17;">Москва, Печатников переулок, 6</p>
+<ul style="list-style: none; margin: 14px 0 0; padding: 0; border-top: 1px solid rgba(133, 35, 26, .4); font-size: 11px; color: #2B1A17;">
 <li style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(133, 35, 26, .4);"><span>Трубная</span><span style="color: #85231A;">340 м</span></li>
 <li style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(133, 35, 26, .4);"><span>Цветной бульвар</span><span style="color: #85231A;">750 м</span></li>
 <li style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(133, 35, 26, .4);"><span>Сретенский бульвар</span><span style="color: #85231A;">770 м</span></li>
 </ul>
-<p style="margin: 12px 0 0; font-size: 14px; color: #2B1A17;">1 этаж · остановка «Метро Трубная» — 245 м</p>
+<p style="margin: 12px 0 0; font-size: 11px; color: #2B1A17;">1 этаж · остановка «Метро Трубная» — 245 м</p>
 <div style="display: flex; gap: 14px; align-items: flex-start; margin-top: 14px;">
 <figure class="tilt zoomable" onClick="{{zEntrance}}" style="flex: none; width: 240px; margin: 0; padding: 7px 7px 9px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 4px 5px 0 rgba(43, 26, 23, .28); transform: rotate(-2deg); cursor: zoom-in;"><img loading="lazy" decoding="async" src="assets/route-entrance-lg.webp" alt="Печатников переулок, вывеска «бэсти» над входом" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 35%; display: block;"><figcaption style="display: flex; justify-content: space-between; margin-top: 6px; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #85231A;"><span>вход · вывеска</span><span aria-hidden="true">⤢</span></figcaption></figure>
-<div style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; color: #2B1A17;">
+<div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #2B1A17;">
 <span>Ежедневно, 10:00–22:00</span>
-<a class="tap" href="tel:+79652300425" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600; color: #85231A; text-decoration: none;">+7 (965) 230-04-25</a>
-<span style="font-size: 13px;">Вход без пандуса — на коляске к нам, к сожалению, не попасть</span>
+<a class="tap" href="tel:+79652300425" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 600; color: #85231A; text-decoration: none;">+7 (965) 230-04-25</a>
+<span style="font-size: 11px;">Вход без пандуса — на коляске к нам, к сожалению, не попасть</span>
 </div>
 </div>
 <a class="btn" href="https://yandex.by/maps/org/besti_neyls/87489915348/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 18px; padding: 0 22px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Построить маршрут</a>
@@ -1482,16 +1482,16 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div style="position: relative; padding: 22px 22px 20px;">
 <span aria-hidden="true" style="position: absolute; inset: 8px; border: 1px dashed rgba(133, 35, 26, .55); pointer-events: none;"></span>
 <p style="display: flex; align-items: center; gap: 7px; margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase;"><svg aria-hidden="true" width="11" height="11" viewBox="0 0 5 5" shape-rendering="crispEdges" style="display: block;"><rect x="2" y="0" width="1" height="1" fill="#85231A"></rect><rect x="1" y="1" width="3" height="1" fill="#85231A"></rect><rect x="0" y="2" width="5" height="1" fill="#85231A"></rect><rect x="2" y="2" width="1" height="1" fill="#FFFFFF"></rect><rect x="1" y="3" width="3" height="1" fill="#85231A"></rect><rect x="2" y="4" width="1" height="1" fill="#85231A"></rect></svg>Купон · сэт-комплекс Luxio</p>
-<p style="display: flex; align-items: baseline; gap: 12px; margin: 8px 0 0;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 54px; line-height: 1; font-weight: 500; letter-spacing: -.02em; white-space: nowrap;">2 890 ₽</span><span class="sr">вместо</span><s style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 500; white-space: nowrap;">3 400 ₽</s></p>
-<ul style="list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 10px; font-size: 13px; color: #2B1A17;"><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>снятие гель-лака</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>маникюр</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>выравнивание</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>покрытие Luxio</li></ul>
+<p style="display: flex; align-items: baseline; gap: 12px; margin: 8px 0 0;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 56px; line-height: 1; font-weight: 500; letter-spacing: -.02em; white-space: nowrap;">2 890 ₽</span><span class="sr">вместо</span><s style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 500; white-space: nowrap;">3 400 ₽</s></p>
+<ul style="list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 10px; font-size: 11px; color: #2B1A17;"><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>снятие гель-лака</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>маникюр</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>выравнивание</li><li style="display: flex; align-items: center; gap: 7px;"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; display: grid; place-items: center; background: #FFFAF6; border: 1px solid #2B1A17;"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#85231A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>покрытие Luxio</li></ul>
 <p style="margin: 12px 0 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #6F1D15;">для первого визита в бэсти</p>
 </div>
 <div style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 8px; padding: 18px 12px 14px; background: #FFFFFF; border-left: 2px dashed #2B1A17; text-align: center;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: #7E4F48;">купон</p>
-<p style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 46px; line-height: .9; font-weight: 600; color: #85231A;">−15%</p>
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 9px; letter-spacing: .04em; text-transform: uppercase; color: #2B1A17;">экономия 510 ₽</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #7E4F48;">купон</p>
+<p style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 56px; line-height: .9; font-weight: 600; color: #85231A;">−15%</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #2B1A17;">экономия 510 ₽</p>
 <span aria-hidden="true" style="display: block; width: 100%; height: 26px; background: repeating-linear-gradient(90deg, #2B1A17 0 2px, transparent 2px 4px, #2B1A17 4px 5px, transparent 5px 8px, #2B1A17 8px 11px, transparent 11px 13px);"></span>
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 9px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">первый визит</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">первый визит</p>
 </div>
 </div>
 <span aria-hidden="true" style="position: absolute; top: -13px; right: 123px; width: 26px; height: 26px; border-radius: 50%; background: #85231A; border: 1px solid #2B1A17; clip-path: inset(50% 0 0 0);"></span>
@@ -1500,9 +1500,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 </div>
 <div style="grid-column: 7 / span 6;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Запись онлайн</p>
-<h2 class="hx" style="margin: 12px 0 0; font-size: 56px; line-height: .95; font-weight: 500; letter-spacing: -.02em;">Купон на первый визит ещё ждёт</h2>
-<p style="margin: 14px 0 0; font-size: 17px; line-height: 1.45;">Запишитесь онлайн — время и мастера видно сразу</p>
+<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Запись онлайн</p>
+<h2 class="hx" style="margin: 12px 0 0; font-size: 48px; line-height: .95; font-weight: 500; letter-spacing: -.02em;">Купон на первый визит ещё ждёт</h2>
+<p style="margin: 14px 0 0; font-size: 13px; line-height: 1.45;">Запишитесь онлайн — время и мастера видно сразу</p>
 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;"><a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #FFACE4; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться</a><a class="btn" href="https://t.me/bestie_nail" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Написать в Telegram</a></div>
 </div>
 </div>
@@ -1516,30 +1516,30 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div class="stack" style="position: relative; z-index: 1; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; row-gap: 32px;">
 <div style="grid-column: 1 / span 3;">
 <img loading="lazy" decoding="async" src="assets/besti-mark-pink.svg" alt="бэсти" style="height: 52px; width: auto; display: block;">
-<p style="margin: 18px 0 0; max-width: 270px; font-size: 18px; line-height: 1.5; color: rgba(255, 250, 246, .9);">Студия маникюра и педикюра в 340 метрах от „Трубной“. Каждый день 10:00–22:00</p>
+<p style="margin: 18px 0 0; max-width: 270px; font-size: 15px; line-height: 1.5; color: rgba(255, 250, 246, .9);">Студия маникюра и педикюра в 340 метрах от „Трубной“. Каждый день 10:00–22:00</p>
 </div>
-<div style="grid-column: 4 / span 3; display: flex; flex-direction: column; gap: 8px; font-size: 18px;">
-<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Контакты</p>
+<div style="grid-column: 4 / span 3; display: flex; flex-direction: column; gap: 8px; font-size: 15px;">
+<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Контакты</p>
 <span>Бэсти Нейлс — студия маникюра</span>
 <a class="tap" href="tel:+79652300425" style="color: #FFFAF6; text-decoration: none;">+7 (965) 230-04-25</a>
 <a class="tap" href="https://t.me/bestie_nail" target="_blank" rel="noopener" style="color: #FFFAF6;">Telegram @bestie_nail</a>
 <span>Instagram* — <span class="wait wait-d">[ждём: ссылка на аккаунт]</span></span>
 </div>
-<div style="grid-column: 7 / span 3; display: flex; flex-direction: column; gap: 8px; font-size: 18px;">
-<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Адрес и часы</p>
+<div style="grid-column: 7 / span 3; display: flex; flex-direction: column; gap: 8px; font-size: 15px;">
+<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Адрес и часы</p>
 <span>Москва, Печатников пер., 6</span>
 <span>Ежедневно 10:00–22:00</span>
 </div>
-<div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 10px; font-size: 18px;">
-<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Реквизиты и документы</p>
+<div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 10px; font-size: 15px;">
+<p style="margin: 0 0 4px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #FFACE4;">Реквизиты и документы</p>
 <span>ИП Абдулагаева Зухра Загитдиновна</span>
 <span><span class="wait wait-d">[ждём: ИНН и ОГРНИП]</span></span>
 <a class="tap" href="privacy.html" style="color: #FFFAF6; text-underline-offset: 3px;">Политика обработки персональных данных</a>
-<span style="margin-top: 2px; font-size: 14px; line-height: 1.4; color: rgba(255, 250, 246, .78);">*Instagram принадлежит компании Meta, признанной экстремистской и запрещённой на территории РФ</span>
+<span style="margin-top: 2px; font-size: 11px; line-height: 1.4; color: rgba(255, 250, 246, .78);">*Instagram принадлежит компании Meta, признанной экстремистской и запрещённой на территории РФ</span>
 </div>
 </div>
 <div aria-label="Услуги" style="position: relative; z-index: 1; overflow: hidden; border-top: 1px solid rgba(255, 250, 246, .25); border-bottom: 1px solid rgba(255, 250, 246, .25);">
-<div class="marq" style="display: flex; width: max-content; padding: 14px 0; font-family: 'PT Mono', monospace; font-size: 14px; letter-spacing: .04em; white-space: nowrap; animation-duration: 45s;">
+<div class="marq" style="display: flex; width: max-content; padding: 14px 0; font-family: 'PT Mono', monospace; font-size: 13px; letter-spacing: .04em; white-space: nowrap; animation-duration: 45s;">
 <span style="display: flex; gap: 28px; padding-right: 28px;"><span>Маникюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Педикюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Покрытие Luxio</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Френч</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Японский маникюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Пилочный маникюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Укрепление гелем</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Спа-уход</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Брови</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Ресницы</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Мужской маникюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span></span><span aria-hidden="true" style="display: flex; gap: 28px; padding-right: 28px;"><span>Маникюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Педикюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Покрытие Luxio</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Френч</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Японский маникюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Пилочный маникюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Укрепление гелем</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Спа-уход</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Брови</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Ресницы</span><span aria-hidden="true" style="color: #FFACE4;">✳</span><span>Мужской маникюр</span><span aria-hidden="true" style="color: #FFACE4;">✳</span></span>
 </div>
 </div>
@@ -1557,7 +1557,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <sc-if value="{{lbIsVid}}" hint-placeholder-val="{{false}}"><video src="{{lbVid}}" poster="{{lbSrc}}" autoplay muted loop playsinline aria-label="{{lbAlt}}" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"></video></sc-if>
 <figcaption style="display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;"><span>{{lbCap}}</span><span style="color: #7E4F48;">esc · закрыть</span></figcaption>
 </figure>
-<button aria-label="Закрыть фото" style="position: absolute; top: 20px; right: 20px; min-height: 40px; padding: 0 16px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: {{lbOp}}; transition: opacity .4s ease;">× закрыть</button>
+<button aria-label="Закрыть фото" style="position: absolute; top: 20px; right: 20px; min-height: 40px; padding: 0 16px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; opacity: {{lbOp}}; transition: opacity .4s ease;">× закрыть</button>
 </div>
 </sc-if>
 </div>
@@ -2128,7 +2128,7 @@ class Component extends DCLogic {
         hasImg: !!v.img, avT: v.img ? '' : v.av,
         qq: v.big ? '«' + v.q + '»' : v.q,
         ff: v.big ? "'Cormorant Garamond', Georgia, serif" : "'PT Mono', monospace",
-        fs: v.big ? 26 : 15, lh: v.big ? 1.15 : 1.5, fst: v.big ? 'italic' : 'normal', qc: v.big ? '#85231A' : '#2B1A17',
+        fs: v.big ? 22 : 15, lh: v.big ? 1.15 : 1.5, fst: v.big ? 'italic' : 'normal', qc: v.big ? '#85231A' : '#2B1A17',
         chCol: (c[0] * 3 + 1) + ' / span 3', chRow: c[1], chTf: 'translateY(' + JY[i % 6] + 'px) rotate(' + JR[i % 6] + 'deg)',
         snip: v.q.length > 38 ? v.q.slice(0, 36) + '…' : v.q });
     });
