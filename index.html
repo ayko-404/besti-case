@@ -554,7 +554,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
    с 22.11 (вечер) сокращена: Наборный: 12 (метки, капс, подписи) · 15 (текст) · 24 (капс) · 44.
    Заголовочный: 22 (h3, цитата) · 48 (h2) · 60 (h1, цифры). Рукописный: 34 · 56.
    Исключение — имитация карточки Яндекс Карт (#ymap): её собственные размеры. */
-@media (min-width: 1360px) { #top .hero-rev-col { justify-content: flex-start !important; } #top .hero-rev { flex: none; width: 360px !important; } }
+/* обложка (22.11): текст и кнопки — общей шкалой; H1 на десктопе 72; отзыв 300 */
+@media (min-width: 901px) { #top .h1 { font-size: 72px !important; } #top .hero-rev { width: 300px !important; } }
 .bt { font-size: 15px; font-size-adjust: none; font-synthesis: none; line-height: 1.5; }
 .bt h1, .bt h2, .bt h3 { font-family: 'Cormorant Garamond', Georgia, serif; }
 .bt h1, .bt h2, .bt h3, .bt [style*="Cormorant"], .bt [style*="Gogol"], .bt [style*="PT Mono"], .bt .wait, .bt .chip { font-size-adjust: none; }
@@ -671,9 +672,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 }
 /* ── «Почему бэсти» (22.11): механика ref-278 — закреплённый экран, вкладки, смена фото «сканированием» по прокрутке. Варианты: heron / bordo / window (?variants) ── */
 .pw { --n: 4; height: calc(var(--n) * 70vh + 100vh); padding: 0 !important; }
-.pw-stick { --rw: 64px; --ln: rgba(43, 26, 23, .22); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px 0 28px; box-sizing: border-box; overflow: hidden; }
+.pw-stick { container-type: inline-size; --rw: max(64px, calc((100cqw - 1600px) / 2)); /* 22.11: боковые клетки до края контейнера сайта */ --ln: rgba(43, 26, 23, .22); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 104px 0 28px; box-sizing: border-box; overflow: hidden; }
 /* вкладки и линейка — от края до края экрана, контент — в сетке сайта */
-.pw-main { padding: 0 max(calc(var(--rw) + 24px), calc((100% - 1600px) / 2)); }
+.pw-main { padding: 0 max(88px, calc((100% - 1600px) / 2)); }
 .pw-tabs__edge { border-left: 1px solid var(--ln); } .pw-tabs__edge:first-child { border-left: 0; }
 .pw-tabs { position: relative; display: grid; grid-template-columns: var(--rw) repeat(4, minmax(0, 1fr)) var(--rw); height: 80px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ln); border-bottom: 1px solid var(--ln); }
 .pw-tab { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 13px 14px 14px; border-left: 1px solid var(--ln); font-family: 'PT Mono', monospace; color: #2B1A17; cursor: pointer; transition: color .35s ease; }
@@ -683,9 +684,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .pw-tab.is-on { color: #FFFAF6; }
 .pw-tabs__bg { position: absolute; z-index: 0; top: 0; bottom: 0; left: calc(var(--rw) + 1px); width: calc((100% - 2 * var(--rw)) / 4 - 1px); background: #85231A; transform: translateX(calc(var(--k, 0) * 100%)); transition: transform .55s cubic-bezier(.77, 0, .175, 1); }
 .pw-main { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: center; }
-.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin-left: calc(max(calc(var(--rw) + 56px), (100vw - 1600px) / 2) - max(calc(var(--rw) + 24px), (100vw - 1600px) / 2)); }
-.pw-ruler { position: absolute; left: 0; top: 185px; bottom: 28px; width: calc(var(--rw) + 4px); background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .38) 0 1px, transparent 1px 14px) calc(var(--rw) - 3px) var(--ty, 0px) / 6px 14px repeat-y; }
-.pw-ruler__n { position: absolute; left: 0; width: var(--rw); top: 50%; transform: translateY(-50%); text-align: center; font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; font-size-adjust: none; }
+.pw-left { position: relative; grid-column: 1 / span 5; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin-left: calc(max(120px, (100cqw - 1600px) / 2) - max(88px, (100cqw - 1600px) / 2)); }
+.pw-ruler { position: absolute; left: 0; top: 185px; bottom: 28px; width: calc(var(--rw) + 4px); background: repeating-linear-gradient(to bottom, rgba(43, 26, 23, .38) 0 1px, transparent 1px 14px) right 1px top var(--ty, 0px) / 6px 14px repeat-y; }
+.pw-ruler__n { position: absolute; left: 0; width: var(--rw); top: 50%; transform: translateY(-50%); text-align: right; padding-right: 14px; box-sizing: border-box; font-family: 'PT Mono', monospace; font-size: 12px; color: #2B1A17; font-size-adjust: none; }
 .pw-label { position: absolute; top: 28px; left: 0; margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #7E4F48; }
 .pw-txts { position: absolute; left: 0; right: 0; top: 64px; bottom: 0; overflow: hidden; }
 .pw-list { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
@@ -956,20 +957,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 }
 /* широкие мониторы: содержимое не шире 1632 (1600 + поля; было 1408 до 21.11), фоны и бегущие строки — на всю ширину */
 .bt .sec, .bt .ritual-pin, .bt header, .bt .crt > .stack { padding-left: max(16px, calc((100% - 1600px) / 2)) !important; padding-right: max(16px, calc((100% - 1600px) / 2)) !important; }
-/* обложка под zoom 1.2/1.4 — прежняя ширина 1408, иначе фото и отзыв расползаются к краям (21.11) */
-.bt #top { padding-left: max(16px, calc((100% - 1408px) / 2)) !important; padding-right: max(16px, calc((100% - 1408px) / 2)) !important; }
 .bt #cert, .bt #route { padding-left: max(0px, calc((100% - 1440px) / 2)) !important; }
-/* обложка на больших экранах чуть крупнее, чтобы не казалась мелкой */
-@media (min-width: 1800px) { .bt #top { zoom: 1.4; } }
-@media (min-width: 2300px) { .bt #top { zoom: 1.6; } }
-/* обложка на весь экран (21.11): 30px — бегущая строка; при zoom делим высоту на коэффициент */
+/* обложка на весь экран (21.11): 30px — бегущая строка */
 @media (min-width: 901px) { .bt #top { min-height: calc(100svh - 30px); align-content: center; } }
-/* большие мониторы (21.11): обложка крупнее (zoom 1.4 / 1.6), уже по ширине — отзыв не наезжает на фото; отступ сверху под шапку */
-@media (min-width: 1800px) {
-  .bt #top { min-height: calc((100svh - 30px) / 1.4); padding-top: calc(60px / 1.4) !important; padding-left: max(16px, calc((100% - 1240px) / 2)) !important; padding-right: max(16px, calc((100% - 1240px) / 2)) !important; }
-  .bt #top > .hide-m:first-child { justify-content: flex-start !important; }
-}
-@media (min-width: 2300px) { .bt #top { min-height: calc((100svh - 30px) / 1.6); padding-top: calc(60px / 1.6) !important; } }
+/* большие мониторы (22.11): zoom всей обложки убран — текст и кнопки как на всём сайте; крупнее только фото */
+@media (min-width: 1800px) { .bt #top .hero-pics { zoom: 1.3; } .bt #top { padding-top: 60px !important; } }
+@media (min-width: 2300px) { .bt #top .hero-pics { zoom: 1.5; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } .splash { display: none !important; } }
 </style>
 </helmet>
@@ -1044,7 +1037,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </figure>
 </div>
 <div style="grid-column: 4 / span 6; display: flex; flex-direction: column; align-items: center; text-align: center;">
-<div style="display: flex; justify-content: center; align-items: flex-end;"><figure class="tilt zoomable" onClick="{{zA}}" style="position: relative; z-index: 1; width: 180px; margin: 0 -16px 0 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(-8deg) translateY(16px);"><img fetchpriority="high" decoding="async" src="assets/hero-left.webp" alt="Гостья в меховом пальто показывает свежий маникюр, розовая надпись «бэсти»" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(a) гостья бэсти</figcaption></figure><figure class="tilt zoomable" onClick="{{zB}}" style="position: relative; z-index: 2; width: 224px; margin: 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(3deg);"><video id="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-video-poster.webp" aria-label="Видео: день в студии бэсти — зал, процесс и готовый маникюр" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"><source src="assets/hero-video.mp4" type="video/mp4"></video><figcaption style="display: flex; justify-content: space-between; margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;"><span>(b) день в бэсти</span><span class="rec-m" aria-hidden="true" style="color: #C0392B;">● rec</span></figcaption></figure><figure class="tilt zoomable" onClick="{{zC}}" style="position: relative; z-index: 1; width: 180px; margin: 0 0 0 -16px; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(9deg) translateY(20px);"><img fetchpriority="high" decoding="async" src="assets/hero-c.webp" alt="Бордовое покрытие на фоне белого кирпича" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(c) бордо</figcaption></figure></div>
+<div class="hero-pics" style="display: flex; justify-content: center; align-items: flex-end;"><figure class="tilt zoomable" onClick="{{zA}}" style="position: relative; z-index: 1; width: 180px; margin: 0 -16px 0 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(-8deg) translateY(16px);"><img fetchpriority="high" decoding="async" src="assets/hero-left.webp" alt="Гостья в меховом пальто показывает свежий маникюр, розовая надпись «бэсти»" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(a) гостья бэсти</figcaption></figure><figure class="tilt zoomable" onClick="{{zB}}" style="position: relative; z-index: 2; width: 224px; margin: 0; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(3deg);"><video id="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-video-poster.webp" aria-label="Видео: день в студии бэсти — зал, процесс и готовый маникюр" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"><source src="assets/hero-video.mp4" type="video/mp4"></video><figcaption style="display: flex; justify-content: space-between; margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;"><span>(b) день в бэсти</span><span class="rec-m" aria-hidden="true" style="color: #C0392B;">● rec</span></figcaption></figure><figure class="tilt zoomable" onClick="{{zC}}" style="position: relative; z-index: 1; width: 180px; margin: 0 0 0 -16px; padding: 8px 8px 10px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 5px 6px 0 rgba(43, 26, 23, .28); transform: rotate(9deg) translateY(20px);"><img fetchpriority="high" decoding="async" src="assets/hero-c.webp" alt="Бордовое покрытие на фоне белого кирпича" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"><figcaption style="margin-top: 7px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;">(c) бордо</figcaption></figure></div>
 <h1 class="h1" style="margin: 44px 0 0; font-size: 60px; line-height: .98; font-weight: 500; letter-spacing: -.02em; color: #85231A;">Студия маникюра,<br><em style="font-style: italic; font-weight: 400;">где тебя ждут</em></h1>
 <p style="margin: 12px 0 0; max-width: 520px; font-size: 15px; line-height: 1.45; color: #2B1A17;">Студия маникюра и педикюра в 3 минутах от метро «Трубная». Выберите услугу и запишитесь онлайн</p>
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px;"><a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться онлайн</a></div>
@@ -1165,7 +1158,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 <div class="gosti__body">
 <div class="ga">
-<div class="ga__m ga__m--1"><figure><video src="assets/gosti/video-den-v-studii.mp4" poster="assets/gosti/video-den-v-studii-poster.webp" muted loop playsinline preload="none" aria-label="Видео: утро в студии"></video></figure><figure><img width="900" height="1200" src="assets/gosti/gosti-stolik-cvety.webp" alt="Столик в студии с цветами" loading="lazy" decoding="async"></figure></div>
+<div class="ga__m ga__m--1"><figure><video src="assets/gosti/video-den-v-studii.mp4" poster="assets/gosti/video-den-v-studii-poster.webp" muted loop playsinline preload="none" aria-label="Видео: утро в студии"></video></figure><figure><img width="960" height="1200" src="assets/gosti/gosti-nevalyashka.webp" alt="Неваляшка — символ бэсти — на столике студии" loading="lazy" decoding="async"></figure></div>
 <div class="ga__t ga__t--1">
 <svg class="dd dd--bottle" aria-hidden="true" viewBox="0 0 140 170" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="right: 3%; bottom: 4%; width: 150px; --r: 8deg;"><rect x="52" y="8" width="34" height="44" rx="5" fill="#85231A"/><path d="M58 14 v32" stroke="#FFFAF6" stroke-width="2"/>
 <rect x="46" y="50" width="46" height="12" rx="3" fill="#FFFAF6"/>
@@ -1177,7 +1170,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <p class="ga__p">Студия в Печатниковом переулке, в трёх минутах от «Трубной». Рядом «Золотое Яблоко» и рестораны — можно устроить себе бьюти-день.</p>
 <p class="ga__note">как у лучшей подруги</p>
 </div>
-<div class="ga__m ga__m--2"><figure class="ga__wide"><img width="1200" height="900" src="assets/gosti/gosti-zelyonye-kresla-4x3.webp" alt="Зелёные бархатные кресла и ковёр в студии" loading="lazy" decoding="async"></figure></div>
+<div class="ga__m ga__m--2"><figure><img width="900" height="1200" src="assets/gosti/gosti-gostya-raznocvetnyj.webp" alt="Гостья бэсти с разноцветным маникюром" loading="lazy" decoding="async"></figure><figure><img width="900" height="1200" src="assets/gosti/gosti-gostya-kapuchino-stolik.webp" alt="Гостья за столиком с двумя чашками капучино" loading="lazy" decoding="async"></figure></div>
 <div class="ga__t ga__t--2">
 <svg class="dd dd--spark" aria-hidden="true" viewBox="0 0 80 80" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="left: 6%; bottom: 4%; width: 70px; --r: 12deg;"><path d="M40 6 C42 30 50 38 74 40 C50 42 42 50 40 74 C38 50 30 42 6 40 C30 38 38 30 40 6 Z" fill="#FFACE4"/></svg>
 <svg class="dd dd--cup" aria-hidden="true" viewBox="0 0 150 150" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="right: 6%; top: -2%; width: 118px; --r: -7deg;"><path d="M28 70 H108 V102 Q108 130 80 130 H56 Q28 130 28 102 Z" fill="#FFFAF6"/><path d="M108 80 Q132 80 130 98 Q128 114 106 112" />
@@ -1200,7 +1193,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </figure>
 </div>
 </div>
-<div class="ga__m ga__m--3"><figure><img width="900" height="1200" src="assets/gosti/gosti-polka.webp" alt="Полка с уходом в студии" loading="lazy" decoding="async"></figure><figure><video src="assets/gosti/video-process.mp4" poster="assets/gosti/video-process-poster.webp" muted loop playsinline preload="none" aria-label="Видео: мастер делает маникюр"></video></figure></div>
+<div class="ga__m ga__m--3"><figure><img width="960" height="1200" src="assets/gosti/gosti-sobaka-dog-friendly.webp" alt="Собака студии в леопардовом шарфике: мы — dog friendly" loading="lazy" decoding="async"></figure><figure><video src="assets/gosti/video-process.mp4" poster="assets/gosti/video-process-poster.webp" muted loop playsinline preload="none" aria-label="Видео: мастер делает маникюр"></video></figure></div>
 <div class="ga__t ga__t--3">
 <svg class="dd dd--pop" aria-hidden="true" viewBox="0 0 190 160" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="left: 18%; top: 12%; width: 210px; --r: -5deg;"><path d="M30 60 L44 148 H92 L106 60 Z" fill="#FFFAF6"/><path d="M48 60 L56 148 M68 60 V148 M88 60 L80 148" stroke="#FFACE4" stroke-width="6"/><path d="M30 60 L44 148 H92 L106 60 Z" />
 <circle cx="40" cy="52" r="12" fill="#FFFAF6"/><circle cx="60" cy="42" r="13" fill="#FFFAF6"/><circle cx="82" cy="46" r="12" fill="#FFFAF6"/><circle cx="98" cy="56" r="10" fill="#FFFAF6"/><circle cx="70" cy="58" r="10" fill="#FFFAF6"/>
@@ -1210,7 +1203,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <p class="ga__h">Персональный планшет с&nbsp;наушниками</p>
 <p class="ga__p">Пока мастер работает, время в студии проходит незаметно.</p>
 </div>
-<div class="ga__m ga__m--4"><figure><video src="assets/gosti/video-polki-luxio.mp4" poster="assets/gosti/video-polki-luxio-poster.webp" muted loop playsinline preload="none" aria-label="Видео: полки с лаками Luxio"></video></figure><figure><img width="900" height="1200" src="assets/gosti/gosti-flakon-kirpich.webp" alt="Маникюр на фоне кирпичной стены" loading="lazy" decoding="async"></figure></div>
+<div class="ga__m ga__m--4"><figure><video src="assets/gosti/video-polki-luxio.mp4" poster="assets/gosti/video-polki-luxio-poster.webp" muted loop playsinline preload="none" aria-label="Видео: полки с лаками Luxio"></video></figure><figure><img width="900" height="1200" src="assets/gosti/gosti-gostya-temnyj-kolca.webp" alt="Гостья бэсти с тёмным маникюром и кольцами" loading="lazy" decoding="async"></figure></div>
 <div class="ga__t ga__t--4">
 <svg class="dd dd--bub" aria-hidden="true" viewBox="0 0 180 150" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="right: 2%; top: -2%; width: 150px; --r: 6deg;"><circle cx="52" cy="80" r="34" fill="#FFFAF6"/><path d="M36 66 q6 -10 18 -12" stroke="#FFACE4" stroke-width="4"/>
 <circle cx="116" cy="46" r="20" fill="#FFFAF6"/><path d="M106 38 q4 -6 10 -7" stroke="#FFACE4" stroke-width="3"/><circle cx="130" cy="100" r="12" fill="#FFFAF6"/><circle cx="96" cy="124" r="7" fill="#FFFAF6"/>
