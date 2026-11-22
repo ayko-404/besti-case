@@ -434,6 +434,9 @@ html.lenis body {
    Оформление «Окно» (выбор Никиты 22.11); тексты едут с прокруткой, как у Heron. */
 (function () {
   var pv = 'window'; // выбран Никитой 22.11
+  // помехи (22.11): варианты на выбор — ?variants, окно «помехи.exe»
+  var FX = [['tear', 'Срыв кадра'], ['pix', 'Битые пиксели'], ['rec', 'Запись REC'], ['grain', 'Только зерно']], fx = 'tear';
+  try { var sv = localStorage.getItem('besti:fx'); if (sv && FX.some(function (v) { return v[0] === sv; })) fx = sv; } catch (e) {}
   // зерно для фона: случайный шум 220×220, один раз в data URL
   var noise = '';
   try {
@@ -446,6 +449,7 @@ html.lenis body {
     ticking = false;
     var sec = document.getElementById('ritual'); if (!sec || !sec.classList.contains('pw')) return;
     if (sec.getAttribute('data-pv2') !== pv) sec.setAttribute('data-pv2', pv);
+    if (sec.getAttribute('data-fx') !== fx) sec.setAttribute('data-fx', fx);
     if (noise && !sec.style.getPropertyValue('--noise')) sec.style.setProperty('--noise', noise);
     var st = sec.querySelector('.pw-stick'); if (!st || getComputedStyle(st).display === 'none') return;
     var imgs = sec.querySelectorAll('.pw-img'), N = imgs.length;
@@ -490,6 +494,46 @@ html.lenis body {
     var y = sec.getBoundingClientRect().top + scrollY + (sec.offsetHeight - innerHeight) * (i / (N - 1)) + 2;
     if (window.__lenis) window.__lenis.scrollTo(y); else scrollTo({ top: y, behavior: 'smooth' });
   });
+  // битые пиксели: после каждой вспышки квадрат прыгает в новое место (сетка 8px)
+  var pxPlace = function (el) {
+    var st = el.closest('.pw-stick'); if (!st) return;
+    var w = st.clientWidth, h = st.clientHeight;
+    el.style.left = (Math.floor(Math.random() * (w / 8)) * 8) + 'px';
+    el.style.top = (Math.floor((200 + Math.random() * (h - 260)) / 8) * 8) + 'px';
+    el.classList.toggle('is-l', Math.random() < .3); el.classList.toggle('is-p', Math.random() < .35);
+    el.style.animationDuration = (2 + Math.random() * 2.6).toFixed(2) + 's';
+  };
+  document.addEventListener('animationiteration', function (e) { if (e.target.classList && e.target.classList.contains('pw-px')) pxPlace(e.target); }, true);
+  // счётчик записи: часы:минуты:секунды с момента, как блок на экране
+  var t0 = 0, tcOn = false;
+  setInterval(function () {
+    var sec = document.getElementById('ritual'); if (!sec) return;
+    sec.querySelectorAll('.pw-px:not([style])').forEach(function (el) { pxPlace(el); el.style.animationDelay = (-Math.random() * 4).toFixed(2) + 's'; });
+    if (fx !== 'rec') return;
+    var r = sec.getBoundingClientRect(), vis = r.top < innerHeight && r.bottom > 0;
+    if (vis && !tcOn) { tcOn = true; t0 = Date.now(); } if (!vis) tcOn = false;
+    var b = sec.querySelector('.pw-osd--tc b'); if (!b || !tcOn) return;
+    var sc = Math.floor((Date.now() - t0) / 1000), z = function (n) { return ('0' + n).slice(-2); };
+    b.textContent = z(Math.floor(sc / 3600)) + ':' + z(Math.floor(sc / 60) % 60) + ':' + z(sc % 60);
+  }, 500);
+  if (/[?&]variants/.test(location.search)) {
+    var mk = function () {
+      var box = document.createElement('div');
+      box.style.cssText = "position:fixed;right:16px;bottom:16px;z-index:9000;width:244px;background:#FFFFFF;border:1px solid #2B1A17;box-shadow:5px 5px 0 #2B1A17;font-family:'PT Mono',monospace;font-size:12px;color:#2B1A17;font-size-adjust:none";
+      box.innerHTML = '<div style="display:flex;justify-content:space-between;padding:5px 8px;background:#85231A;color:#FFFAF6;font-size:11px;letter-spacing:.06em;text-transform:uppercase"><span>помехи.exe</span><span>_ □ ×</span></div>' +
+        FX.map(function (v, i) { return '<button data-fx="' + v[0] + '" style="display:flex;gap:8px;width:100%;padding:7px 10px;border:0;border-top:1px solid rgba(43,26,23,.12);background:transparent;font:inherit;text-align:left;cursor:pointer;color:inherit"><b style="color:#85231A">' + (i + 1) + '</b>' + v[1] + '</button>'; }).join('') +
+        '<button data-go style="width:100%;padding:9px 10px;border:0;border-top:1px solid #2B1A17;background:#FFACE4;font:inherit;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;color:#85231A">↓ к блоку</button>';
+      document.body.appendChild(box);
+      var mark = function () { box.querySelectorAll('[data-fx]').forEach(function (b) { var on = b.getAttribute('data-fx') === fx; b.style.background = on ? '#FFF1F9' : 'transparent'; b.style.fontWeight = on ? '700' : '400'; }); };
+      box.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        if (b.hasAttribute('data-fx')) { fx = b.getAttribute('data-fx'); try { localStorage.setItem('besti:fx', fx); } catch (x) {} mark(); req(); return; }
+        var s = document.getElementById('ritual'); if (s) { var y = s.getBoundingClientRect().top + scrollY + 2; if (window.__lenis) window.__lenis.scrollTo(y); else scrollTo({ top: y, behavior: 'smooth' }); }
+      });
+      mark();
+    };
+    if (document.body) mk(); else document.addEventListener('DOMContentLoaded', mk);
+  }
   req();
 })();
 </script>
@@ -692,14 +736,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 @media (prefers-reduced-motion: reduce) { .pw-tabs__bg { transition: none; } }
 /* помехи на фоне «Почему бэсти» (22.11): зерно, строки развёртки, полоса трекинга VHS, сбой картинки при смене пункта */
 .pw-stick::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background-image: var(--noise, none); background-size: 220px 220px; opacity: .055; mix-blend-mode: multiply; animation: pw-grain .7s steps(7) infinite; }
-.pw-stick::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background: linear-gradient(to bottom, transparent 0, rgba(255, 172, 228, .22) 42%, rgba(133, 35, 26, .07) 50%, rgba(255, 172, 228, .12) 58%, transparent 100%) 0 -160px / 100% 160px no-repeat,
-              repeating-linear-gradient(to bottom, rgba(43, 26, 23, .04) 0 1px, transparent 1px 3px);
-  animation: pw-roll 9s linear infinite; }
 .pw-tabs, .pw-line, .pw-left, .pw-right { position: relative; z-index: 1; }
 .pw-ruler { z-index: 1; }
 @keyframes pw-grain { 0% { background-position: 0 0; } 14% { background-position: -37px 61px; } 28% { background-position: 83px -22px; } 42% { background-position: -91px -74px; } 57% { background-position: 49px 103px; } 71% { background-position: -12px -118px; } 85% { background-position: 126px 37px; } 100% { background-position: 0 0; } }
-@keyframes pw-roll { 0% { background-position: 0 -160px, 0 0; } 100% { background-position: 0 calc(100vh + 160px), 0 0; } }
 .pw-play { position: absolute; right: 12px; bottom: 12px; padding: 3px 7px; background: rgba(43, 26, 23, .72); color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; animation: pw-blink 1.6s steps(2) infinite; font-size-adjust: none; }
 @keyframes pw-blink { 50% { opacity: .35; } }
 .pw-imgs.is-glitch { animation: pw-glitch .34s steps(6) 1; }
@@ -711,7 +750,34 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   80% { transform: translate(1px, 1px); clip-path: none; }
   100% { transform: translate(0); filter: none; }
 }
-@media (prefers-reduced-motion: reduce) { .pw-stick::before, .pw-stick::after, .pw-play { animation: none; } .pw-imgs.is-glitch { animation: none; } }
+/* помехи, варианты вместо полосы и развёртки (22.11): data-fx = tear / pix / rec / grain */
+.pw-fx { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.pw-fx > * { display: none; position: absolute; }
+#ritual[data-fx="tear"] .pw-tear, #ritual[data-fx="pix"] .pw-px, #ritual[data-fx="rec"] .pw-osd { display: block; }
+/* 1 · срыв кадра: тонкие полосы зерна изредка дёргаются вбок, как сбитая синхронизация */
+.pw-tear { left: -40px; right: -40px; top: 0; height: 18px; background-image: var(--noise, none); background-size: 220px 220px; opacity: 0; mix-blend-mode: multiply; border-top: 1px solid rgba(133, 35, 26, .35); animation: pw-tear 6.5s steps(1) infinite; }
+.pw-tear--2 { height: 7px; border-top: 0; animation-duration: 8.3s; animation-delay: -3.1s; }
+@keyframes pw-tear {
+  0%, 86% { opacity: 0; transform: translate(0, 34vh); }
+  87% { opacity: .22; transform: translate(-14px, 34vh); }
+  88.5% { opacity: .3; transform: translate(22px, 36vh); }
+  90% { opacity: .18; transform: translate(-6px, 63vh); }
+  91.5% { opacity: .26; transform: translate(10px, 64vh); }
+  93%, 100% { opacity: 0; transform: translate(0, 64vh); }
+}
+/* 2 · битые пиксели: квадраты по сетке 8px вспыхивают и гаснут в случайных местах */
+.pw-px { width: 8px; height: 8px; background: #85231A; opacity: 0; animation: pw-px 2.6s steps(1) infinite; }
+.pw-px.is-l { width: 16px; height: 8px; } .pw-px.is-p { background: #FFACE4; }
+@keyframes pw-px { 0% { opacity: .34; } 12% { opacity: .16; } 24% { opacity: .34; } 40%, 100% { opacity: 0; } }
+.pw-px.is-p { animation-name: pw-pxp; } @keyframes pw-pxp { 0% { opacity: 1; } 12% { opacity: .5; } 24% { opacity: 1; } 40%, 100% { opacity: 0; } }
+/* 3 · запись: экранные надписи видеокамеры в правой пустой ячейке */
+.pw-osd { right: 0; width: var(--rw); text-align: center; color: #85231A; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; font-size-adjust: none; line-height: 1; }
+.pw-osd--rec { top: 208px; } .pw-osd--rec i { display: inline-block; width: 7px; height: 7px; margin-right: 5px; background: #85231A; vertical-align: 1px; animation: pw-blink 1.2s steps(2) infinite; }
+.pw-osd--tc { top: 238px; writing-mode: vertical-rl; display: none; margin: 0 auto; left: auto; letter-spacing: .14em; font-variant-numeric: tabular-nums; }
+#ritual[data-fx="rec"] .pw-osd--tc { display: flex; justify-content: flex-start; align-items: center; }
+.pw-osd--ch { bottom: 52px; opacity: .7; }
+@media (max-width: 900px) { .pw-fx { display: none; } }
+@media (prefers-reduced-motion: reduce) { .pw-stick::before, .pw-play, .pw-fx * { animation: none !important; } .pw-imgs.is-glitch { animation: none; } }
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
 @media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
@@ -1126,6 +1192,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <!-- 03 ПОЧЕМУ БЭСТИ · контент с bestie-nails.ru (22.11); механика по ref-278 (heronaiapp.com): закреплённый экран, вкладки сверху, смена фото «сканированием» снизу вверх по прокрутке -->
 <section id="ritual" class="pw" data-pv2="window" style="position: relative; background: #FFFAF6; color: #85231A;">
 <div class="pw-stick">
+<div class="pw-fx" aria-hidden="true"><i class="pw-tear"></i><i class="pw-tear pw-tear--2"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><i class="pw-px"></i><span class="pw-osd pw-osd--rec"><i></i>rec</span><span class="pw-osd pw-osd--tc">sp&nbsp;&nbsp;<b>00:00:00</b></span><span class="pw-osd pw-osd--ch">ch·04</span></div>
 <ol class="pw-tabs" aria-label="Почему бэсти — шаги"><li class="pw-tabs__edge" aria-hidden="true"></li><li class="pw-tab" data-i="0"><span class="pw-tab__n">[01]</span><span class="pw-tab__t">Кино в кресле</span></li><li class="pw-tab" data-i="1"><span class="pw-tab__n">[02]</span><span class="pw-tab__t">Массаж для рук</span></li><li class="pw-tab" data-i="2"><span class="pw-tab__n">[03]</span><span class="pw-tab__t">Меню напитков</span></li><li class="pw-tab" data-i="3"><span class="pw-tab__n">[04]</span><span class="pw-tab__t">Уход Zielinski & Rozen</span></li><li class="pw-tabs__edge" aria-hidden="true"></li><li class="pw-tabs__bg" aria-hidden="true"></li></ol>
 <div class="pw-main">
 <div class="pw-ruler" aria-hidden="true"><span class="pw-ruler__n">[01]</span></div>
