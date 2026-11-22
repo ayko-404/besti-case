@@ -1181,6 +1181,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 /* обложка на весь экран (21.11): 30px — бегущая строка */
 @media (min-width: 901px) { .bt #top { min-height: calc(100svh - 30px); align-content: center; } }
 /* большие мониторы (22.11): zoom всей обложки убран — текст и кнопки как на всём сайте; крупнее только фото */
+/* подписи полароидов не растут вместе с фото: 12px на экране = 12 / zoom (22.11) */
+@media (min-width: 1600px) { .bt #top .hero-pics figcaption { font-size: calc(12px / 1.3) !important; } }
+@media (min-width: 1800px) { .bt #top .hero-pics figcaption { font-size: calc(12px / 1.4) !important; } }
 @media (min-width: 1600px) { .bt #top .hero-pics { zoom: 1.3; } .bt #top { padding-bottom: 90px !important; } }
 @media (min-width: 1800px) { .bt #top .hero-pics { zoom: 1.4; } .bt #top { padding-top: 60px !important; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } .splash { display: none !important; } }
