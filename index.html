@@ -548,6 +548,145 @@ html.lenis body {
   if (document.fonts) document.fonts.ready.then(chk);
 })();
 </script>
+<script>
+/* Вопросы (22.11): вкладки и аккордеон — делегированием (React может пересоздать узлы); мятый лист — three.js r128, грузится, когда блок близко */
+(function () {
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('#faq .fq__tab');
+    if (t) {
+      var sec = t.closest('#faq'), i = t.getAttribute('data-t');
+      sec.querySelectorAll('.fq__tab').forEach(function (b) { b.setAttribute('aria-selected', b === t ? 'true' : 'false'); });
+      sec.querySelectorAll('.fq__panel').forEach(function (p) { p.hidden = p.id !== 'fq-p-' + i; });
+      return;
+    }
+    var q = e.target.closest && e.target.closest('#faq .fq__q');
+    if (q) {
+      var it = q.closest('.fq__it'), o = !it.classList.contains('is-open');
+      it.parentNode.querySelectorAll('.fq__it.is-open').forEach(function (x) { if (x !== it) { x.classList.remove('is-open'); x.querySelector('.fq__q').setAttribute('aria-expanded', 'false'); } });
+      it.classList.toggle('is-open', o); q.setAttribute('aria-expanded', o ? 'true' : 'false');
+    }
+  });
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var started = false, ok = false, THREEs = null;
+  var R, scene, cam, mesh, geo, flat, crum, wr, W = 0, H = 0, sw = 0, sh = 0, lastP = -1, lastT = 0, vis = false;
+  function sec() { return document.getElementById('faq'); }
+  function cl(x, a, b) { return x < a ? a : x > b ? b : x; }
+  function ss(a, b, x) { x = cl((x - a) / (b - a), 0, 1); return x * x * (3 - 2 * x); }
+  function eo(x) { return 1 - Math.pow(1 - x, 3); }
+  // детерминированный «шум» складок: сумма синусов со случайными направлениями
+  var seed = 7; function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+  function mkN(n) { var a = []; for (var i = 0; i < n; i++) { var th = rnd() * 6.283; a.push([Math.cos(th), Math.sin(th), 0.6 + rnd() * 1.8, rnd() * 6.283, 0.5 + rnd()]); } return a; }
+  var NX = mkN(9), NY = mkN(9), NZ = mkN(9), NC = mkN(11);
+  function sm(T, x, y) { var s = 0; for (var i = 0; i < T.length; i++) { var k = T[i]; s += Math.sin((k[0] * x + k[1] * y) * k[2] + k[3]) * k[4]; } return s / Math.sqrt(T.length); }
+  function nz(T, x, y) { var s = 0; for (var i = 0; i < T.length; i++) { var k = T[i]; s += (Math.abs(Math.sin((k[0] * x + k[1] * y) * k[2] + k[3])) * 2 - 1) * k[4]; } return s / Math.sqrt(T.length); }
+  function build() {
+    var s = sec(); if (!s) return false;
+    var win = s.querySelector('.fq__win'), st = s.querySelector('.fq__stage');
+    W = win.offsetWidth; H = win.offsetHeight; sw = st.clientWidth; sh = st.clientHeight;
+    var T = THREEs;
+    if (!R) {
+      R = new T.WebGLRenderer({ antialias: true, alpha: true });
+      R.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+      scene = new T.Scene();
+      scene.add(new T.AmbientLight(0xffffff, 0.4));
+      var d = new T.DirectionalLight(0xffffff, 0.72); d.position.set(0.45, 0.7, 1); scene.add(d);
+      var d2 = new T.DirectionalLight(0xffe9ef, 0.22); d2.position.set(-0.6, -0.4, 0.5); scene.add(d2);
+      cam = new T.OrthographicCamera(-1, 1, 1, -1, -5000, 5000); cam.position.z = 1000;
+    }
+    R.setSize(sw, sh, false);
+    cam.left = -sw / 2; cam.right = sw / 2; cam.top = sh / 2; cam.bottom = -sh / 2; cam.updateProjectionMatrix();
+    // центр окна относительно центра сцены
+    var wr0 = win.getBoundingClientRect(), sr = st.getBoundingClientRect();
+    wr = { x: (wr0.left + wr0.width / 2) - (sr.left + sr.width / 2), y: -((wr0.top + wr0.height / 2) - (sr.top + sr.height / 2)) };
+    if (mesh) { scene.remove(mesh); geo.dispose(); }
+    var sx = 48, sy = Math.max(28, Math.round(48 * H / W));
+    geo = new T.PlaneGeometry(W, H, sx, sy).toNonIndexed();
+    var pos = geo.attributes.position, n = pos.count, M = Math.max(W, H);
+    flat = new Float32Array(n * 3); crum = new Float32Array(n * 3);
+    for (var i = 0; i < n; i++) {
+      var x = pos.getX(i), y = pos.getY(i), u = x / M * 11, v = y / M * 11;
+      flat[i * 3] = x; flat[i * 3 + 1] = y; flat[i * 3 + 2] = 0;
+      // комок: лист сжат к центру и смят по трём осям
+      var k = 0.3, A = M * 0.13;
+      crum[i * 3] = x * k + nz(NX, u, v) * A;
+      crum[i * 3 + 1] = y * k + nz(NY, u, v) * A;
+      crum[i * 3 + 2] = nz(NZ, u, v) * A * 1.4;
+    }
+    mesh = new T.Mesh(geo, new T.MeshStandardMaterial({ color: 0xfffaf6, roughness: 0.92, metalness: 0, flatShading: true, side: T.DoubleSide }));
+    scene.add(mesh);
+    s.querySelector('.fq__gl').appendChild(R.domElement);
+    lastP = -1;
+    return true;
+  }
+  function frame(now) {
+    var s = sec();
+    if (!s || !ok) return;
+    if (!R.domElement.isConnected) { var gl = s.querySelector('.fq__gl'); if (!gl) return; gl.appendChild(R.domElement); }
+    var r = s.getBoundingClientRect(), run = s.offsetHeight - s.querySelector('.fq__stage').offsetHeight;
+    var P = cl(-r.top / Math.max(run, 1), 0, 1);
+    var vh = innerHeight; vis = r.bottom > -50 && r.top < vh + 50;
+    if (vis) {
+      var t = eo(ss(0.04, 0.46, P));           // расправление
+      var fade = ss(0.42, 0.56, P);             // лист → окно
+      var objs = ss(0.40, 0.80, P);             // иконки выплывают
+      var idle = P < 0.5;
+      if (idle && (Math.abs(P - lastP) > 0.0005 || now - lastT > 33)) {
+        lastT = now;
+        var pos = geo.attributes.position, n = pos.count, M = Math.max(W, H), cr = (1 - t);
+        var wrk = Math.sin(Math.PI * Math.min(1, t * 1.15)) * 0.07 * M + 0.03 * M * (1 - fade);
+        for (var i = 0; i < n; i++) {
+          var fx = flat[i * 3], fy = flat[i * 3 + 1];
+          var c = (1 - t) * nz(NC, fx / M * 12, fy / M * 12) + t * sm(NC, fx / M * 6, fy / M * 6);
+          pos.setXYZ(i, crum[i * 3] * cr + fx * t, crum[i * 3 + 1] * cr + fy * t, crum[i * 3 + 2] * cr + c * wrk * (1 - t * 0.85));
+        }
+        pos.needsUpdate = true;
+        var tm = now / 1000;
+        mesh.rotation.x = cr * (0.5 + Math.sin(tm * 0.6) * 0.18);
+        mesh.rotation.y = cr * (0.35 + Math.cos(tm * 0.45) * 0.22);
+        mesh.rotation.z = cr * 0.25;
+        mesh.position.set(wr.x * t, wr.y * t, 0);
+        var sc = 0.9 + 0.1 * t; mesh.scale.set(sc, sc, sc);
+        R.render(scene, cam);
+      }
+      R.domElement.style.opacity = String(1 - fade);
+      R.domElement.style.visibility = fade >= 1 ? 'hidden' : 'visible';
+      var win = s.querySelector('.fq__win');
+      win.style.opacity = String(fade);
+      win.style.transform = 'scale(' + (0.985 + 0.015 * fade) + ')';
+      var shd = s.querySelector('.fq__shadow');
+      shd.style.opacity = String((1 - fade) * 0.9);
+      shd.style.transform = 'scale(' + (0.7 + 0.9 * t) + ', ' + (0.7 + 0.5 * t) + ')';
+      s.querySelectorAll('.fq-o').forEach(function (o) {
+        var L = +o.getAttribute('data-l') / 100, Tp = +o.getAttribute('data-t') / 100, rot = +o.getAttribute('data-r');
+        var dx = (0.5 - L) * sw * (1 - objs), dy = (0.5 - Tp) * sh * (1 - objs);
+        o.style.opacity = String(objs);
+        o.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + (0.3 + 0.7 * objs).toFixed(3) + ') rotate(' + (rot * objs).toFixed(1) + 'deg)';
+      });
+      lastP = P;
+    }
+    requestAnimationFrame(frame);
+  }
+  function start() {
+    if (started) return; started = true;
+    var sc = document.createElement('script');
+    sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    sc.onload = function () {
+      THREEs = window.THREE;
+      try { if (!build()) return; } catch (err) { return; }
+      ok = true; var s = sec(); if (s) s.classList.add('is-gl');
+      requestAnimationFrame(frame);
+    };
+    document.head.appendChild(sc);
+  }
+  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (ok) build(); }, 200); });
+  var iv = setInterval(function () {
+    var s = sec(); if (!s) return;
+    var r = s.getBoundingClientRect();
+    if (r.top < innerHeight * 2.5) { clearInterval(iv); start(); }
+  }, 400);
+})();
+</script>
 <x-dc>
 <helmet>
 <style>
@@ -597,6 +736,49 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   .rva__list { margin-top: 36px; }
   .rvm__ph img { width: 76px; height: 76px; }
 }
+/* вопросы (22.11) — мятый лист → окно, по мотивам agentcard.com */
+.fq { position: relative; height: calc(100vh + 900px); background: #FFFAF6; color: #2B1A17; }
+.fq__stage { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; padding: 88px 16px 24px; box-sizing: border-box; }
+.fq__gl, .fq__objs { position: absolute; inset: 0; pointer-events: none; }
+.fq__gl { z-index: 2; }
+.fq__gl canvas { display: block; width: 100%; height: 100%; }
+.fq__shadow { position: absolute; z-index: 1; left: 50%; top: 50%; width: 320px; height: 90px; margin: 140px 0 0 -160px; border-radius: 50%; background: radial-gradient(closest-side, rgba(43, 26, 23, .16), transparent); opacity: 0; pointer-events: none; }
+.fq__win { position: relative; z-index: 3; width: min(720px, 100%); background: #FFFAF6; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; font-family: 'PT Mono', monospace; }
+.fq__bar { display: flex; justify-content: space-between; align-items: center; padding: 3px 8px; background: #85231A; color: #FFFAF6; border-bottom: 1px solid #2B1A17; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.fq__in { padding: 40px 48px 36px; }
+.fq__h { margin: 0; text-align: center; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em; color: #85231A; }
+.fq__sub { margin: 12px 0 0; text-align: center; font-size: 15px; color: #7E4F48; }
+.fq__tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; margin: 32px 0 20px; border: 1px solid #2B1A17; background: #FFFFFF; }
+.fq__tab { min-height: 44px; padding: 0 12px; background: transparent; border: 0; border-left: 1px solid #2B1A17; color: #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: background .2s, color .2s; }
+.fq__tab:first-child { border-left: 0; }
+.fq__tab[aria-selected="true"] { background: #85231A; color: #FFFAF6; box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .45), inset -2px -2px 0 rgba(43, 26, 23, .25); }
+.fq__tab:not([aria-selected="true"]):hover { background: #FFACE4; }
+.fq__panel { border-top: 1px solid rgba(43, 26, 23, .25); }
+.fq__panel:not([hidden]) { animation: fqpanel .35s cubic-bezier(.2, .8, .2, 1); }
+@keyframes fqpanel { from { opacity: 0; transform: translateY(6px); } }
+.fq__it { border-bottom: 1px solid rgba(43, 26, 23, .25); }
+.fq__q { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 18px; min-height: 56px; padding: 8px 0; background: transparent; border: 0; text-align: left; color: #2B1A17; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1.4; cursor: pointer; }
+.fq__q i { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid #2B1A17; background: #FFFAF6; color: #85231A; font-style: normal; font-size: 15px; line-height: 1; transition: transform .3s cubic-bezier(.2, .8, .2, 1), background .2s; }
+.fq__q:hover i { background: #FFACE4; }
+.fq__it.is-open .fq__q i { transform: rotate(45deg); background: #FFACE4; }
+.fq__a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s cubic-bezier(.2, .8, .2, 1); }
+.fq__it.is-open .fq__a { grid-template-rows: 1fr; }
+.fq__ai { overflow: hidden; padding-right: 44px; font-size: 15px; line-height: 1.55; color: #2B1A17; }
+.fq__ai p { margin: 0 0 6px; } .fq__ai p:last-child { margin-bottom: 16px; }
+.fq-o { position: absolute; z-index: 1; display: block; opacity: 0; will-change: transform, opacity; }
+.fq-o__b { display: block; animation: fqbob 5.5s ease-in-out infinite alternate; }
+@keyframes fqbob { from { transform: translateY(-7px) rotate(-2deg); } to { transform: translateY(7px) rotate(2deg); } }
+.fq.is-gl .fq__win { opacity: 0; }
+.fq:not(.is-gl) .fq-o { opacity: 1; }
+@media (max-width: 1399px) { .fq__objs { display: none; } }
+@media (max-width: 900px) {
+  .fq { height: calc(100svh + 700px); }
+  .fq__stage { height: 100svh; padding: 80px 12px 16px; }
+  .fq__in { padding: 28px 18px 22px; }
+  .fq__h { font-size: 34px; }
+  .fq__tabs { margin: 24px 0 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .fq { height: auto; } .fq__stage { position: relative; height: auto; } .fq-o__b { animation: none; } }
 /* обложка (22.11): текст и кнопки — общей шкалой; H1 на десктопе 72; отзыв 300 */
 @media (min-width: 901px) { #top .h1 { font-size: 72px !important; } #top .hero-rev { width: 300px !important; } }
 /* 22.11: от 1400 — отзыв в 3 строки (360) от края контейнера, не наезжает на фото */
@@ -866,7 +1048,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 }
 @media (prefers-reduced-motion: reduce) { .tm-ph, .tm-ph img { transition: none; } .tm-heart { display: none; } }
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
-@media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #founder, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
+@media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #founder, #team, #reviews { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
 .tilt { transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .tilt:hover { transform: rotate(0deg) scale(1.04) !important; }
@@ -1424,32 +1606,34 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </div>
 </section>
 
-<!-- 11 FAQ · заголовок и список по центру -->
-<section id="faq" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
-<div style="grid-column: 1 / span 5; text-align: left;">
-<p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Вопросы</p>
-<div style="display: flex; justify-content: flex-start; align-items: flex-end; gap: 6px; margin-top: 14px;">
-<h2 class="hx" style="margin: 0; font-size: 48px; line-height: 1; font-weight: 500; letter-spacing: -.015em;">Частые вопросы</h2>
-<svg class="hide-m" aria-hidden="true" width="40" height="52" viewBox="0 0 40 52" fill="none" style="transform: translate(-6px, -52px) rotate(14deg) scale(.85);"><path d="M8 16 C 8 4, 32 2, 33 15 C 34 26, 20 27, 20 38" stroke="#85231A" stroke-width="2.4" stroke-linecap="round"></path><circle cx="20" cy="47" r="2.6" fill="#85231A"></circle></svg>
+<!-- 11 ВОПРОСЫ (22.11) · по мотивам agentcard.com: при прокрутке мятый лист расправляется (three.js) и становится окном «вопросы.txt»; вокруг выплывают иконки сайта -->
+<section id="faq" class="fq" aria-labelledby="fq-h">
+<div class="fq__stage">
+<div class="fq__objs" aria-hidden="true"><span class="fq-o" data-l="8" data-t="22" data-r="-8" style="left: 8%; top: 22%;"><span class="fq-o__b" style="animation-delay: -0.0s;"><svg aria-hidden="true" viewBox="0 0 190 160" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 170px; height: auto; display: block;"><path d="M30 60 L44 148 H92 L106 60 Z" fill="#FFFAF6"/><path d="M48 60 L56 148 M68 60 V148 M88 60 L80 148" stroke="#FFACE4" stroke-width="6"/><path d="M30 60 L44 148 H92 L106 60 Z" />
+<circle cx="40" cy="52" r="12" fill="#FFFAF6"/><circle cx="60" cy="42" r="13" fill="#FFFAF6"/><circle cx="82" cy="46" r="12" fill="#FFFAF6"/><circle cx="98" cy="56" r="10" fill="#FFFAF6"/><circle cx="70" cy="58" r="10" fill="#FFFAF6"/>
+<rect x="118" y="44" width="62" height="86" rx="7" fill="#FFACE4" transform="rotate(10 149 87)"/><path d="M142 74 L162 88 L140 100 Z" fill="#85231A" transform="rotate(10 149 87)"/>
+<path d="M126 24 l4 8 M150 18 v10 M172 26 l-4 8" /></svg></span></span><span class="fq-o" data-l="15" data-t="17" data-r="6" style="left: 15%; top: 17%;"><span class="fq-o__b" style="animation-delay: -0.7s;"><img src="assets/icon-manikyur.png" alt="" width="84" height="84" style="width: 84px; height: auto; display: block; image-rendering: pixelated;"></span></span><span class="fq-o" data-l="5" data-t="46" data-r="7" style="left: 5%; top: 46%;"><span class="fq-o__b" style="animation-delay: -1.4s;"><svg aria-hidden="true" viewBox="0 0 150 150" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 120px; height: auto; display: block;"><path d="M28 70 H108 V102 Q108 130 80 130 H56 Q28 130 28 102 Z" fill="#FFFAF6"/><path d="M108 80 Q132 80 130 98 Q128 114 106 112" />
+<path d="M20 136 H118" /><path d="M48 92 q4 -5 8 0 M76 92 q4 -5 8 0" /><path d="M58 106 q8 8 16 0" />
+<path d="M54 56 c-10 -12 8 -18 4 -30" /><path d="M82 56 c-10 -12 8 -18 4 -30" />
+<path d="M70 22 c-6 -8 -16 -2 -10 6 l10 10 l10 -10 c6 -8 -4 -14 -10 -6 z" fill="#FFACE4"/></svg></span></span><span class="fq-o" data-l="17" data-t="66" data-r="-6" style="left: 17%; top: 66%;"><span class="fq-o__b" style="animation-delay: -2.1s;"><img src="assets/icon-pokrytie.png" alt="" width="84" height="84" style="width: 84px; height: auto; display: block; image-rendering: pixelated;"></span></span><span class="fq-o" data-l="13" data-t="88" data-r="12" style="left: 13%; top: 88%;"><span class="fq-o__b" style="animation-delay: -2.8s;"><svg aria-hidden="true" viewBox="0 0 80 80" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 64px; height: auto; display: block;"><path d="M40 6 C42 30 50 38 74 40 C50 42 42 50 40 74 C38 50 30 42 6 40 C30 38 38 30 40 6 Z" fill="#FFACE4"/></svg></span></span><span class="fq-o" data-l="86" data-t="18" data-r="8" style="left: 86%; top: 18%;"><span class="fq-o__b" style="animation-delay: -3.5s;"><svg aria-hidden="true" viewBox="0 0 140 170" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 130px; height: auto; display: block;"><rect x="52" y="8" width="34" height="44" rx="5" fill="#85231A"/><path d="M58 14 v32" stroke="#FFFAF6" stroke-width="2"/>
+<rect x="46" y="50" width="46" height="12" rx="3" fill="#FFFAF6"/>
+<path d="M30 70 Q30 62 40 62 H98 Q108 62 108 72 V136 Q108 150 94 150 H44 Q30 150 30 136 Z" fill="#FFACE4"/>
+<path d="M54 98 q4 -6 8 0 M78 98 q4 -6 8 0" /><path d="M58 116 q12 12 24 0" /><circle cx="50" cy="112" r="4" fill="#FF7FC8" stroke="none"/><circle cx="92" cy="112" r="4" fill="#FF7FC8" stroke="none"/>
+<path d="M118 30 v16 M110 38 h16" /><path d="M16 46 v10 M11 51 h10" /><path d="M124 100 l6 -4 M126 112 h8" /></svg></span></span><span class="fq-o" data-l="80" data-t="34" data-r="-5" style="left: 80%; top: 34%;"><span class="fq-o__b" style="animation-delay: -4.2s;"><img src="assets/icon-pedikyur.png" alt="" width="84" height="84" style="width: 84px; height: auto; display: block; image-rendering: pixelated;"></span></span><span class="fq-o" data-l="88" data-t="50" data-r="6" style="left: 88%; top: 50%;"><span class="fq-o__b" style="animation-delay: -4.9s;"><svg aria-hidden="true" viewBox="0 0 180 150" fill="none" stroke="#85231A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 140px; height: auto; display: block;"><circle cx="52" cy="80" r="34" fill="#FFFAF6"/><path d="M36 66 q6 -10 18 -12" stroke="#FFACE4" stroke-width="4"/>
+<circle cx="116" cy="46" r="20" fill="#FFFAF6"/><path d="M106 38 q4 -6 10 -7" stroke="#FFACE4" stroke-width="3"/><circle cx="130" cy="100" r="12" fill="#FFFAF6"/><circle cx="96" cy="124" r="7" fill="#FFFAF6"/>
+<text x="24" y="146" font-family="Gogol, cursive" font-size="30" fill="#85231A" stroke="none" transform="rotate(-6 24 146)">чисто!</text>
+<path d="M160 20 v12 M154 26 h12" /></svg></span></span><span class="fq-o" data-l="79" data-t="72" data-r="7" style="left: 79%; top: 72%;"><span class="fq-o__b" style="animation-delay: -5.6s;"><img src="assets/icon-brovi.png" alt="" width="84" height="84" style="width: 84px; height: auto; display: block; image-rendering: pixelated;"></span></span><span class="fq-o" data-l="90" data-t="86" data-r="-8" style="left: 90%; top: 86%;"><span class="fq-o__b" style="animation-delay: -6.3s;"><img src="assets/icon-ukreplenie.png" alt="" width="84" height="84" style="width: 84px; height: auto; display: block; image-rendering: pixelated;"></span></span></div>
+<div class="fq__shadow" aria-hidden="true"></div>
+<div class="fq__gl" aria-hidden="true"></div>
+<div class="fq__win">
+<div class="fq__bar"><span>вопросы.txt</span><span aria-hidden="true">_ □ ×</span></div>
+<div class="fq__in">
+<h2 id="fq-h" class="fq__h">Частые вопросы</h2>
+<p class="fq__sub">Всё, что важно знать до визита</p>
+<div class="fq__tabs" role="tablist" aria-label="Темы вопросов"><button type="button" class="fq__tab" role="tab" id="fq-tab-0" aria-controls="fq-p-0" aria-selected="true" data-t="0">Запись и визит</button><button type="button" class="fq__tab" role="tab" id="fq-tab-1" aria-controls="fq-p-1" aria-selected="false" data-t="1">Студия</button></div>
+<div class="fq__panel" id="fq-p-0" role="tabpanel" aria-labelledby="fq-tab-0"><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Сколько длится визит?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Маникюр — 1–1,5 часа; педикюр — 1–2 часа. Время зависит от услуги; дополнительные процедуры выбираются отдельно</p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Записалась не на ту услугу — что делать?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Скажите администратору: поменяем на месте или подскажем заранее</p><p><span class="wait">[ждём: подтверждение]</span></p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Как оплатить?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p>Картой, наличными, по QR-коду или через СБП</p></div></div></div></div><div class="fq__panel" id="fq-p-1" role="tabpanel" aria-labelledby="fq-tab-1" hidden><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Можно прийти с собакой?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p><span class="wait">[ждём: правила — в карточке «с собаками до 35 см» и «с кошками и собаками»; спросить отдельно]</span></p></div></div></div><div class="fq__it"><button type="button" class="fq__q" aria-expanded="false"><span>Есть ли парковка?</span><i aria-hidden="true">+</i></button><div class="fq__a"><div class="fq__ai"><p><span class="wait">[ждём: где — в карточке «парковка: да»]</span></p></div></div></div></div>
 </div>
 </div>
-<div style="grid-column: 7 / span 6; border-top: 1px solid #85231A;">
-<sc-for list="{{faq}}" as="f" hint-placeholder-count="5">
-<div style="border-bottom: 1px solid rgba(133, 35, 26, .3);">
-<h3 style="margin: 0;">
-<button onClick="{{f.toggle}}" aria-expanded="{{f.open}}" style="display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 18px; min-height: 52px; padding: 8px 0; background: transparent; border: 0; text-align: left; color: #85231A; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.2; font-weight: 500;">
-<span>{{f.q}}</span>
-<span aria-hidden="true" style="flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: {{f.bg}}; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1;">{{f.sign}}</span>
-</button>
-</h3>
-<sc-if value="{{f.open}}" hint-placeholder-val="{{false}}">
-<div style="padding: 0 44px 14px 0; font-size: 15px; line-height: 1.5; color: #2B1A17;">
-<sc-if value="{{f.hasA}}" hint-placeholder-val="{{true}}"><p style="margin: 0;">{{f.a}}</p></sc-if>
-<sc-if value="{{f.hasW}}" hint-placeholder-val="{{false}}"><p style="margin: 6px 0 0;"><span class="wait">{{f.w}}</span></p></sc-if>
-</div>
-</sc-if>
-</div>
-</sc-for>
 </div>
 </section>
 
