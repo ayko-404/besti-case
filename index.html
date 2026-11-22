@@ -434,11 +434,19 @@ html.lenis body {
    Оформление «Окно» (выбор Никиты 22.11); тексты едут с прокруткой, как у Heron. */
 (function () {
   var pv = 'window'; // выбран Никитой 22.11
+  // зерно для фона: случайный шум 220×220, один раз в data URL
+  var noise = '';
+  try {
+    var c = document.createElement('canvas'); c.width = c.height = 220; var x = c.getContext('2d'), d = x.createImageData(220, 220);
+    for (var q = 0; q < d.data.length; q += 4) { var v = Math.random() * 255 | 0; d.data[q] = d.data[q + 1] = d.data[q + 2] = v; d.data[q + 3] = 255; }
+    x.putImageData(d, 0, 0); noise = 'url(' + c.toDataURL('image/png') + ')';
+  } catch (e) {}
   var ticking = false, lastK = -1;
   function upd() {
     ticking = false;
     var sec = document.getElementById('ritual'); if (!sec || !sec.classList.contains('pw')) return;
     if (sec.getAttribute('data-pv2') !== pv) sec.setAttribute('data-pv2', pv);
+    if (noise && !sec.style.getPropertyValue('--noise')) sec.style.setProperty('--noise', noise);
     var st = sec.querySelector('.pw-stick'); if (!st || getComputedStyle(st).display === 'none') return;
     var imgs = sec.querySelectorAll('.pw-img'), N = imgs.length;
     var r = sec.getBoundingClientRect(), run = sec.offsetHeight - innerHeight;
@@ -463,6 +471,8 @@ html.lenis body {
       st.style.setProperty('--ty', (-(f * slot) % 14).toFixed(1) + 'px');
     }
     if (k !== lastK || !sec.querySelector('.pw-tab.is-on')) {
+      var g = sec.querySelector('.pw-imgs');
+      if (g && lastK !== -1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) { g.classList.remove('is-glitch'); void g.offsetWidth; g.classList.add('is-glitch'); }
       lastK = k;
       sec.querySelector('.pw-tabs').style.setProperty('--k', k);
       sec.querySelectorAll('.pw-tab').forEach(function (el, i) { el.classList.toggle('is-on', i === k); });
@@ -680,6 +690,28 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
   #ritual[data-pv2="bordo"] .pw-mob__h { color: #FFFAF6; }
 }
 @media (prefers-reduced-motion: reduce) { .pw-tabs__bg { transition: none; } }
+/* помехи на фоне «Почему бэсти» (22.11): зерно, строки развёртки, полоса трекинга VHS, сбой картинки при смене пункта */
+.pw-stick::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background-image: var(--noise, none); background-size: 220px 220px; opacity: .055; mix-blend-mode: multiply; animation: pw-grain .7s steps(7) infinite; }
+.pw-stick::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(to bottom, transparent 0, rgba(255, 172, 228, .22) 42%, rgba(133, 35, 26, .07) 50%, rgba(255, 172, 228, .12) 58%, transparent 100%) 0 -160px / 100% 160px no-repeat,
+              repeating-linear-gradient(to bottom, rgba(43, 26, 23, .04) 0 1px, transparent 1px 3px);
+  animation: pw-roll 9s linear infinite; }
+.pw-tabs, .pw-line, .pw-left, .pw-right { position: relative; z-index: 1; }
+.pw-ruler { z-index: 1; }
+@keyframes pw-grain { 0% { background-position: 0 0; } 14% { background-position: -37px 61px; } 28% { background-position: 83px -22px; } 42% { background-position: -91px -74px; } 57% { background-position: 49px 103px; } 71% { background-position: -12px -118px; } 85% { background-position: 126px 37px; } 100% { background-position: 0 0; } }
+@keyframes pw-roll { 0% { background-position: 0 -160px, 0 0; } 100% { background-position: 0 calc(100vh + 160px), 0 0; } }
+.pw-play { position: absolute; right: 12px; bottom: 12px; padding: 3px 7px; background: rgba(43, 26, 23, .72); color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; animation: pw-blink 1.6s steps(2) infinite; font-size-adjust: none; }
+@keyframes pw-blink { 50% { opacity: .35; } }
+.pw-imgs.is-glitch { animation: pw-glitch .34s steps(6) 1; }
+@keyframes pw-glitch {
+  0% { transform: translate(0); filter: none; }
+  20% { transform: translate(-4px, 1px); filter: drop-shadow(3px 0 0 rgba(255, 40, 90, .7)) drop-shadow(-3px 0 0 rgba(0, 200, 255, .6)); }
+  40% { transform: translate(3px, -2px); clip-path: inset(18% 0 52% 0); }
+  60% { transform: translate(-2px, 0); clip-path: inset(62% 0 8% 0); filter: drop-shadow(-4px 0 0 rgba(255, 40, 90, .7)) drop-shadow(4px 0 0 rgba(0, 200, 255, .6)); }
+  80% { transform: translate(1px, 1px); clip-path: none; }
+  100% { transform: translate(0); filter: none; }
+}
+@media (prefers-reduced-motion: reduce) { .pw-stick::before, .pw-stick::after, .pw-play { animation: none; } .pw-imgs.is-glitch { animation: none; } }
 /* отступы между блоками на десктопе крупнее (21.11): было 64/48–56 */
 @media (min-width: 901px) { #promo, #price, #studio, #drinks, #works, #clean, #team, #reviews, #faq { padding-top: 112px !important; padding-bottom: 104px !important; } #studio { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; } #final { padding-top: 104px !important; padding-bottom: 104px !important; } }
 .bn .prow[style*="pointer"], .bn .prow[style*="pointer"] * { cursor: url('assets/cursor-nail-sm-hover.png') 7 0, pointer; }
@@ -1104,7 +1136,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 <div class="pw-right">
 <div class="pw-frame">
 <div class="pw-bar" aria-hidden="true"><span class="pw-bar__f">kino_v_kresle.jpg</span><span>_ □ ×</span></div>
-<div class="pw-imgs"><figure class="pw-img" data-i="0" data-file="kino_v_kresle.jpg"><img src="assets/pros/kino-v-kresle.webp" alt="Педикюрное кресло с планшетом" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="1" data-file="massazh_dlya_ruk.jpg"><img src="assets/pros/massazher-dlya-ruk.webp" alt="Руки в массажёре для рук" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="2" data-file="menyu_napitkov.jpg"><img src="assets/pros/menyu-napitkov.webp" alt="Меню напитков бэсти на столике студии: кофе, чай, матча и какао" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="3" data-file="uhod_zielinski.jpg"><img src="assets/pros/uhod-zielinski.webp" alt="Средства Zielinski & Rozen на полке студии" loading="lazy" decoding="async"></figure><span class="pw-scan" aria-hidden="true"></span><span class="pw-tag" aria-hidden="true">бэсти · <b>01</b>/04</span></div>
+<div class="pw-imgs"><figure class="pw-img" data-i="0" data-file="kino_v_kresle.jpg"><img src="assets/pros/kino-v-kresle.webp" alt="Педикюрное кресло с планшетом" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="1" data-file="massazh_dlya_ruk.jpg"><img src="assets/pros/massazher-dlya-ruk.webp" alt="Руки в массажёре для рук" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="2" data-file="menyu_napitkov.jpg"><img src="assets/pros/menyu-napitkov.webp" alt="Меню напитков бэсти на столике студии: кофе, чай, матча и какао" loading="lazy" decoding="async"></figure><figure class="pw-img" data-i="3" data-file="uhod_zielinski.jpg"><img src="assets/pros/uhod-zielinski.webp" alt="Средства Zielinski & Rozen на полке студии" loading="lazy" decoding="async"></figure><span class="pw-scan" aria-hidden="true"></span><span class="pw-tag" aria-hidden="true">бэсти · <b>01</b>/04</span><span class="pw-play" aria-hidden="true">▶ play</span></div>
 <i class="pw-plus pw-plus--tl" aria-hidden="true"></i><i class="pw-plus pw-plus--tr" aria-hidden="true"></i><i class="pw-plus pw-plus--bl" aria-hidden="true"></i><i class="pw-plus pw-plus--br" aria-hidden="true"></i>
 </div>
 </div>
