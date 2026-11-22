@@ -520,13 +520,13 @@ html.lenis body {
 /* «Команда» (22.11): при наведении на фото мастера из-под курсора вылетают пиксельные сердечки */
 (function () {
   if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var HEART = '<svg width="27" height="24" viewBox="-1 -1 9 8" shape-rendering="crispEdges"><rect x="1" y="-1" width="2" height="1" fill="#2B1A17"></rect><rect x="4" y="-1" width="2" height="1" fill="#2B1A17"></rect><rect x="0" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="6" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="-1" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="7" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="-1" y="2" width="1" height="1" fill="#2B1A17"></rect><rect x="7" y="2" width="1" height="1" fill="#2B1A17"></rect><rect x="0" y="3" width="1" height="1" fill="#2B1A17"></rect><rect x="6" y="3" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="4" width="1" height="1" fill="#2B1A17"></rect><rect x="5" y="4" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="5" width="1" height="1" fill="#2B1A17"></rect><rect x="4" y="5" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="6" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="0" width="2" height="1" fill="#FFACE4"></rect><rect x="4" y="0" width="2" height="1" fill="#FFACE4"></rect><rect x="0" y="1" width="1" height="1" fill="#FFACE4"></rect><rect x="1" y="1" width="1" height="1" fill="#FFFFFF"></rect><rect x="2" y="1" width="5" height="1" fill="#FFACE4"></rect><rect x="0" y="2" width="7" height="1" fill="#FFACE4"></rect><rect x="1" y="3" width="5" height="1" fill="#FFACE4"></rect><rect x="2" y="4" width="3" height="1" fill="#FFACE4"></rect><rect x="3" y="5" width="1" height="1" fill="#FFACE4"></rect></svg>', last = null, alive = 0;
+  var HEART_SVG = '<svg width="27" height="24" viewBox="-1 -1 9 8" shape-rendering="crispEdges"><rect x="1" y="-1" width="2" height="1" fill="#2B1A17"></rect><rect x="4" y="-1" width="2" height="1" fill="#2B1A17"></rect><rect x="0" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="6" y="0" width="1" height="1" fill="#2B1A17"></rect><rect x="-1" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="7" y="1" width="1" height="1" fill="#2B1A17"></rect><rect x="-1" y="2" width="1" height="1" fill="#2B1A17"></rect><rect x="7" y="2" width="1" height="1" fill="#2B1A17"></rect><rect x="0" y="3" width="1" height="1" fill="#2B1A17"></rect><rect x="6" y="3" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="4" width="1" height="1" fill="#2B1A17"></rect><rect x="5" y="4" width="1" height="1" fill="#2B1A17"></rect><rect x="2" y="5" width="1" height="1" fill="#2B1A17"></rect><rect x="4" y="5" width="1" height="1" fill="#2B1A17"></rect><rect x="3" y="6" width="1" height="1" fill="#2B1A17"></rect><rect x="1" y="0" width="2" height="1" fill="#FFACE4"></rect><rect x="4" y="0" width="2" height="1" fill="#FFACE4"></rect><rect x="0" y="1" width="1" height="1" fill="#FFACE4"></rect><rect x="1" y="1" width="1" height="1" fill="#FFFFFF"></rect><rect x="2" y="1" width="5" height="1" fill="#FFACE4"></rect><rect x="0" y="2" width="7" height="1" fill="#FFACE4"></rect><rect x="1" y="3" width="5" height="1" fill="#FFACE4"></rect><rect x="2" y="4" width="3" height="1" fill="#FFACE4"></rect><rect x="3" y="5" width="1" height="1" fill="#FFACE4"></rect></svg>', HEART = 'url("data:image/svg+xml,' + encodeURIComponent(HEART_SVG.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')) + '")', last = null, alive = 0; // одна картинка вместо разметки — дешевле
   document.addEventListener('pointermove', function (e) {
     var ph = e.target.closest && e.target.closest('#team .tm-ph'); if (!ph) { last = null; return; }
     var card = ph.parentElement, r = card.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
     if (last && Math.hypot(x - last[0], y - last[1]) < 34) return;
     last = [x, y]; if (alive > 12) return;
-    var h = document.createElement('span'); h.className = 'tm-heart'; h.innerHTML = HEART;
+    var h = document.createElement('span'); h.className = 'tm-heart'; h.style.backgroundImage = HEART;
     h.style.left = x + 'px'; h.style.top = y + 'px'; card.appendChild(h); alive++;
     var dx = (Math.random() - .5) * 40, s = .7 + Math.random() * .6;
     var a = h.animate([
@@ -803,17 +803,17 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 /* «Команда» (22.11): контент с bestie-nails.ru — 5 мастеров; наведение — карточка приподнимается, из-под курсора вылетают пиксельные сердечки */
 .team-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 16px; align-items: stretch; }
 .tm { position: relative; display: flex; flex-direction: column; }
-.tm-ph { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; transition: transform .24s steps(3), box-shadow .24s steps(3); }
-.tm-ph img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.tm::before { content: ''; position: absolute; z-index: 0; left: 5px; top: 5px; width: 100%; aspect-ratio: 4 / 5; background: #2B1A17; } /* тень — неподвижная подложка: при наведении двигается только фото, тень не перерисовывается */
+.tm-ph { position: relative; z-index: 1; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid #2B1A17; transition: transform .32s cubic-bezier(.2, .8, .2, 1); will-change: transform; }
+.tm-ph img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2, .8, .2, 1); will-change: transform; }
 .tm-n { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid #85231A; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.15; font-weight: 500; color: #85231A; }
 .tm-r { margin: 4px 0 0; font-size: 11px; color: #7E4F48; }
 .tm-d { margin: 8px 0 0; font-size: 13px; line-height: 1.45; color: #2B1A17; }
 .tm-b { display: flex !important; align-items: center; justify-content: center; text-align: center; min-height: 44px; margin-top: auto; padding: 0 12px; width: 100%; background: #FFFFFF; color: #85231A; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
 .tm-d { margin-bottom: 16px; }
-.tm-heart { position: absolute; z-index: 5; width: 27px; height: 24px; margin: -12px 0 0 -13px; pointer-events: none; }
-.tm-heart svg { display: block; }
+.tm-heart { position: absolute; z-index: 5; display: block; width: 27px; height: 24px; margin: -12px 0 0 -13px; pointer-events: none; background: no-repeat center / 27px 24px; image-rendering: pixelated; will-change: transform, opacity; }
 @media (hover: hover) and (pointer: fine) {
-  .tm:hover .tm-ph { transform: translate(-4px, -4px); box-shadow: 9px 9px 0 #2B1A17; }
+  .tm:hover .tm-ph { transform: translate(-4px, -4px); }
   .tm:hover .tm-ph img { transform: scale(1.04); }
 }
 @media (prefers-reduced-motion: reduce) { .tm-ph, .tm-ph img { transition: none; } .tm-heart { display: none; } }
