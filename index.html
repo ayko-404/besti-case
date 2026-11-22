@@ -352,32 +352,6 @@ html[data-intro="seen"] .bl:not([data-mode="intro"]) :is(.bl-scan, .bl-c) { disp
   if (document.body) panel(); else document.addEventListener('DOMContentLoaded', panel);
 })();
 </script>
-<script>
-/* Варианты прайса (22.11): data-pv на #price; окно «прайс.exe» — по ссылке с ?variants. Выбор хранится у зрителя. */
-(function () {
-  var PV = [['tabs', 'Вкладки (сейчас)'], ['sheet', 'Папки-ярлыки'], ['files', 'Картотека'], ['desk', 'Рабочий стол']];
-  var pv = 'tabs'; try { pv = localStorage.getItem('besti:pv') || 'tabs'; } catch (e) {}
-  function apply() { var el = document.getElementById('price'); if (!el) return setTimeout(apply, 150); if (pv === 'tabs') el.removeAttribute('data-pv'); else el.setAttribute('data-pv', pv); }
-  apply();
-  if (!/[?&]variants/.test(location.search)) return;
-  function panel() {
-    var box = document.createElement('div');
-    box.style.cssText = "position:fixed;right:16px;bottom:16px;z-index:9000;width:244px;background:#FFFFFF;border:1px solid #2B1A17;box-shadow:5px 5px 0 #2B1A17;font-family:'PT Mono',monospace;font-size:12px;color:#2B1A17";
-    box.innerHTML = '<div style="display:flex;justify-content:space-between;padding:5px 8px;background:#85231A;color:#FFFAF6;font-size:11px;letter-spacing:.06em;text-transform:uppercase"><span>прайс.exe</span><span>_ □ ×</span></div>' +
-      PV.map(function (v, i) { return '<button data-pv="' + v[0] + '" style="display:flex;gap:8px;width:100%;padding:7px 10px;border:0;border-top:1px solid rgba(43,26,23,.12);background:transparent;font:inherit;text-align:left;cursor:pointer;color:inherit"><b style="color:#85231A">' + (i + 1) + '</b>' + v[1] + '</button>'; }).join('') +
-      '<button data-go style="width:100%;padding:9px 10px;border:0;border-top:1px solid #2B1A17;background:#FFACE4;font:inherit;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;color:#85231A">↓ к прайсу</button>';
-    document.body.appendChild(box);
-    function mark() { Array.prototype.forEach.call(box.querySelectorAll('[data-pv]'), function (b) { var on = b.getAttribute('data-pv') === pv; b.style.background = on ? '#FFF1F9' : 'transparent'; b.style.fontWeight = on ? '700' : '400'; }); }
-    box.addEventListener('click', function (e) {
-      var b = e.target.closest('button'); if (!b) return;
-      if (b.hasAttribute('data-pv')) { pv = b.getAttribute('data-pv'); try { localStorage.setItem('besti:pv', pv); } catch (x) {} apply(); mark(); }
-      var el = document.getElementById('price'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    mark();
-  }
-  if (document.body) panel(); else document.addEventListener('DOMContentLoaded', panel);
-})();
-</script>
 <x-dc>
 <helmet>
 <style>
@@ -404,23 +378,32 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .nailbtn:hover .nail { transform: translateY(-3px) rotate(-10deg); }
 .nail { transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
 .prow-hover:hover { background: rgba(255, 172, 228, .16); }
-/* ── Варианты прайса «папками» (22.11, выбор Никиты; ?variants → окно «прайс.exe»). Прямые углы, жёсткие тени, наши пиксельные иконки ── */
-/* 2 · Папки-ярлыки: вкладки как в окне свойств, выбранная сливается с листом */
-#price[data-pv="sheet"] .pr-tabs { gap: 0 !important; align-items: flex-end; position: relative; z-index: 2; }
-#price[data-pv="sheet"] .pr-tab { margin-right: -1px; min-height: 58px !important; background: #F7EEE8 !important; border: 1px solid #2B1A17 !important; border-bottom: 0 !important; transform: translateY(6px); transition: transform .2s ease; }
-#price[data-pv="sheet"] .pr-tab[aria-selected="true"] { background: #FFFFFF !important; transform: none; min-height: 66px !important; margin-bottom: -1px; z-index: 3; box-shadow: inset 0 3px 0 #FFACE4; }
-#price[data-pv="sheet"] .pr-panel { margin-top: 0 !important; padding: 28px 28px 20px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 6px 6px 0 #2B1A17; position: relative; z-index: 1; }
-/* 3 · Картотека: разноцветные папки с ушком внахлёст */
-#price[data-pv="files"] .pr-tabs { gap: 0 !important; flex-wrap: nowrap !important; align-items: flex-end; padding-top: 16px; padding-right: 10px; position: relative; z-index: 2; }
-#price[data-pv="files"] .pr-tab { position: relative; margin-right: -10px; min-height: 60px !important; border: 1px solid #2B1A17 !important; border-bottom: 0 !important; transform: translateY(8px); transition: transform .25s cubic-bezier(.23, 1, .32, 1); }
-#price[data-pv="files"] .pr-tab::before { content: ''; position: absolute; left: -1px; top: -13px; width: 46%; height: 13px; background: inherit; border: 1px solid #2B1A17; border-bottom: 0; }
-#price[data-pv="files"] .pr-tab:nth-child(1) { background: #FFFFFF !important; z-index: 5; } #price[data-pv="files"] .pr-tab:nth-child(2) { background: #FDE4EF !important; z-index: 4; }
-#price[data-pv="files"] .pr-tab:nth-child(3) { background: #FFCDEB !important; z-index: 3; } #price[data-pv="files"] .pr-tab:nth-child(4) { background: #F8D6CB !important; z-index: 2; }
-#price[data-pv="files"] .pr-tab:nth-child(5) { background: #EFE2D6 !important; z-index: 1; }
-#price[data-pv="files"] .pr-tab:hover { transform: translateY(2px); }
-#price[data-pv="files"] .pr-tab[aria-selected="true"] { transform: none; z-index: 9; margin-bottom: -1px; min-height: 66px !important; }
-#price[data-pv="files"] .pr-panel { margin-top: 0 !important; padding: 28px 28px 20px; border: 1px solid #2B1A17; box-shadow: 6px 6px 0 #2B1A17; position: relative; z-index: 6; }
-/* 4 · Рабочий стол: пиксельные папки-ярлыки, прайс — окном */
+/* ── Прайс «рабочий стол» (22.11, выбор Никиты): пиксельные папки-ярлыки, услуги — окном; список слева, карточка справа ── */
+.pl-list { grid-column: 1 / span 6; border-top: 1px solid rgba(43, 26, 23, .25); }
+.pl-row { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; column-gap: 10px; width: 100%; min-height: 52px; padding: 0 10px 0 8px; background: transparent; border: 0; border-bottom: 1px solid rgba(43, 26, 23, .25); text-align: left; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1.3; color: #2B1A17; cursor: pointer; transition: background-color .16s ease; }
+.pl-row:hover { background: rgba(255, 172, 228, .14); }
+.pl-row[aria-pressed="true"] { background: #FFF6F0; color: #85231A; }
+.pl-mark { font-size: 10px; color: #85231A; }
+.pl-price { white-space: nowrap; color: #85231A; }
+.pl-det { grid-column: 8 / span 5; align-self: start; padding-top: 4px; }
+.pl-kick { margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; }
+.pl-title { margin: 12px 0 0; font-family: 'PT Mono', monospace !important; font-size: 26px !important; line-height: 1.2; font-weight: 400; letter-spacing: .02em; text-transform: uppercase; color: #2B1A17; }
+.pl-big { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 18px 0 0; font-family: 'PT Mono', monospace; font-size: 44px; line-height: 1; color: #85231A; }
+.pl-time { padding: 4px 10px; border: 1px solid #2B1A17; font-size: 13px; line-height: 1.2; letter-spacing: .02em; color: #2B1A17; }
+.pl-label { margin: 26px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #85231A; }
+.pl-comp { margin: 8px 0 0; padding: 0; list-style: none; font-family: 'PT Mono', monospace; font-size: 15px; line-height: 1.45; color: #2B1A17; }
+.pl-comp li { margin-top: 6px; padding-left: 20px; text-indent: -20px; font-family: 'PT Mono', monospace !important; font-size: 15px !important; line-height: 1.45 !important; }
+.pl-comp li::before { content: '✓'; display: inline-block; width: 20px; text-indent: 0; color: #85231A; }
+.pl-inline { display: none; }
+.pl-det, .pl-det *, .pl-inline, .pl-inline *, .pl-list * { font-size-adjust: none !important; }
+#price[data-pv="desk"] .pr-panel::before, #price[data-pv="desk"] .pr-panel::after { font-size-adjust: none; }
+@media (max-width: 900px) {
+  .pl-list { grid-column: 1 / -1; }
+  .pl-det { display: none; }
+  .pl-inline { display: block; padding: 6px 8px 18px; border-bottom: 1px solid rgba(43, 26, 23, .25); background: #FFF6F0; }
+  .pl-inline .pl-big { margin-top: 8px; font-size: 30px; }
+  .pl-row { font-size: 14px; }
+}
 #price[data-pv="desk"] .pr-tabs { gap: 8px 18px !important; justify-content: center; }
 #price[data-pv="desk"] .pr-tab { flex: 0 0 140px !important; min-width: 0 !important; flex-direction: column; justify-content: flex-start; gap: 8px !important; padding: 8px 6px !important; background: transparent !important; border: 1px dashed transparent !important; text-align: center !important; }
 #price[data-pv="desk"] .pr-tab:hover { border-color: rgba(133, 35, 26, .45) !important; }
@@ -429,14 +412,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 #price[data-pv="desk"] .pr-tab > span:last-child { align-items: center; }
 #price[data-pv="desk"] .pr-ic { position: relative; width: 74px; height: 60px; display: grid !important; place-items: center; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 37 30' shape-rendering='crispEdges'%3E%3Cpath d='M1 1h14v4h21v24H1z' fill='%232B1A17'/%3E%3Cpath d='M2 2h12v4h21v22H2z' fill='%23FFCDEB'/%3E%3Cpath d='M2 10h33v18H2z' fill='%23FFACE4'/%3E%3Cpath d='M2 9h33v1H2z' fill='%2385231A'/%3E%3C/svg%3E") center / 100% 100% no-repeat; image-rendering: pixelated; }
 #price[data-pv="desk"] .pr-ic img { width: 34px !important; height: 34px !important; margin-top: 8px; }
-#price[data-pv="desk"] .pr-panel { position: relative; margin-top: 20px !important; padding: 52px 24px 18px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 6px 6px 0 #2B1A17; }
-#price[data-pv="desk"] .pr-panel::before { content: attr(aria-label) ".txt"; position: absolute; left: 0; right: 0; top: 0; height: 30px; padding: 0 12px; display: flex; align-items: center; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: lowercase; }
+#price[data-pv="desk"] .pr-panel { position: relative; margin-top: 20px !important; padding: 64px 40px 40px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 6px 6px 0 #2B1A17; }
+#price[data-pv="desk"] .pr-panel::before { content: attr(aria-label) ".txt"; position: absolute; left: 0; right: 0; top: 0; height: 30px; padding: 0 12px; display: flex; align-items: center; background: #85231A; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: lowercase; }
 #price[data-pv="desk"] .pr-panel::after { content: '_ □ ×'; position: absolute; right: 12px; top: 0; height: 30px; display: flex; align-items: center; color: #FFFAF6; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .1em; }
 @media (max-width: 900px) {
-  #price[data-pv="sheet"] .pr-tabs, #price[data-pv="files"] .pr-tabs { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; padding-top: 16px; }
-  #price[data-pv="sheet"] .pr-tab, #price[data-pv="files"] .pr-tab { flex: 0 0 auto !important; min-width: 150px !important; }
   #price[data-pv] .pr-panel { padding: 16px 12px 12px; box-shadow: 4px 4px 0 #2B1A17; }
-  #price[data-pv="sheet"] .pr-panel, #price[data-pv="files"] .pr-panel { margin-top: -28px !important; }
   #price[data-pv="desk"] .pr-panel { padding-top: 44px; }
   #price[data-pv="desk"] .pr-tab { flex: 0 0 30% !important; }
 }
@@ -734,7 +714,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </section>
 
 <!-- 05 ПРАЙС · заголовок по центру, иконки категорий, две колонки -->
-<section id="price" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px;">
+<section id="price" data-pv="desk" class="stack sec" style="position: relative; background: #FFFAF6; color: #85231A; padding: 64px 16px 56px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px;">
 <div style="grid-column: 7 / span 6; text-align: left;">
 <p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;">Услуги и цены</p>
 <h2 class="hx" style="margin: 14px 0 0; font-size: 40px; line-height: 1.05; font-weight: 500; letter-spacing: -.01em;">От „Самой невинности“<br>до „Роскошного максимума“</h2>
@@ -753,56 +733,26 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 </sc-for>
 </div>
 
-<div role="tabpanel" aria-label="{{tabTitle}}" class="stack pr-panel" style="grid-column: 1 / -1; margin-top: 8px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
-<div class="col-m" style="grid-column: 1 / span 6; padding-right: 16px; border-top: 1px solid #85231A;">
-<div class="prow" style="display: grid; grid-template-columns: minmax(0, 1fr) 76px 98px 44px; column-gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(133, 35, 26, .3); font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: #2B1A17;">
-<span>Услуга</span><span>Время</span><span style="text-align: right;">Цена</span><span></span>
-</div>
-<sc-for list="{{rowsL}}" as="r" hint-placeholder-count="6">
-<div class="prow-hover" style="border-bottom: 1px solid rgba(133, 35, 26, .22);">
-<div class="prow" onClick="{{r.toggle}}" style="display: grid; grid-template-columns: minmax(0, 1fr) 76px 98px 44px; column-gap: 10px; align-items: center; min-height: 44px; cursor: {{r.cur}};">
-<span style="font-size: 18px; line-height: 1.25; color: #85231A;">{{r.name}}</span>
-<span style="font-size: 14px; color: #2B1A17;">{{r.time}}</span>
-<span style="font-size: 19px; color: #85231A; white-space: nowrap; text-align: right;">{{r.price}}</span>
-<span style="display: flex; justify-content: flex-end;">
-<sc-if value="{{r.hasC}}" hint-placeholder-val="{{true}}">
-<button aria-expanded="{{r.open}}" aria-label="{{r.aria}}" style="width: 44px; height: 44px; padding: 0; display: grid; place-items: center; background: transparent; border: 0; color: #85231A; font-family: 'PT Mono', monospace;"><span style="width: 24px; height: 24px; display: grid; place-items: center; background: {{r.btnBg}}; border: 1px solid #2B1A17; font-size: 15px; line-height: 1;">{{r.sign}}</span></button>
-</sc-if>
-</span>
-</div>
-<sc-if value="{{r.open}}" hint-placeholder-val="{{false}}">
-<p style="margin: 0; padding: 2px 54px 14px 0; font-size: 17px; line-height: 1.5; color: #2B1A17;">{{r.comp}}</p>
-</sc-if>
-<sc-if value="{{r.flag}}" hint-placeholder-val="{{false}}">
-<p style="margin: 0 0 8px;"><span class="wait" style="font-size: 10px;">{{r.flagText}}</span></p>
+<div role="tabpanel" aria-label="{{tabTitle}}" class="pr-panel" style="grid-column: 1 / -1; margin-top: 8px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 8px; align-items: start;">
+<div class="pl-list">
+<sc-for list="{{plist}}" as="r" hint-placeholder-count="8">
+<div class="pl-item">
+<button class="pl-row" aria-pressed="{{r.sel}}" onClick="{{r.pick}}"><span class="pl-mark" aria-hidden="true">{{r.mark}}</span><span class="pl-name">{{r.name}}</span><span class="pl-price">{{r.price}}</span></button>
+<sc-if value="{{r.sel}}" hint-placeholder-val="{{false}}">
+<div class="pl-inline"><p class="pl-big"><span>{{r.price}}</span><span class="pl-time">{{r.time}}</span></p><sc-if value="{{r.hasC}}" hint-placeholder-val="{{true}}"><p class="pl-label">Что входит</p><ul class="pl-comp"><sc-for list="{{r.comp}}" as="c" hint-placeholder-count="3"><li>{{c}}</li></sc-for></ul></sc-if></div>
 </sc-if>
 </div>
 </sc-for>
 </div>
-<div class="col-m" style="grid-column: 7 / span 6; padding-left: 16px; border-top: 1px solid #85231A; border-left: 1px solid rgba(133, 35, 26, .22);">
-<div class="prow" style="display: grid; grid-template-columns: minmax(0, 1fr) 76px 98px 44px; column-gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(133, 35, 26, .3); font-family: 'PT Mono', monospace; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: #2B1A17;">
-<span>Услуга</span><span>Время</span><span style="text-align: right;">Цена</span><span></span>
-</div>
-<sc-for list="{{rowsR}}" as="r" hint-placeholder-count="6">
-<div class="prow-hover" style="border-bottom: 1px solid rgba(133, 35, 26, .22);">
-<div class="prow" onClick="{{r.toggle}}" style="display: grid; grid-template-columns: minmax(0, 1fr) 76px 98px 44px; column-gap: 10px; align-items: center; min-height: 44px; cursor: {{r.cur}};">
-<span style="font-size: 18px; line-height: 1.25; color: #85231A;">{{r.name}}</span>
-<span style="font-size: 14px; color: #2B1A17;">{{r.time}}</span>
-<span style="font-size: 19px; color: #85231A; white-space: nowrap; text-align: right;">{{r.price}}</span>
-<span style="display: flex; justify-content: flex-end;">
-<sc-if value="{{r.hasC}}" hint-placeholder-val="{{true}}">
-<button aria-expanded="{{r.open}}" aria-label="{{r.aria}}" style="width: 44px; height: 44px; padding: 0; display: grid; place-items: center; background: transparent; border: 0; color: #85231A; font-family: 'PT Mono', monospace;"><span style="width: 24px; height: 24px; display: grid; place-items: center; background: {{r.btnBg}}; border: 1px solid #2B1A17; font-size: 15px; line-height: 1;">{{r.sign}}</span></button>
+<div class="pl-det">
+<p class="pl-kick">({{det.n}}) {{det.cat}}</p>
+<h3 class="pl-title">{{det.name}}</h3>
+<p class="pl-big"><span>{{det.price}}</span><span class="pl-time">{{det.time}}</span></p>
+<sc-if value="{{det.hasC}}" hint-placeholder-val="{{true}}">
+<p class="pl-label">Что входит</p>
+<ul class="pl-comp"><sc-for list="{{det.comp}}" as="c" hint-placeholder-count="4"><li>{{c}}</li></sc-for></ul>
 </sc-if>
-</span>
-</div>
-<sc-if value="{{r.open}}" hint-placeholder-val="{{false}}">
-<p style="margin: 0; padding: 2px 54px 14px 0; font-size: 17px; line-height: 1.5; color: #2B1A17;">{{r.comp}}</p>
-</sc-if>
-<sc-if value="{{r.flag}}" hint-placeholder-val="{{false}}">
-<p style="margin: 0 0 8px;"><span class="wait" style="font-size: 10px;">{{r.flagText}}</span></p>
-</sc-if>
-</div>
-</sc-for>
+<a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin-top: 28px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Записаться онлайн</a>
 </div>
 </div>
 <div style="grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 18px; margin-top: 22px;">
@@ -1681,6 +1631,15 @@ class Component extends DCLogic {
       };
     });
     const half = Math.ceil(rows.length / 2);
+    const selKey = (st.open && st.open.indexOf(cur.id + '-') === 0) ? st.open : cur.id + '-0';
+    const curIdx = Math.max(0, cats.findIndex((c) => c.id === cur.id));
+    const plist = cur.rows.map((r, i) => {
+      const key = cur.id + '-' + i, sel = key === selKey;
+      return { name: r.n, price: r.p, time: r.t, sel: sel, mark: sel ? '▸' : '', comp: r.c ? r.c.split(' · ') : [], hasC: !!r.c, pick: () => this.setState({ open: key }) };
+    });
+    const selI = Math.max(0, cur.rows.findIndex((r, i) => cur.id + '-' + i === selKey));
+    const sr = cur.rows[selI];
+    const det = { n: '0' + (curIdx + 1), cat: cur.title, name: sr.n, price: sr.p, time: sr.t, comp: sr.c ? sr.c.split(' · ') : [], hasC: !!sr.c };
 
     const S = [
       { n: '01', t: 'Встречаем', d: 'Администратор покажет студию и предложит меню', img: 'assets/ritual-1-full.webp?v=2', alt: 'Зал студии: кирпичная стена, рабочее место мастера у окна', wait: '' },
@@ -1825,7 +1784,7 @@ class Component extends DCLogic {
       cReset: () => this.setState({ cx: 0, cy: 0 }),
       nails: nails,
       rowsL: rows.slice(0, half), rowsR: rows.slice(half),
-      tabTitle: cur.title,
+      tabTitle: cur.title, plist: plist, det: det,
       steps: steps, layers: layers, curN: S[st.step] ? S[st.step].n : '01',
       pile: pile, workN: st.work + 1, workTotal: total,
       worksPrev: () => this.setState({ work: (st.work - 1 + total) % total }),
