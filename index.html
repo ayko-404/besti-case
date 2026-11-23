@@ -785,6 +785,15 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
   .fq__tabs { margin: 24px 0 14px; }
 }
 @media (prefers-reduced-motion: reduce) { .fq { height: auto; } .fq__stage { position: relative; height: auto; } .fq-o__b { animation: none; } }
+/* мобильная обложка (23.11): бегущая строка выше, шапка в ширину экрана, обложка на весь экран — следующий блок не виден */
+@media (max-width: 900px) {
+  .topline { height: 38px !important; padding-top: 2px; box-sizing: border-box; }
+  .hdr-bar { padding: 8px 12px 0 !important; gap: 6px !important; }
+  .hdr-logo { padding: 0 12px !important; }
+  .hdr-bar .burger { padding: 0 10px !important; }
+  .hdr-bar .hbtn { padding: 0 12px !important; }
+  .bt #top { min-height: calc(100svh - 38px); box-sizing: border-box; align-content: center; padding-top: 92px !important; padding-bottom: 32px !important; row-gap: 20px !important; }
+}
 /* обложка (22.11): текст и кнопки — общей шкалой; H1 на десктопе 72; отзыв 300 */
 @media (min-width: 901px) { #top .h1 { font-size: 72px !important; margin-top: 72px !important; } #top .hero-rev { width: 300px !important; } }
 /* 22.11: от 1400 — отзыв в 3 строки (360) от края контейнера, не наезжает на фото */
@@ -1203,7 +1212,7 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
 </sc-for>
 
 <!-- БЕГУЩАЯ СТРОКА (Telepathic) -->
-<div aria-label="Коротко о студии" style="overflow: hidden; height: 30px; display: flex; align-items: center; background: #85231A; color: #FFFAF6;">
+<div class="topline" aria-label="Коротко о студии" style="overflow: hidden; height: 30px; display: flex; align-items: center; background: #85231A; color: #FFFAF6;">
 <div class="marq" style="display: flex; width: max-content; font-family: 'PT Mono', monospace; font-size: 12px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;">
 <span style="display: flex; gap: 40px; padding-right: 40px;"><span>Сэт-комплекс Luxio — 2 890 ₽ для первого визита</span><span>·</span><span>Маникюр и педикюр в 3 минутах от метро «Трубная»</span><span>·</span><span>Каждый день 10:00–22:00</span><span>·</span><span>Запись онлайн в YCLIENTS</span><span>·</span></span>
 <span aria-hidden="true" style="display: flex; gap: 40px; padding-right: 40px;"><span>Сэт-комплекс Luxio — 2 890 ₽ для первого визита</span><span>·</span><span>Маникюр и педикюр в 3 минутах от метро «Трубная»</span><span>·</span><span>Каждый день 10:00–22:00</span><span>·</span><span>Запись онлайн в YCLIENTS</span><span>·</span></span>
@@ -1212,9 +1221,9 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
 
 <!-- ШАПКА: плавающие ретро-панели (Köppen / MECCA) -->
 <div style="position: sticky; top: 8px; z-index: 50; height: 0; overflow: visible;">
-<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 8px 16px 0;">
+<header class="hdr-bar" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 8px 16px 0;">
 <nav aria-label="Основное меню" style="display: flex; align-items: stretch; background: #FFFAF6; border: 1px solid rgba(43, 26, 23, .4); box-shadow: 3px 3px 0 rgba(43, 26, 23, .16);">
-<a href="#top" aria-label="Бэсти — студия маникюра, наверх" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0 24px; min-height: 52px; box-sizing: border-box; text-decoration: none; color: #85231A;">
+<a class="hdr-logo" href="#top" aria-label="Бэсти — студия маникюра, наверх" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0 24px; min-height: 52px; box-sizing: border-box; text-decoration: none; color: #85231A;">
 <img fetchpriority="high" decoding="async" src="assets/besti-wordmark-bordo.svg" alt="бэсти" style="height: 29px; width: auto; display: block;"><span style="display: inline-block; transform: rotate(-4deg) skewX(-10deg) translateX(11px); margin-top: -6px; font-family: 'PT Mono', monospace; font-size: 12px; line-height: 1; letter-spacing: .02em; white-space: nowrap; color: #85231A;">студия маникюра</span>
 </a>
 <a class="navlink" href="#price" style="display: flex; align-items: center; padding: 0 16px; border-left: 1px solid rgba(43, 26, 23, .2); color: #2B1A17; text-decoration: none; font-size: 12px;">Услуги и цены</a>
