@@ -624,13 +624,20 @@ html.lenis body {
     try { R.compile(scene, cam); R.render(scene, cam); } catch (e) {} // шейдеры — заранее, не в момент входа в блок
     return true;
   }
+  // техаудит 23.11: цикл крутится только пока блок рядом с экраном; вне экрана — стоп, будит прокрутка
+  var running = false, cS = null, cWin, cShd, cStage, cObjs;
+  function kick() { if (ok && !running) { running = true; requestAnimationFrame(frame); } }
+  addEventListener('scroll', kick, { passive: true });
   function frame(now) {
     var s = sec();
-    if (!s || !ok) return;
-    if (!R.domElement.isConnected) { var gl = s.querySelector('.fq__gl'); if (!gl) return; gl.appendChild(R.domElement); }
-    var r = s.getBoundingClientRect(), run = s.offsetHeight - s.querySelector('.fq__stage').offsetHeight;
+    if (!s || !ok) { running = false; return; }
+    if (!R.domElement.isConnected) { var gl = s.querySelector('.fq__gl'); if (!gl) { running = false; return; } gl.appendChild(R.domElement); }
+    if (s !== cS) { cS = s; cWin = s.querySelector('.fq__win'); cShd = s.querySelector('.fq__shadow'); cStage = s.querySelector('.fq__stage');
+      cObjs = [].map.call(s.querySelectorAll('.fq-o'), function (o) { return [o, +o.getAttribute('data-l') / 100, +o.getAttribute('data-t') / 100, +o.getAttribute('data-r')]; }); lastP = -1; }
+    var r = s.getBoundingClientRect(), run = s.offsetHeight - cStage.offsetHeight;
     var P = cl(-r.top / Math.max(run, 1), 0, 1);
     var vh = innerHeight; vis = r.bottom > -50 && r.top < vh + 50;
+    if (!vis) { running = false; return; }
     if (vis) {
       var t = eo(ss(0.04, 0.46, P));           // расправление
       var fade = ss(0.42, 0.56, P);             // лист → окно
@@ -654,20 +661,19 @@ html.lenis body {
         var sc = 0.9 + 0.1 * t; mesh.scale.set(sc, sc, sc);
         R.render(scene, cam);
       }
-      R.domElement.style.opacity = String(1 - fade);
-      R.domElement.style.visibility = fade >= 1 ? 'hidden' : 'visible';
-      var win = s.querySelector('.fq__win');
-      win.style.opacity = String(fade);
-      win.style.transform = 'scale(' + (0.985 + 0.015 * fade) + ')';
-      var shd = s.querySelector('.fq__shadow');
-      shd.style.opacity = String((1 - fade) * 0.9);
-      shd.style.transform = 'scale(' + (0.7 + 0.9 * t) + ', ' + (0.7 + 0.5 * t) + ')';
-      s.querySelectorAll('.fq-o').forEach(function (o) {
-        var L = +o.getAttribute('data-l') / 100, Tp = +o.getAttribute('data-t') / 100, rot = +o.getAttribute('data-r');
-        var dx = (0.5 - L) * sw * (1 - objs), dy = (0.5 - Tp) * sh * (1 - objs);
-        o.style.opacity = String(objs);
-        o.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + (0.3 + 0.7 * objs).toFixed(3) + ') rotate(' + (rot * objs).toFixed(1) + 'deg)';
-      });
+      if (P !== lastP) { // стили — только когда прокрутка сдвинулась
+        R.domElement.style.opacity = String(1 - fade);
+        R.domElement.style.visibility = fade >= 1 ? 'hidden' : 'visible';
+        cWin.style.opacity = String(fade);
+        cWin.style.transform = 'scale(' + (0.985 + 0.015 * fade) + ')';
+        cShd.style.opacity = String((1 - fade) * 0.9);
+        cShd.style.transform = 'scale(' + (0.7 + 0.9 * t) + ', ' + (0.7 + 0.5 * t) + ')';
+        cObjs.forEach(function (a) {
+          var o = a[0], dx = (0.5 - a[1]) * sw * (1 - objs), dy = (0.5 - a[2]) * sh * (1 - objs);
+          o.style.opacity = String(objs);
+          o.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + (0.3 + 0.7 * objs).toFixed(3) + ') rotate(' + (a[3] * objs).toFixed(1) + 'deg)';
+        });
+      }
       lastP = P;
     }
     requestAnimationFrame(frame);
@@ -681,11 +687,11 @@ html.lenis body {
       THREEs = window.THREE;
       try { if (!build()) return unwait(); } catch (err) { return unwait(); }
       ok = true; var s = sec(); if (s) s.classList.add('is-gl');
-      requestAnimationFrame(frame);
+      kick();
     };
     document.head.appendChild(sc);
   }
-  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (ok) build(); }, 200); });
+  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (ok) { build(); cS = null; kick(); } }, 200); });
   var iv = setInterval(function () {
     var s = sec(); if (!s) return;
     var r = s.getBoundingClientRect();
@@ -1827,7 +1833,7 @@ html.sinfo-on .sinfo { transform: none; opacity: 1; pointer-events: auto; }
 <div style="position: absolute; inset: 0; background: rgba(43, 26, 23, .8); opacity: {{lbOp}}; transition: opacity .5s ease;"></div>
 <figure style="position: absolute; left: 50%; top: {{lbTop}}px; width: {{lbW}}px; margin: 0; padding: 12px 12px 14px; background: #FFFFFF; border: 1px solid #2B1A17; box-shadow: 12px 14px 0 rgba(0, 0, 0, .28); transform: {{lbTf}}; transform-origin: 50% 50%; transition: {{lbTr}}; will-change: transform;">
 <sc-if value="{{lbIsImg}}" hint-placeholder-val="{{true}}"><img loading="lazy" decoding="async" src="{{lbSrc}}" alt="{{lbAlt}}" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;"></sc-if>
-<sc-if value="{{lbIsVid}}" hint-placeholder-val="{{false}}"><video src="{{lbVid}}" poster="{{lbSrc}}" autoplay muted loop playsinline aria-label="{{lbAlt}}" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"></video></sc-if>
+<sc-if value="{{lbIsVid}}" hint-placeholder-val="{{false}}"><video class="lb-vid" data-src="{{lbVid}}" muted loop playsinline preload="none" aria-label="{{lbAlt}}" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; background: #2B1A17;"></video></sc-if>
 <figcaption style="display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #85231A; text-align: left;"><span>{{lbCap}}</span><span style="color: #7E4F48;">esc · закрыть</span></figcaption>
 </figure>
 <button aria-label="Закрыть фото" style="position: absolute; top: 20px; right: 20px; min-height: 40px; padding: 0 16px; background: #FFFAF6; color: #85231A; border: 1px solid #2B1A17; box-shadow: 3px 3px 0 #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; opacity: {{lbOp}}; transition: opacity .4s ease;">× закрыть</button>
@@ -1852,7 +1858,7 @@ class Component extends DCLogic {
     this.lbOrigin = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: r.width };
     try { document.documentElement.style.overflow = 'hidden'; } catch (x) {}
     this.setState({ lb: ph, lbOpen: false });
-    requestAnimationFrame(() => requestAnimationFrame(() => { if (this.state.lb) this.setState({ lbOpen: true }); }));
+    requestAnimationFrame(() => requestAnimationFrame(() => { if (this.state.lb) { this.setState({ lbOpen: true }); const v = document.querySelector('.lb-vid'); if (v && v.dataset.src) { v.src = v.dataset.src; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } } }));
   }
   // закрытие (21.11): анимируем прямо в DOM, без перерисовки всей страницы; снимаем окно после конца перехода (.62с)
   closeLb = () => {
