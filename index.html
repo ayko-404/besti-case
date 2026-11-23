@@ -364,7 +364,7 @@ html.lenis body {
       vis.forEach(function (el, i) { io.unobserve(el); show(el, Math.min(i, 6) * 70); });
     }, { rootMargin: '0px 0px -10% 0px' });
     Array.prototype.forEach.call(secs, function (sec) {
-      if (sec.id === 'ritual' || done[sec.id]) return; done[sec.id] = 1;
+      if (sec.id === 'ritual' || sec.id === 'faq' || done[sec.id]) return; // faq: появление ведёт своя WebGL-анимация, иначе окно мелькает (23.11) done[sec.id] = 1;
       targets(sec).forEach(function (el) {
         var r = el.getBoundingClientRect();
         if (sec.id !== 'top' && r.bottom < innerHeight * .9 && r.top < innerHeight) return; // уже на экране — не прячем
