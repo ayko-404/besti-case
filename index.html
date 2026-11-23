@@ -403,9 +403,10 @@ html.lenis body {
     ticking = false;
     var e = els(); if (!e || !e.st || !e.L || !e.R) return;
     if (reduce) { e.gi.style.setProperty('--p', '1'); e.gi.classList.add('is-done'); return; }
-    if (!m || m.gi !== e.gi || m.w !== innerWidth || m.h !== innerHeight) measure(e);
-    var p = Math.max(0, Math.min(1, (scrollY - m.start) / m.run));
-    e.gi.style.setProperty('--p', p.toFixed(3)); e.gi.classList.toggle('is-done', p >= .97);
+    if (!m || m.gi !== e.gi) measure(e); // размеры окна — сброс по resize; innerWidth на каждом кадре заставлял пересчитывать раскладку (23.11)
+    var p = Math.max(0, Math.min(1, (scrollY - m.start) / m.run)), ps = p.toFixed(3);
+    if (m.ps === ps) return; m.ps = ps; // вне заставки ничего не пишем
+    e.gi.style.setProperty('--p', ps); e.gi.classList.toggle('is-done', p >= .97);
   }
   function req() { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }
   addEventListener('scroll', req, { passive: true });
@@ -449,7 +450,7 @@ html.lenis body {
     var sec = document.getElementById('ritual'); if (!sec || !sec.classList.contains('pw')) return;
     if (sec.getAttribute('data-pv2') !== pv) sec.setAttribute('data-pv2', pv);
     if (sec.getAttribute('data-fx') !== fx) sec.setAttribute('data-fx', fx);
-    var st = sec.querySelector('.pw-stick'); if (!st || innerWidth <= 900) return;
+    var st = sec.querySelector('.pw-stick'); if (!st || (window.__vw || innerWidth) <= 900) return;
     var imgs = sec.querySelectorAll('.pw-img'), N = imgs.length;
     var r = sec.getBoundingClientRect(), run = sec.offsetHeight - innerHeight;
     var box = sec.querySelector('.pw-txts'), list = sec.querySelector('.pw-list'), boxH = box ? box.clientHeight : 0, gH = (sec.querySelector('.pw-imgs') || {}).clientHeight || 0; // все чтения — до записей, чтобы не было лишней раскладки
@@ -571,7 +572,7 @@ html.lenis body {
   function unwait() { if (!ok) de.classList.add('fq-static'); }
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { de.classList.add('fq-static'); return; }
   var started = false, ok = false, THREEs = null;
-  var R, scene, cam, mesh, geo, flat, crum, wr, W = 0, H = 0, sw = 0, sh = 0, lastP = -1, lastT = 0, vis = false;
+  var fold, R, scene, cam, mesh, geo, flat, crum, wr, W = 0, H = 0, sw = 0, sh = 0, lastP = -1, lastT = 0, vis = false;
   function sec() { return document.getElementById('faq'); }
   function cl(x, a, b) { return x < a ? a : x > b ? b : x; }
   function ss(a, b, x) { x = cl((x - a) / (b - a), 0, 1); return x * x * (3 - 2 * x); }
@@ -589,7 +590,7 @@ html.lenis body {
     var T = THREEs;
     if (!R) {
       R = new T.WebGLRenderer({ antialias: true, alpha: true });
-      R.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+      R.setPixelRatio(Math.min(devicePixelRatio || 1, innerWidth < 900 ? 1.5 : 2));
       scene = new T.Scene();
       scene.add(new T.AmbientLight(0xffffff, 0.4));
       var d = new T.DirectionalLight(0xffffff, 0.72); d.position.set(0.45, 0.7, 1); scene.add(d);
@@ -602,23 +603,25 @@ html.lenis body {
     var wr0 = win.getBoundingClientRect(), sr = st.getBoundingClientRect();
     wr = { x: (wr0.left + wr0.width / 2) - (sr.left + sr.width / 2), y: -((wr0.top + wr0.height / 2) - (sr.top + sr.height / 2)) };
     if (mesh) { scene.remove(mesh); geo.dispose(); }
-    var sx = 48, sy = Math.max(28, Math.round(48 * H / W));
+    var mob = innerWidth < 900, sx = mob ? 26 : 44, sy = Math.max(mob ? 18 : 26, Math.round(sx * H / W));
     geo = new T.PlaneGeometry(W, H, sx, sy).toNonIndexed();
     var pos = geo.attributes.position, n = pos.count, M = Math.max(W, H);
-    flat = new Float32Array(n * 3); crum = new Float32Array(n * 3);
+    flat = new Float32Array(n * 3); crum = new Float32Array(n * 3); var cA = new Float32Array(n), cB = new Float32Array(n); fold = [cA, cB];
     for (var i = 0; i < n; i++) {
       var x = pos.getX(i), y = pos.getY(i), u = x / M * 11, v = y / M * 11;
       flat[i * 3] = x; flat[i * 3 + 1] = y; flat[i * 3 + 2] = 0;
+      cA[i] = nz(NC, x / M * 12, y / M * 12); cB[i] = sm(NC, x / M * 6, y / M * 6);
       // комок: лист сжат к центру и смят по трём осям
       var k = 0.3, A = M * 0.13;
       crum[i * 3] = x * k + nz(NX, u, v) * A;
       crum[i * 3 + 1] = y * k + nz(NY, u, v) * A;
       crum[i * 3 + 2] = nz(NZ, u, v) * A * 1.4;
     }
-    mesh = new T.Mesh(geo, new T.MeshStandardMaterial({ color: 0xfffaf6, roughness: 0.92, metalness: 0, flatShading: true, side: T.DoubleSide }));
+    mesh = new T.Mesh(geo, new T.MeshPhongMaterial({ color: 0xfffaf6, shininess: 0, specular: 0x000000, flatShading: true, side: T.DoubleSide })); // Phong дешевле Standard, грани плоские (23.11)
     scene.add(mesh);
     s.querySelector('.fq__gl').appendChild(R.domElement);
     lastP = -1;
+    try { R.compile(scene, cam); R.render(scene, cam); } catch (e) {} // шейдеры — заранее, не в момент входа в блок
     return true;
   }
   function frame(now) {
@@ -639,7 +642,7 @@ html.lenis body {
         var wrk = Math.sin(Math.PI * Math.min(1, t * 1.15)) * 0.07 * M + 0.03 * M * (1 - fade);
         for (var i = 0; i < n; i++) {
           var fx = flat[i * 3], fy = flat[i * 3 + 1];
-          var c = (1 - t) * nz(NC, fx / M * 12, fy / M * 12) + t * sm(NC, fx / M * 6, fy / M * 6);
+          var c = (1 - t) * fold[0][i] + t * fold[1][i];
           pos.setXYZ(i, crum[i * 3] * cr + fx * t, crum[i * 3 + 1] * cr + fy * t, crum[i * 3 + 2] * cr + c * wrk * (1 - t * 0.85));
         }
         pos.needsUpdate = true;
@@ -688,6 +691,29 @@ html.lenis body {
     var r = s.getBoundingClientRect();
     if (r.top < innerHeight * 4 || performance.now() > 6000) { clearInterval(iv); start(); }
   }, 400);
+})();
+</script>
+<script>
+/* флаг ширины для обработчиков скролла: считается только на resize (23.11) */
+(function () { function f() { window.__vw = window.innerWidth; } f(); addEventListener('resize', f, { passive: true }); })();
+</script>
+<script>
+/* «Почему бэсти» на мобиле: аккордеон (23.11), делегированием */
+document.addEventListener('click', function (e) {
+  var q = e.target.closest && e.target.closest('#ritual .pw-m__q'); if (!q) return;
+  var it = q.closest('.pw-m'), o = !it.classList.contains('is-open');
+  it.parentNode.querySelectorAll('.pw-m.is-open').forEach(function (x) { if (x !== it) { x.classList.remove('is-open'); x.querySelector('.pw-m__q').setAttribute('aria-expanded', 'false'); } });
+  it.classList.toggle('is-open', o); q.setAttribute('aria-expanded', o ? 'true' : 'false');
+});
+</script>
+<script>
+/* панель «о_студии»: авто — наверху открыта; клик — ручной режим до следующего возврата наверх/ухода вниз (23.11) */
+(function () {
+  var de = document.documentElement, manual = null;
+  function set(on) { de.classList.toggle('sinfo-on', on); var b = document.querySelector('.sinfo-btn'); if (b) b.setAttribute('aria-expanded', on ? 'true' : 'false'); }
+  window.__sinfo = function (atTop, auto) { if (auto) manual = null; set(manual !== null ? manual : atTop); };
+  set(scrollY < 80);
+  document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.sinfo-btn'); if (!b) return; manual = !de.classList.contains('sinfo-on'); set(manual); });
 })();
 </script>
 <x-dc>
@@ -794,6 +820,10 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
   .hdr-bar .hbtn { padding: 0 12px !important; }
   .bt #top { min-height: calc(100svh - 38px); box-sizing: border-box; align-content: center; padding-top: 92px !important; padding-bottom: 32px !important; row-gap: 20px !important; }
 }
+/* панель «о_студии» (23.11): открыта наверху страницы, закрывается при прокрутке; классом на html, без перерисовки React */
+.sinfo { transform: translateY(-104%); opacity: 0; pointer-events: none; }
+html.sinfo-on .sinfo { transform: none; opacity: 1; pointer-events: auto; }
+.sinfo-sign::before { content: '▾'; } html.sinfo-on .sinfo-sign::before { content: '▴'; }
 /* обложка (22.11): текст и кнопки — общей шкалой; H1 на десктопе 72; отзыв 300 */
 @media (min-width: 901px) { #top .h1 { font-size: 72px !important; margin-top: 72px !important; } #top .hero-rev { width: 300px !important; } }
 /* 22.11: от 1400 — отзыв в 3 строки (360) от края контейнера, не наезжает на фото */
@@ -977,10 +1007,20 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
   .pw-stick { display: none; }
   .pw-mob { display: block; }
   .pw-mob__h { margin: 0 0 8px; font-size: 40px; line-height: 1; font-weight: 500; color: #85231A; }
-  .pw-m { margin-top: 32px; }
-  .pw-m img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; }
-  .pw-m .pw-kick { margin-top: 18px; }
-  .pw-m .pw-h { font-size: 34px; }
+  /* аккордеон на мобиле (23.11): первый пункт открыт */
+  .pw-acc { margin-top: 24px; border-top: 1px solid rgba(43, 26, 23, .3); }
+  .pw-m { border-bottom: 1px solid rgba(43, 26, 23, .3); }
+  .pw-m__hd { margin: 0; }
+  .pw-m__q { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 10px 0; background: none; border: 0; text-align: left; cursor: pointer; }
+  .pw-m__q .pw-kick { margin: 0; }
+  .pw-m__q .pw-h { margin: 0; font-size: 28px; line-height: 1.05; }
+  .pw-m__q i { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid #2B1A17; background: #FFFAF6; color: #85231A; font-style: normal; font-family: 'PT Mono', monospace; font-size: 15px; transition: transform .3s cubic-bezier(.2, .8, .2, 1), background .2s; }
+  .pw-m.is-open .pw-m__q i { transform: rotate(45deg); background: #FFACE4; }
+  .pw-m__a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s cubic-bezier(.2, .8, .2, 1); }
+  .pw-m.is-open .pw-m__a { grid-template-rows: 1fr; }
+  .pw-m__ai { overflow: hidden; }
+  .pw-m__ai img { display: block; width: calc(100% - 5px); aspect-ratio: 4 / 3; object-fit: cover; border: 1px solid #2B1A17; box-shadow: 5px 5px 0 #2B1A17; margin-top: 4px; }
+  .pw-m__ai .pw-p { margin: 18px 0 22px; }
   #ritual[data-pv2="bordo"] .pw-mob__h { color: #FFFAF6; }
 }
 @media (prefers-reduced-motion: reduce) { .pw-tabs__bg { transition: none; } }
@@ -1181,13 +1221,24 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
   .tap { display: inline-flex !important; align-items: center; min-height: 44px; }
 }
 @media (max-width: 600px) {
-  .pcoupon { grid-template-columns: minmax(0, 1fr) 96px !important; }
-  .pcoupon > div:first-child { padding: 16px 14px 16px !important; }
-  .pcoupon [style*="font-size: 22px"] { font-size: 16px !important; }
-  .pcoupon [style*="font-size: 60px"] { font-size: 36px !important; }
-  .pcoupon ul { grid-template-columns: minmax(0, 1fr) !important; }
-  .pcoupon > div:last-child { padding: 14px 8px 12px !important; }
-  .pcoupon .btn { padding: 0 16px !important; }
+  /* купон на мобиле (23.11): билет, а не квадрат — состав в 2 колонки мелко, корешок узкий, без лишних строк */
+  .pcoupon { grid-template-columns: minmax(0, 1fr) 78px !important; box-shadow: 5px 5px 0 #2B1A17 !important; }
+  .pcoupon > div:first-child { padding: 14px 14px 14px !important; }
+  .pcoupon [style*="font-size: 22px"] { font-size: 15px !important; }
+  .pcoupon > div:first-child [style*="font-size: 60px"] { font-size: 38px !important; }
+  .pcoupon ul { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 4px 8px !important; margin-top: 10px !important; font-size: 12px !important; }
+  .pcoupon ul li { gap: 5px !important; line-height: 1.25; }
+  .pcoupon ul li > span { width: 13px !important; height: 13px !important; }
+  .pcoupon > div:first-child > p:nth-of-type(3) { display: none; }
+  .pcoupon .btn { margin-top: 12px !important; min-height: 40px !important; padding: 0 16px !important; }
+  .pcoupon > div:last-child { padding: 12px 6px 10px !important; gap: 6px !important; }
+  .pcoupon > div:last-child [style*="font-size: 60px"] { font-size: 30px !important; }
+  .pcoupon > div:last-child > p:nth-of-type(3) { font-size: 10px !important; }
+  .pcoupon > div:last-child > span { height: 22px !important; }
+  .pcoupon > div:last-child > p:last-child { display: none; }
+  .free-cta { flex-direction: column; transform: none !important; text-align: center; }
+  .free-cta > span { font-size: 30px !important; }
+  .free-arr { display: block !important; width: 54px; height: auto; transform: rotate(78deg) !important; margin: 4px 0 -6px; }
   .pnotch { right: 83px !important; }
 }
 /* широкие мониторы: содержимое не шире 1632 (1600 + поля; было 1408 до 21.11), фоны и бегущие строки — на всю ширину */
@@ -1243,9 +1294,9 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
 5,0 на Яндекс Картах</a>
 <a class="hbtn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: flex; align-items: center; padding: 0 20px; min-height: 52px; background: #FFACE4; color: #85231A; border-left: 1px solid rgba(43, 26, 23, .4); text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase;">Записаться</a>
 </div>
-<button class="hide-m" onClick="{{infoToggle}}" aria-expanded="{{infoOpen}}" aria-controls="studio-info" style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: -1px; min-height: 26px; padding: 4px 10px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; text-align: left;"><span>о_студии.besti</span><span aria-hidden="true" style="font-size: 12px;">{{infoSign}}</span></button>
+<button class="hide-m sinfo-btn" type="button" aria-expanded="true" aria-controls="studio-info" style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: -1px; min-height: 26px; padding: 4px 10px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; text-align: left;"><span>о_студии.besti</span><span class="sinfo-sign" aria-hidden="true" style="font-size: 12px;"></span></button>
 <div class="hide-m" style="position: absolute; left: 0; right: -8px; top: 100%; overflow: hidden; padding: 0 8px 10px 0; pointer-events: none;">
-<div id="studio-info" style="background: #FFFFFF; border: 1px solid #2B1A17; border-top: 0; box-shadow: 5px 5px 0 #2B1A17; text-align: left; transform: {{infoTf}}; opacity: {{infoOp}}; pointer-events: {{infoPe}}; transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .3s ease;"><div style="padding: 9px 14px 10px;"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Рейтинг на Яндекс Картах</p><p style="display: flex; align-items: center; gap: 10px; margin: 6px 0 0;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1; font-weight: 600; color: #85231A;">5,0</span><span aria-hidden="true" style="display: flex; gap: 2px;"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg></span></p><p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; color: #2B1A17;">152 оценки</p></div><div style="padding: 9px 14px 10px; border-top: 1px solid rgba(43, 26, 23, .35);"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Адрес</p><p style="margin: 6px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.1; font-weight: 600; color: #85231A;">Печатников пер., 6</p><p style="margin: 6px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; color: #2B1A17;">340 м от м. Трубная</p></div><div style="padding: 9px 14px 10px; border-top: 1px solid rgba(43, 26, 23, .35);"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Часы работы</p><p style="margin: 6px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1; font-weight: 600; color: #85231A;">10:00–22:00</p><p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; color: #2B1A17;">каждый день</p></div></div>
+<div id="studio-info" class="sinfo" style="background: #FFFFFF; border: 1px solid #2B1A17; border-top: 0; box-shadow: 5px 5px 0 #2B1A17; text-align: left; transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .3s ease;"><div style="padding: 9px 14px 10px;"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Рейтинг на Яндекс Картах</p><p style="display: flex; align-items: center; gap: 10px; margin: 6px 0 0;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1; font-weight: 600; color: #85231A;">5,0</span><span aria-hidden="true" style="display: flex; gap: 2px;"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#85231A"></path></svg></span></p><p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; color: #2B1A17;">152 оценки</p></div><div style="padding: 9px 14px 10px; border-top: 1px solid rgba(43, 26, 23, .35);"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Адрес</p><p style="margin: 6px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.1; font-weight: 600; color: #85231A;">Печатников пер., 6</p><p style="margin: 6px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; color: #2B1A17;">340 м от м. Трубная</p></div><div style="padding: 9px 14px 10px; border-top: 1px solid rgba(43, 26, 23, .35);"><p style="margin: 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #7E4F48;">Часы работы</p><p style="margin: 6px 0 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1; font-weight: 600; color: #85231A;">10:00–22:00</p><p style="margin: 4px 0 0; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .04em; color: #2B1A17;">каждый день</p></div></div>
 </div>
 </div>
 </header>
@@ -1382,7 +1433,7 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
 </div>
 </div>
 <div style="grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 18px; margin-top: 22px;">
-<span style="display: inline-flex; align-items: center; gap: 4px; transform: rotate(-2deg); transform-origin: right center;"><span style="font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 34px; line-height: 1; color: #85231A;">свободные окна — в онлайн-записи</span><svg class="hide-m" aria-hidden="true" width="72" height="34" viewBox="0 0 72 34" fill="none" style="flex: none; transform: translateY(6px);"><path d="M3 28 C 18 32, 40 30, 66 17" stroke="#85231A" stroke-width="2.5" stroke-linecap="round"></path><path d="M55 11 L67 16.5 L58 26" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<span class="free-cta" style="display: inline-flex; align-items: center; gap: 4px; transform: rotate(-2deg); transform-origin: right center;"><span style="font-family: 'Gogol', 'Cormorant Garamond', cursive; font-size: 34px; line-height: 1; color: #85231A;">свободные окна — в онлайн-записи</span><svg class="free-arr" aria-hidden="true" width="72" height="34" viewBox="0 0 72 34" fill="none" style="flex: none; transform: translateY(6px);"><path d="M3 28 C 18 32, 40 30, 66 17" stroke="#85231A" stroke-width="2.5" stroke-linecap="round"></path><path d="M55 11 L67 16.5 L58 26" stroke="#85231A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
 <a class="btn" href="https://n2379744.yclients.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 24px; background: #85231A; color: #FFFAF6; border: 1px solid #2B1A17; text-decoration: none; font-family: 'PT Mono', monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;">Выбрать время</a>
 </div>
 </section>
@@ -1507,7 +1558,7 @@ html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important;
 </div>
 <div class="pw-mob">
 <h2 class="hx pw-mob__h">Почему <em>бэсти</em></h2>
-<div class="pw-m"><img src="assets/pros/kino-v-kresle.webp" alt="Педикюрное кресло с планшетом" loading="lazy" decoding="async"><p class="pw-kick">[01]</p><h3 class="pw-h">Кино <em>в&nbsp;кресле</em></h3><p class="pw-p">У&nbsp;педикюрного кресла свой планшет с&nbsp;наушниками: включите фильм или сериал, пока мастер работает.</p></div><div class="pw-m"><img src="assets/pros/massazher-dlya-ruk.webp" alt="Руки в массажёре для рук" loading="lazy" decoding="async"><p class="pw-kick">[02]</p><h3 class="pw-h">Массаж <em>для&nbsp;рук</em></h3><p class="pw-p">В&nbsp;конце процедуры предложим расслабить руки в&nbsp;массажёре. Бесплатно&nbsp;— гости пишут, что видят такое впервые.</p></div><div class="pw-m"><img src="assets/pros/menyu-napitkov.webp" alt="Меню напитков бэсти на столике студии: кофе, чай, матча и какао" loading="lazy" decoding="async"><p class="pw-kick">[03]</p><h3 class="pw-h">Меню <em>напитков</em></h3><p class="pw-p">Кофе на&nbsp;обычном или растительном молоке, гречишный чай, матча и&nbsp;какао на&nbsp;банановом молоке.</p></div><div class="pw-m"><img src="assets/pros/uhod-zielinski.webp" alt="Средства Zielinski & Rozen на полке студии" loading="lazy" decoding="async"><p class="pw-kick">[04]</p><h3 class="pw-h">Уход <em>Zielinski &amp;&nbsp;Rozen</em></h3><p class="pw-p">Питательный уход входит почти во&nbsp;все виды маникюра и&nbsp;педикюра&nbsp;— доплачивать за&nbsp;него не&nbsp;нужно.</p></div>
+<div class="pw-acc"><div class="pw-m is-open"><h3 class="pw-m__hd"><button type="button" class="pw-m__q" aria-expanded="true"><span class="pw-kick">[01]</span><span class="pw-h">Кино <em>в&nbsp;кресле</em></span><i aria-hidden="true">+</i></button></h3><div class="pw-m__a"><div class="pw-m__ai"><img src="assets/pros/kino-v-kresle.webp" alt="Педикюрное кресло с планшетом" loading="lazy" decoding="async"><p class="pw-p">У&nbsp;педикюрного кресла свой планшет с&nbsp;наушниками: включите фильм или сериал, пока мастер работает.</p></div></div></div><div class="pw-m"><h3 class="pw-m__hd"><button type="button" class="pw-m__q" aria-expanded="false"><span class="pw-kick">[02]</span><span class="pw-h">Массаж <em>для&nbsp;рук</em></span><i aria-hidden="true">+</i></button></h3><div class="pw-m__a"><div class="pw-m__ai"><img src="assets/pros/massazher-dlya-ruk.webp" alt="Руки в массажёре для рук" loading="lazy" decoding="async"><p class="pw-p">В&nbsp;конце процедуры предложим расслабить руки в&nbsp;массажёре. Бесплатно&nbsp;— гости пишут, что видят такое впервые.</p></div></div></div><div class="pw-m"><h3 class="pw-m__hd"><button type="button" class="pw-m__q" aria-expanded="false"><span class="pw-kick">[03]</span><span class="pw-h">Меню <em>напитков</em></span><i aria-hidden="true">+</i></button></h3><div class="pw-m__a"><div class="pw-m__ai"><img src="assets/pros/menyu-napitkov.webp" alt="Меню напитков бэсти на столике студии: кофе, чай, матча и какао" loading="lazy" decoding="async"><p class="pw-p">Кофе на&nbsp;обычном или растительном молоке, гречишный чай, матча и&nbsp;какао на&nbsp;банановом молоке.</p></div></div></div><div class="pw-m"><h3 class="pw-m__hd"><button type="button" class="pw-m__q" aria-expanded="false"><span class="pw-kick">[04]</span><span class="pw-h">Уход <em>Zielinski &amp;&nbsp;Rozen</em></span><i aria-hidden="true">+</i></button></h3><div class="pw-m__a"><div class="pw-m__ai"><img src="assets/pros/uhod-zielinski.webp" alt="Средства Zielinski & Rozen на полке студии" loading="lazy" decoding="async"><p class="pw-p">Питательный уход входит почти во&nbsp;все виды маникюра и&nbsp;педикюра&nbsp;— доплачивать за&nbsp;него не&nbsp;нужно.</p></div></div></div></div>
 </div>
 </section>
 
@@ -1887,7 +1938,8 @@ class Component extends DCLogic {
   parallax() {
     const s = this.studioEl, r = this.reviewEl;
     if (!s || !r) return;
-    if (window.innerWidth < 900) { r.style.transform = ''; return; }
+    if ((window.__vw || 0) < 900) { // ширина — из кэша: innerWidth/matchMedia на каждом скролле заставляли пересчитывать раскладку (23.11)
+      if (r.style.transform) r.style.transform = ''; return; }
     // положение карточки меряем не чаще раза в 0,5 с, а между замерами считаем от scrollY: замер на каждом кадре заставлял браузер пересчитывать раскладку
     const now = performance.now();
     if (!this.pxBox || now - this.pxBox.t > 500) { const q = (r.parentElement || s).getBoundingClientRect(); this.pxBox = { t: now, top: q.top + window.scrollY, h: q.height }; }
@@ -1949,7 +2001,7 @@ class Component extends DCLogic {
     this.onScroll = () => {
       this.parallax();
       const atTop = window.scrollY < 80;
-      if (atTop !== this.state.atTop) this.setState({ atTop: atTop, infoManual: null });
+      if (atTop !== this.atTopNow) { this.atTopNow = atTop; window.__sinfo && window.__sinfo(atTop, true); } // без setState: перерисовка всего сайта давала лаг (23.11)
       const el = this.ritualEl;
       if (!el) return;
       const r = el.getBoundingClientRect();
