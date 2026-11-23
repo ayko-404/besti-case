@@ -567,9 +567,9 @@ html.lenis body {
     }
   });
 
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var de = document.documentElement; de.classList.add('fq-wait');
-  function unwait() { de.classList.remove('fq-wait'); }
+  var de = document.documentElement;
+  function unwait() { if (!ok) de.classList.add('fq-static'); }
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { de.classList.add('fq-static'); return; }
   var started = false, ok = false, THREEs = null;
   var R, scene, cam, mesh, geo, flat, crum, wr, W = 0, H = 0, sw = 0, sh = 0, lastP = -1, lastT = 0, vis = false;
   function sec() { return document.getElementById('faq'); }
@@ -673,11 +673,11 @@ html.lenis body {
     if (started) return; started = true;
     var sc = document.createElement('script');
     sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    sc.onerror = unwait; setTimeout(function () { if (!ok) unwait(); }, 8000);
+    sc.onerror = unwait; setTimeout(function () { if (!ok) unwait(); }, 15000);
     sc.onload = function () {
       THREEs = window.THREE;
       try { if (!build()) return unwait(); } catch (err) { return unwait(); }
-      ok = true; var s = sec(); if (s) s.classList.add('is-gl'); unwait();
+      ok = true; var s = sec(); if (s) s.classList.add('is-gl');
       requestAnimationFrame(frame);
     };
     document.head.appendChild(sc);
@@ -771,9 +771,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #2B1A17; outline-offs
 .fq-o { position: absolute; z-index: 1; display: block; opacity: 0; will-change: transform, opacity; }
 .fq-o__b { display: block; animation: fqbob 5.5s ease-in-out infinite alternate; }
 @keyframes fqbob { from { transform: translateY(-7px) rotate(-2deg); } to { transform: translateY(7px) rotate(2deg); } }
-.fq.is-gl .fq__win { opacity: 0; }
-html.fq-wait #faq .fq__win { opacity: 0; } /* до готовности листа окно не мелькает (22.11) */
-.fq:not(.is-gl) .fq-o { opacity: 1; }
+/* окно и иконки скрыты по умолчанию — показывает только анимация; без WebGL / при ошибке — html.fq-static (23.11) */
+#faq .fq__win { opacity: 0; }
+html.fq-static #faq .fq__win, html.fq-static #faq .fq-o { opacity: 1 !important; transform: none !important; }
 @media (max-width: 1399px) { .fq__objs { display: none; } }
 @media (max-width: 900px) {
   .fq { height: calc(100svh + 700px); }
